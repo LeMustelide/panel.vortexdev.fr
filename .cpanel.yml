@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/qxqp2383/panel.vortexdev.fr/
+    - /bin/cp -R * $DEPLOYPATH
