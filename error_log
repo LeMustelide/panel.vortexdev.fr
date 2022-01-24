@@ -1,0 +1,28 @@
+[24-Jan-2022 19:54:23 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:26 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:29 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:43 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:46 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:50 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
+[24-Jan-2022 19:54:53 UTC] PHP Fatal error:  Uncaught Error: Class "Symfony\Component\HttpFoundation\Request" not found in /home/qxqp2383/panel.vortexdev.fr/index.php:6
+Stack trace:
+#0 {main}
+  thrown in /home/qxqp2383/panel.vortexdev.fr/index.php on line 6
