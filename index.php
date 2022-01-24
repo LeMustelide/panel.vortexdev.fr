@@ -1,5 +1,5 @@
 <?php
-header("refresh: 5; https://vortexdev.fr");
+header("refresh: 5; https://panel.vortexdev.fr/public/index.php");
 
 	echo '<title>Symfony Installed</title><div style="background: #e9ffed; border: 1px solid #b0dab7; padding: 15px;" align="center" >
 	<font size="5" color="#182e7a">Symfony is installed successfully.</font><br /><br />
