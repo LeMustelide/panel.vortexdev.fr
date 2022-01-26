@@ -23,7 +23,7 @@ final class Versions
      * @deprecated please use {@see self::rootPackageName()} instead.
      *             This constant will be removed in version 2.0.0.
      */
-    const ROOT_PACKAGE_NAME = 'symfony/website-skeleton';
+    const ROOT_PACKAGE_NAME = '__root__';
 
     /**
      * Array of all available composer packages.
@@ -161,13 +161,13 @@ final class Versions
   'symfony/phpunit-bridge' => 'v6.0.0@5d6cc6720085084f504d2482fc4a2f268784006b',
   'symfony/web-profiler-bundle' => 'v6.0.2@5a964f677884a22c6114bc6cfada199a0e4b5c9e',
   'theseer/tokenizer' => '1.2.1@34a41e998c2183e22995f158c581e7b5e755ab9e',
-  'symfony/polyfill-ctype' => '*@',
-  'symfony/polyfill-iconv' => '*@',
-  'symfony/polyfill-php72' => '*@',
-  'symfony/polyfill-php73' => '*@',
-  'symfony/polyfill-php74' => '*@',
-  'symfony/polyfill-php80' => '*@',
-  'symfony/website-skeleton' => 'v6.0.99@',
+  'symfony/polyfill-ctype' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  'symfony/polyfill-iconv' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  'symfony/polyfill-php72' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  'symfony/polyfill-php73' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  'symfony/polyfill-php74' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  'symfony/polyfill-php80' => '*@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
+  '__root__' => 'dev-master@bc2ad42fb7a8ae5bc443ccb879913ccc698e28bd',
 );
 
     private function __construct()
