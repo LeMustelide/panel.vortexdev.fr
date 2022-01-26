@@ -23,8 +23,8 @@ class HelloController extends AbstractController
      *
      * @Route("/")
      */
-    public function home()
+    public function voirForm()
     {
-        return $this->render('hello.html.twig', ['name' => 'World']);
+        return $this->render('login.html.twig');
     }
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<title>Pann. Admin | VorTeXDev</title>
+<link href="img/favicon.ico" rel="shortcut icon"/>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#424242">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://panel.vortexdev.fr/Illu/Webillu.gif">
+<meta property="og:site_name" content="Panneau Administrateur | VorTeX Dev">
+<meta name="description" content="Connectez-vous au Panneau Administrateur.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+</style>
+<link rel="stylesheet" href="css/style.css"/>
+<body class="body">
+  <div class="imgcontainer"  style="
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 9%;
+      ">
+    <a href="https://vortexdev.fr/"> <img src="images/pannel.png" alt="VorTeX-DEV" width="300" height="125"> </a>
+  </div>
+  <form action="dashboard.php" method="POST" style="margin-left: auto; margin-right: auto;" >
+    <div class="container">
+    <h1 style="margin-top: 10px;margin-bottom: 10px;font-size:32px;color:#fff">Panneau Administateur</h1>
+	<hr style="margin-top: 5px;margin-bottom: 20px;">
+      <label for="username"><b>Identifiant</b></label>
+      <input type="text" placeholder="Entrez votre identifiant" name="username" required style="margin-bottom: 18px;">
+
+      <label for="password"><b>Mot de passe</b></label>
+      <input type="password" placeholder="Entrez votre mot de passe" name="password" required>
+	<button type="submit" class="connectbtn" value='LOGIN' style="margin-top: 28px;" >Connexion</button>
+    </div>
+  </form>
+</body>
+</html>
