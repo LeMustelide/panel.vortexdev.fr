@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+{% block test %}
 <html lang="fr">
 <title>Pann. Admin | VorTeXDev</title>
 <link href="img/favicon.ico" rel="shortcut icon"/>
@@ -14,6 +15,11 @@
 </style>
 <link rel="stylesheet" href="css/style.css"/>
 <body class="body">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
   <div class="imgcontainer"  style="
       margin-left: auto;
       margin-right: auto;
@@ -21,7 +27,7 @@
       ">
     <a href="https://vortexdev.fr/"> <img src="images/pannel.png" alt="VorTeX-DEV" width="300" height="125"> </a>
   </div>
-  <form action="dashboard.php" method="POST" style="margin-left: auto; margin-right: auto;" >
+  <form action="{{ path('security_login') }}" method="POST" style="margin-left: auto; margin-right: auto;" >
     <div class="container">
     <h1 style="margin-top: 10px;margin-bottom: 10px;font-size:32px;color:#fff">Panneau Administateur</h1>
 	<hr style="margin-top: 5px;margin-bottom: 20px;">
@@ -35,3 +41,4 @@
   </form>
 </body>
 </html>
+{% endblock %}
