@@ -179,6 +179,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
             $app->add(new Command\RemoveCommand($resolver));
             $app->add(new Command\RecipesCommand($this, $this->lock, $rfs));
             $app->add(new Command\InstallRecipesCommand($this, $this->options->get('root-dir')));
+            $app->add(new Command\UpdateRecipesCommand($this, $this->downloader, $rfs, $this->configurator, $this->options->get('root-dir')));
             $app->add(new Command\DumpEnvCommand($this->config, $this->options));
 
             break;
@@ -311,8 +312,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
 
         if (!$recipes) {
             if (ScriptEvents::POST_UPDATE_CMD === $event->getName()) {
-                $this->synchronizePackageJson($rootDir);
-                $this->lock->write();
+                $this->finish($rootDir);
             }
 
             if ($this->downloader->isEnabled()) {
@@ -408,10 +408,15 @@ class Flex implements PluginInterface, EventSubscriberInterface
             );
         }
 
+        $this->finish($rootDir, $originalComposerJsonHash);
+    }
+
+    public function finish(string $rootDir, string $originalComposerJsonHash = null): void
+    {
         $this->synchronizePackageJson($rootDir);
         $this->lock->write();
 
-        if ($this->getComposerJsonHash() !== $originalComposerJsonHash) {
+        if ($originalComposerJsonHash && $this->getComposerJsonHash() !== $originalComposerJsonHash) {
             $this->updateComposerLock();
         }
     }
@@ -426,8 +431,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
         if ($synchronizer->shouldSynchronize()) {
             $lockData = $this->composer->getLocker()->getLockData();
 
-            $r = new \ReflectionParameter([$synchronizer, 'addPackageJsonLink'], 'phpPackage');
-            if ('string' === $r->getType()->getName()) {
+            if (method_exists($synchronizer, 'addPackageJsonLink') && 'string' === (new \ReflectionParameter([$synchronizer, 'addPackageJsonLink'], 'phpPackage'))->getType()->getName()) {
                 // support for smooth upgrades from older flex versions
                 $lockData['packages'] = array_column($lockData['packages'] ?? [], 'name');
                 $lockData['packages-dev'] = array_column($lockData['packages-dev'] ?? [], 'name');
@@ -484,9 +488,10 @@ class Flex implements PluginInterface, EventSubscriberInterface
         $data = $this->downloader->getRecipes($operations);
         $manifests = $data['manifests'] ?? [];
         $locks = $data['locks'] ?? [];
-        // symfony/flex and symfony/framework-bundle recipes should always be applied first
+        // symfony/flex recipes should always be applied first
+        $flexRecipe = [];
+        // symfony/framework-bundle recipe should always be applied first after the metapackages
         $recipes = [
-            'symfony/flex' => null,
             'symfony/framework-bundle' => null,
         ];
         $metaRecipes = [];
@@ -530,6 +535,8 @@ class Flex implements PluginInterface, EventSubscriberInterface
             if (isset($manifests[$name])) {
                 if ('metapackage' === $package->getType()) {
                     $metaRecipes[$name] = new Recipe($package, $name, $job, $manifests[$name], $locks[$name] ?? []);
+                } elseif ('symfony/flex' === $name) {
+                    $flexRecipe = [$name => new Recipe($package, $name, $job, $manifests[$name], $locks[$name] ?? [])];
                 } else {
                     $recipes[$name] = new Recipe($package, $name, $job, $manifests[$name], $locks[$name] ?? []);
                 }
@@ -557,7 +564,7 @@ class Flex implements PluginInterface, EventSubscriberInterface
             }
         }
 
-        return array_merge($metaRecipes, array_filter($recipes));
+        return array_merge($flexRecipe, $metaRecipes, array_filter($recipes));
     }
 
     public function truncatePackages(PrePoolCreateEvent $event)
@@ -570,6 +577,20 @@ class Flex implements PluginInterface, EventSubscriberInterface
         $lockedPackages = $event->getRequest()->getFixedOrLockedPackages();
 
         $event->setPackages($this->filter->removeLegacyPackages($event->getPackages(), $rootPackage, $lockedPackages));
+    }
+
+    public function getComposerJsonHash(): string
+    {
+        return md5_file(Factory::getComposerFile());
+    }
+
+    public function getLock(): Lock
+    {
+        if (null === $this->lock) {
+            throw new \Exception('Cannot access lock before calling activate().');
+        }
+
+        return $this->lock;
     }
 
     private function initOptions(): Options
@@ -708,10 +729,5 @@ class Flex implements PluginInterface, EventSubscriberInterface
         ];
 
         return $events;
-    }
-
-    private function getComposerJsonHash(): string
-    {
-        return md5_file(Factory::getComposerFile());
     }
 }
