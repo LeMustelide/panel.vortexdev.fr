@@ -574,8 +574,11 @@ class ComposerStaticInit098965d24d167bb759e1a4d9b85834db
     );
 
     public static $classMap = array (
-        'App\\Controller\\HelloController' => __DIR__ . '/../..' . '/src/Controller/HelloController.php',
+        'App\\Controller\\SecurityController' => __DIR__ . '/../..' . '/src/Controller/SecurityController.php',
+        'App\\Entity\\Account' => __DIR__ . '/../..' . '/src/Entity/Account.php',
         'App\\Kernel' => __DIR__ . '/../..' . '/src/Kernel.php',
+        'App\\Repository\\AccountRepository' => __DIR__ . '/../..' . '/src/Repository/AccountRepository.php',
+        'App\\Security\\FormLoginAuthenticator' => __DIR__ . '/../..' . '/src/Security/FormLoginAuthenticator.php',
         'Collator' => __DIR__ . '/..' . '/symfony/polyfill-intl-icu/Resources/stubs/Collator.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'DeepCopy\\DeepCopy' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',

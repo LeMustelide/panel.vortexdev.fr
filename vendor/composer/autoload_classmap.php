@@ -6,8 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'App\\Controller\\HelloController' => $baseDir . '/src/Controller/HelloController.php',
+    'App\\Controller\\SecurityController' => $baseDir . '/src/Controller/SecurityController.php',
+    'App\\Entity\\Account' => $baseDir . '/src/Entity/Account.php',
     'App\\Kernel' => $baseDir . '/src/Kernel.php',
+    'App\\Repository\\AccountRepository' => $baseDir . '/src/Repository/AccountRepository.php',
+    'App\\Security\\FormLoginAuthenticator' => $baseDir . '/src/Security/FormLoginAuthenticator.php',
     'Collator' => $vendorDir . '/symfony/polyfill-intl-icu/Resources/stubs/Collator.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'DeepCopy\\DeepCopy' => $vendorDir . '/myclabs/deep-copy/src/DeepCopy/DeepCopy.php',
