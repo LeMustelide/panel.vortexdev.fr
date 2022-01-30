@@ -1,42 +1,35 @@
+<!DOCTYPE html>
+<html style="overflow: auto;">
 
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
+    <link rel="stylesheet" href="assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="assets/css/Login-Form-Dark.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
 {% block body %}
-<html lang="fr">
-<title>Pann. Admin | VorTeXDev</title>
-<link href="img/favicon.ico" rel="shortcut icon"/>
-<meta charset="UTF-8">
-<meta name="theme-color" content="#424242">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://panel.vortexdev.fr/Illu/Webillu.gif">
-<meta property="og:site_name" content="Panneau Administrateur | VorTeX Dev">
-<meta name="description" content="Connectez-vous au Panneau Administrateur.">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
-</style>
-<link rel="stylesheet" href="css/style.css"/>
-<body class="body">
-    {% if error %}
-        <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-    {% endif %}
-  <div class="imgcontainer"  style="
-      margin-left: auto;
-      margin-right: auto;
-      margin-top: 9%;
-      ">
-    <a href="https://vortexdev.fr/"> <img src="images/pannel.png" alt="VorTeX-DEV" width="300" height="125"> </a>
-  </div>
-  <form action="{{ path('login') }}" method="POST" style="margin-left: auto; margin-right: auto;" >
-    <div class="container">
-    <h1 style="margin-top: 10px;margin-bottom: 10px;font-size:32px;color:#fff">Panneau Administateur</h1>
-	<hr style="margin-top: 5px;margin-bottom: 20px;">
-      <label for="username"><b>Identifiant</b></label>
-      <input type="text" placeholder="Entrez votre identifiant" name="_username" value="{{ last_username }}" required style="margin-bottom: 18px;">
+<body style="height: 100vh;">
 
-      <label for="password"><b>Mot de passe</b></label>
-      <input type="password" placeholder="Entrez votre mot de passe" name="_password" required>
-	<button type="submit" class="connectbtn" value='LOGIN' style="margin-top: 28px;" >Connexion</button>
-    </div>
-  </form>
+    <section class="login-dark" style="height: 100%;">
+        <form action="{{ path('login') }}" method="post" style="box-shadow: 10px 10px 9px rgba(15,15,15,0.6);">
+            <h2 class="visually-hidden">Login Form</h2><img src="assets/img/pannel.png" style="width: 250px;margin-left: -10px;margin-top: -20px;margin-bottom: 25px;">
+            <div class="mb-3"><input class="form-control" type="email" name="_username" placeholder="Email" value="{{ last_username }}"></div>
+            <div class="mb-3"><input class="form-control" type="password" name="_password" placeholder="Mot de passe"></div>
+            {% if error %}
+            <div class="alert alert-failure" role="alert"><span><strong>Alert</strong> {{ error.messageKey|trans(error.messageData, 'security') }}</span></div>
+            {% endif %}
+            <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Connexion</button></div><a class="forgot" href="#">Mot de passe oublié ?</a>
+        </form>
+    </section>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/theme.js"></script>
 </body>
-</html>
 {% endblock %}
+</html>
