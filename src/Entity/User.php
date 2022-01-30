@@ -32,7 +32,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     /**
-     * @var json
+     * @var array
      *
      * @ORM\Column(name="roles", type="json", length=180, nullable=false)
      */
