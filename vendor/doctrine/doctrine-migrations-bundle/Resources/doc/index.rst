@@ -312,7 +312,7 @@ for Doctrine's ORM:
 
     .. code-block:: php-annotations
 
-        // src/Entity/User.php
+        // src/Entity/panel/User.php
         namespace App\Entity;
 
         use Doctrine\ORM\Mapping as ORM;
@@ -338,7 +338,7 @@ for Doctrine's ORM:
     .. code-block:: yaml
 
         # config/doctrine/User.orm.yaml
-        App\Entity\User:
+        App\Entity\panel\User:
             type: entity
             table: user
             id:
@@ -359,7 +359,7 @@ for Doctrine's ORM:
               xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                             http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-            <entity name="App\Entity\User" table="user">
+            <entity name="App\Entity\panel\User" table="user">
                 <id name="id" type="integer" column="id">
                     <generator strategy="AUTO"/>
                 </id>

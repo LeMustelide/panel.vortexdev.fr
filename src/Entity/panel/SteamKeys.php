@@ -2,42 +2,50 @@
 
 namespace App\Entity\panel;
 
-use App\Repository\panel\SteamKeysRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * SteamKeys
- * 
- * @ORM\table(name="steamKeys", uniqueConstraints={@ORM\UniqueConstraint(name="steamKey", columns={"steamKey"})})
+ * Steamkeys
+ *
+ * @ORM\Table(name="steamKeys", uniqueConstraints={@ORM\UniqueConstraint(name="steamKey", columns={"steamKey"})})
  * @ORM\Entity(repositoryClass=SteamKeysRepository::class)
  */
-class SteamKeys
+class Steamkeys
 {
-
     /**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="steamId", type="string", length=64, nullable=true)
      */
-    private $steamId;
+    private $steamid;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="steamKey", type="string", length=64, nullable=false)
      * @ORM\Id
-     * @ORM\Column(type="string", length=64, nullable=false)
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $steamKey;
+    private $steamkey;
 
     /**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="string", length=64, nullable=true)
      */
     private $description;
 
     /**
-     * @ORM\Column(type="string", length=64, nullable=true)
+     * @var string|null
+     *
+     * @ORM\Column(name="tag", type="string", length=64, nullable=true)
      */
     private $tag;
 
     /**
-     * @ORM\Column(type="date", length=24, nullable=false)
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=false)
      */
     private $date;
 
@@ -100,4 +108,5 @@ class SteamKeys
 
         return $this;
     }
+
 }

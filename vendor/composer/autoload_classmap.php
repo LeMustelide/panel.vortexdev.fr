@@ -8,7 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'App\\Controller\\LoginController' => $baseDir . '/src/Controller/LoginController.php',
     'App\\Controller\\NavController' => $baseDir . '/src/Controller/NavController.php',
-    'App\\Entity\\User' => $baseDir . '/src/Entity/User.php',
+    'App\\Entity\\User' => $baseDir . '/src/Entity/panel/User.php',
     'App\\Kernel' => $baseDir . '/src/Kernel.php',
     'App\\Repository\\UserRepository' => $baseDir . '/src/Repository/UserRepository.php',
     'Collator' => $vendorDir . '/symfony/polyfill-intl-icu/Resources/stubs/Collator.php',

@@ -2,7 +2,7 @@
 
 namespace App\Repository\panel;
 
-use App\Entity\SteamKeys;
+use App\Entity\panel\SteamKeys;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

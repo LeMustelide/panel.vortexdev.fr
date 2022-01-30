@@ -7,10 +7,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * user
- * 
+ * User
+ *
  * @ORM\Table(name="user", uniqueConstraints={@ORM\UniqueConstraint(name="email", columns={"email"})})
- * @ORM\MappedSuperclass
+ * @ORM\Entity(repositoryClass="App\Repository\panel\UserRepository")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -33,14 +33,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var array
      *
-     * @ORM\Column(name="roles", type="json", length=180, nullable=false)
+     * @ORM\Column(name="roles", type="json", nullable=false)
      */
-    private $roles = [];
+    private $roles;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=180, nullable=false)
+     * @ORM\Column(name="password", type="string", length=255, nullable=false)
      */
     private $password;
 
@@ -113,4 +113,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
 }

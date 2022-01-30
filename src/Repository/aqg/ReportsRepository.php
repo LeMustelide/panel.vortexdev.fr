@@ -21,7 +21,12 @@ class ReportsRepository extends ServiceEntityRepository
 
     public function getReportsIsWaiting()
     {
-        
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) AS number FROM Reports WHERE Status = \'En attente\' ';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
     }
 
     // /**
