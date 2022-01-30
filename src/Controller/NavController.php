@@ -4,13 +4,19 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\User;
+
 
 class NavController extends AbstractController
 {
     #[Route('/', name: 'dashboard')]
-    public function accueil()
+    public function accueil(ManagerRegistry $doctrine)
     {
-        return $this->render('Dashboard.html.twig');
+        $email = '1';
+        return $this->render('Dashboard.html.twig',[
+            "user_count" => $email,
+        ]);
     }
     #[Route('/userList', name: 'userList')]
     public function userList()

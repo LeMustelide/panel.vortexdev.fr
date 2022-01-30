@@ -1,17 +1,30 @@
 doctrine:
     dbal:
-        url: '%env(resolve:DATABASE_URL)%'
-
-        # IMPORTANT: You MUST configure your server version,
-        # either here or in the DATABASE_URL env var (see .env file)
-        #server_version: '13'
+      default_connection: panel
+      connections:
+        panel:
+          url: '%env(resolve:DATABASE_URL)%'
+        aqg:
+          url: '%env(resolve:DATABASE_CUSTOMER_URL)%'
     orm:
+        default_entity_manager: panel
         auto_generate_proxy_classes: true
-        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
-        auto_mapping: true
-        mappings:
-            App:
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Entity'
-                prefix: 'App\Entity'
-                alias: App
+        entity_managers:
+          panel:
+            connection: panel
+            auto_mapping: true
+            naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+            mappings:
+                App:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Entity'
+                    prefix: 'App\Entity'
+                    alias: App
+          aqg:
+            connection: aqg
+            mappings:
+                aqg:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Entity/aqg'
+                    prefix: 'App\Entity\aqg'
+                    alias: aqg
