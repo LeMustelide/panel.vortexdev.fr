@@ -19,6 +19,26 @@ class AccountRepository extends ServiceEntityRepository
         parent::__construct($registry, Account::class);
     }
 
+    public function getUserCount()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) AS number FROM Account';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
+    }
+
+    public function getPlayCount()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT SUM(QuizPlayed) AS number FROM Account';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
+    }
+
     // /**
     //  * @return Account[] Returns an array of Account objects
     //  */

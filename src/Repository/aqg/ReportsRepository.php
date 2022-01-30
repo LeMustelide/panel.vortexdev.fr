@@ -19,6 +19,11 @@ class ReportsRepository extends ServiceEntityRepository
         parent::__construct($registry, Reports::class);
     }
 
+    public function getReportsIsWaiting()
+    {
+        
+    }
+
     // /**
     //  * @return Reports[] Returns an array of Reports objects
     //  */

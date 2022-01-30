@@ -19,6 +19,16 @@ class QuizinformationsRepository extends ServiceEntityRepository
         parent::__construct($registry, Quizinformations::class);
     }
 
+    public function getQuizCount()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) AS number FROM QuizInformations';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
+    }
+
     // /**
     //  * @return Quizinformations[] Returns an array of Quizinformations objects
     //  */

@@ -8,17 +8,15 @@ doctrine:
           url: '%env(resolve:DATABASE_CUSTOMER_URL)%'
     orm:
         default_entity_manager: panel
-        auto_generate_proxy_classes: true
         entity_managers:
           panel:
             connection: panel
             auto_mapping: true
-            naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
             mappings:
                 App:
                     is_bundle: false
-                    dir: '%kernel.project_dir%/src/Entity'
-                    prefix: 'App\Entity'
+                    dir: '%kernel.project_dir%/src/Entity/panel'
+                    prefix: 'App\Entity\panel'
                     alias: App
           aqg:
             connection: aqg
