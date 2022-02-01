@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Constraints as Assert;
 
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\panel\steamKeys;
+use App\Entity\panel\SteamKeys;
 
 class keysController extends AbstractController
 {
@@ -22,7 +22,7 @@ class keysController extends AbstractController
     public function keys(ManagerRegistry $doctrine, Session $session): Response
     {
         $listeKeys = $doctrine
-                            ->getRepository(steamKeys::class)
+                            ->getRepository(SteamKeys::class)
                             ->findAll();
 
     return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys]);
@@ -34,7 +34,7 @@ class keysController extends AbstractController
     public function supKeys(ManagerRegistry $doctrine,Request $request, Session $session): Response
     {
         $listeKeys = $doctrine
-                            ->getRepository(steamKeys::class)
+                            ->getRepository(SteamKeys::class)
                             ->findAll();
 
             $entityManager = $doctrine->getManager();
@@ -42,7 +42,7 @@ class keysController extends AbstractController
             $keys = $request->$request->get("type");
 
             $listeKeys2 = $doctrine
-                                ->getRepository(steamKeys::class)
+                                ->getRepository(SteamKeys::class)
                                 ->findOneBy($keys);
 
             $entityManager->remove($listeKeys2);
