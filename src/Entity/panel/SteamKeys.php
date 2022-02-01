@@ -5,19 +5,19 @@ namespace App\Entity\panel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Steamkeys
+ * steamKeys
  *
  * @ORM\Table(name="steamKeys", uniqueConstraints={@ORM\UniqueConstraint(name="steamKey", columns={"steamKey"})})
- * @ORM\Entity(repositoryClass=SteamKeysRepository::class)
+ * @ORM\Entity(repositoryClass="App\Repository\panel\steamKeysRepository")
  */
-class Steamkeys
+class steamKeys
 {
     /**
      * @var string|null
      *
      * @ORM\Column(name="steamId", type="string", length=64, nullable=true)
      */
-    private $steamid;
+    private $steamId;
 
     /**
      * @var string
@@ -26,7 +26,7 @@ class Steamkeys
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $steamkey;
+    private $steamKey;
 
     /**
      * @var string|null
@@ -43,9 +43,9 @@ class Steamkeys
     private $tag;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="date", type="date", nullable=false)
+     * @ORM\Column(name="date", type="string", length=24, nullable=false)
      */
     private $date;
 

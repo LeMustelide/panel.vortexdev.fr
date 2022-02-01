@@ -2,6 +2,12 @@
 
 {% block title %} Table - panel{% endblock %}
 
+{% block javascripts %}
+
+<script type="text/javascript" src="{{ asset('js/keys.js') }}"></script>
+
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
         <h3 class="text-dark mb-4">Clés Steam</h3>
@@ -36,26 +42,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>FireFull</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>Dev</td>
-                                <td>18/03/2020</td>
-                                <td><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Supprimer</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button><button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button></td>
+                            <tr id="keystr">
+                            {% for steamKeys in listeKeys %}
+
+                                <td id="keystr" value="{{steamKeys.steamId}}">{{ steamKeys.steamId|e }}</td>
+                                <td>{{ steamKeys.steamKey|e }}</td>
+                                <td>{{ steamKeys.description|e }}</td>
+                                <td>{{ steamKeys.tag|e }}</td>
+                                <td>{{ steamKeys.date|e }}</td>
+
+                            {% endfor %}
+                                <td><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;" onclick="supprimerKey()">Supprimer</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button><button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button></td>
                             </tr>
                             <tr></tr>
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td><strong>Pseudo</strong></td>
-                                <td><strong>Clé Steam</strong></td>
-                                <td><strong>Description</strong></td>
-                                <td><strong>Étiquette</strong></td>
-                                <td><strong>Date d'ajout</strong></td>
-                                <td><strong>Actions</strong></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="row">
