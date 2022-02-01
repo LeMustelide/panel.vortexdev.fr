@@ -5,12 +5,12 @@ namespace App\Entity\panel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * steamKeys
+ * SteamKeys
  *
  * @ORM\Table(name="steamKeys", uniqueConstraints={@ORM\UniqueConstraint(name="steamKey", columns={"steamKey"})})
- * @ORM\Entity(repositoryClass="App\Repository\panel\steamKeysRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\panel\SteamKeysRepository")
  */
-class steamKeys
+class SteamKeys
 {
     /**
      * @var string|null

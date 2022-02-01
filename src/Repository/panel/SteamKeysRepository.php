@@ -2,7 +2,7 @@
 
 namespace App\Repository\panel;
 
-use App\Entity\panel\steamKeys;
+use App\Entity\panel\SteamKeys;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,11 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method steamKeys[]    findAll()
  * @method steamKeys[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class steamKeysRepository extends ServiceEntityRepository
+class SteamKeysRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, steamKeys::class);
+        parent::__construct($registry, SteamKeys::class);
     }
 
     // /**
