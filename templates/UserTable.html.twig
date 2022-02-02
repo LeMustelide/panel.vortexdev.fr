@@ -27,34 +27,33 @@
                     <table class="table my-0" id="dataTable">
                         <thead>
                             <tr>
-                                <th>Pseudo</th>
                                 <th>SteamID</th>
-                                <th>Clés Steam</th>
-                                <th style="width: 250px;">Première connexion</th>
-                                <th style="width: 250px;">Dernière connexion</th>
-                                <th style="width: 250px;">Action</th>
+                                <th>UserName</th>
+                                <th>Bio</th>
+                                <th>QuizPlayed</th>
+                                <th>win</th>
+                                <th>lose</th>
+                                <th>QuizCreated</th>
+                                <th style="width: 350px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Airi Satou</td>
-                                <td>Accountant</td>
-                                <td></td>
-                                <td>2008/11/28 22:50:12<br></td>
-                                <td>2008/11/28 22:50:12</td>
+                            {% for Account in listeAccount %}
+
+                                <td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
+                                <td>{{ Account.username|e }}</td>
+                                <td>{{ Account.bio|e }}</td>
+                                <td>{{ Account.quizplayed|e }}</td>
+                                <td>{{ Account.win|e }}</td>
+                                <td>{{ Account.lose|e }}</td>
+                                <td>{{ Account.quizcreated|e }}</td>
+
                                 <td><button class="btn btn-primary" type="button" style="margin-right: 30px;">Details</button><button class="btn btn-primary" type="button">Modifier</button></td>
                             </tr>
+
+                            {% endfor %}
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <td><strong>Pseudo<br></strong></td>
-                                <td><strong>SteamID<br></strong></td>
-                                <td><strong>Clés Steam<br></strong></td>
-                                <td><strong>Première connexion<br></strong></td>
-                                <td><strong>Dernière connexion<br></strong></td>
-                                <td><strong>Action<br></strong></td>
-                            </tr>
-                        </tfoot>
                     </table>
                 </div>
                 <div class="row">

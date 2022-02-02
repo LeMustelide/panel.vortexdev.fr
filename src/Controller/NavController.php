@@ -26,16 +26,6 @@ class NavController extends AbstractController
             "reports_count" => $reportsCount['number']
         ]);
     }
-    #[Route('/userList', name: 'userList')]
-    public function userList()
-    {
-        return $this->render('UserTable.html.twig');
-    }
-    #[Route('/keysList', name: 'keysList')]
-    public function keysList()
-    {
-        return $this->render('KeysTable.html.twig');
-    }
     #[Route('/quizList', name: 'quizList')]
     public function quizList()
     {
