@@ -39,15 +39,17 @@ class keysController extends AbstractController
 
             $entityManager = $doctrine->getManager();
             
-            $keys = $request->$request->get("type");
+            $keys = $request->request->get("keys");
 
             $listeKeys2 = $doctrine
                                 ->getRepository(SteamKeys::class)
-                                ->findOneBy($keys);
+                                ->find($keys);
+
+                                
 
             $entityManager->remove($listeKeys2);
             $entityManager->flush();
 
-    return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys]);
+    return $this->render('KeysTable.html.twig', ['listeKeys' =>$listeKeys, 'listeKeys2' => $listeKeys2]);
     }
 }
