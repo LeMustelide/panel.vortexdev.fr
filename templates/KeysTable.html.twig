@@ -1,91 +1,131 @@
 {% extends "base.html.twig" %}
 
-{% block title %} Table - panel{% endblock %}
+{% block title %}
+	Table - panel
+{% endblock %}
 
 {% block javascripts %}
 
 
-<script type="text/javascript" src="{{ asset('Js/keys.js') }}"></script>
+	<script type="text/javascript" src="{{ asset('Js/keys.js') }}"></script>
 
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
 
 
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <h3 class="text-dark mb-4">Clés Steam</h3>
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <p class="text-primary m-0 fw-bold">Clés Steam<br></p>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                    <option value="10" selected="">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>&nbsp;</label></div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" type="button" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);">Ajouter une clés</button><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
-                    </div>
-                </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table my-0" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>Id Steam</th>
-                                <th>Clé Steam</th>
-                                <th>Description</th>
-                                <th>Étiquette</th>
-                                <th>Date d'ajout</th>
-                                <th style="width: 350px;">Actions</th>
-                            </tr>
-                        </thead>
-                        
-                        <tbody>
-                            {% set nbu = 0 %}
+	<div class="container-fluid">
+		<h3 class="text-dark mb-4">Clés Steam</h3>
+		<div class="card shadow">
+			<div class="card-header py-3">
+				<p class="text-primary m-0 fw-bold">Clés Steam<br></p>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6 text-nowrap">
+						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+							<label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+									<option value="10" selected="">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
+									<option value="100">100</option>
+								</select>&nbsp;</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="text-md-end dataTables_filter" id="dataTable_filter">
+							<button class="btn btn-primary" type="button" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);" onclick="">Ajouter une clés</button>
+							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+					<table class="table my-0" id="dataTable">
+						<thead>
+							<tr>
+								<th>Id Steam</th>
+								<th>Clé Steam</th>
+								<th>Description</th>
+								<th>Étiquette</th>
+								<th>Date d'ajout</th>
+								<th style="width: 350px;">Actions</th>
+							</tr>
+						</thead>
 
-                            {% for steamKeys in listeKeys %}
-                            {% set nbu = nbu + 1 %}
-                            <tr class="key" id="key{{nbu}}" value="{{steamKeys.steamkey}}">
-                            
+						<tbody>
+							{% set nbu = 0 %}
 
-                                <td>{{ steamKeys.steamId|e }}</td>
-                                <td id="keysteam{{nbu}}" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
-                                <td>{{ steamKeys.description|e }}</td>
-                                <td>{{ steamKeys.tag|e }}</td>
-                                <td>{{ steamKeys.date|e }}</td>
+							{% for steamKeys in listeKeys %}
+								{% set nbu = nbu + 1 %}
+								<tr class="key" id="key{{nbu}}" value="{{steamKeys.steamkey}}">
 
-                            
-                                <td><button id ="Key{{nbu}}" class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;" onclick="supprimerKey(this.id);supprimerKey2(this.id)">Supprimer</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button><button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-    </div>
+
+									<td>{{ steamKeys.steamId|e }}</td>
+									<td id="keysteam{{nbu}}" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
+									<td>{{ steamKeys.description|e }}</td>
+									<td>{{ steamKeys.tag|e }}</td>
+									<td>{{ steamKeys.date|e }}</td>
+
+
+									<td>
+										<button id="Key{{nbu}}" class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;" onclick="openForm(this.id)">Supprimer</button>
+										<button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button>
+										<button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-6 align-self-center">
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
+					</div>
+					<div class="col-md-6">
+						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+							<ul class="pagination">
+								<li class="page-item disabled">
+									<a class="page-link" href="#" aria-label="Previous">
+										<span aria-hidden="true">«</span>
+									</a>
+								</li>
+								<li class="page-item active">
+									<a class="page-link" href="#">1</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#">2</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#">3</a>
+								</li>
+								<li class="page-item">
+									<a class="page-link" href="#" aria-label="Next">
+										<span aria-hidden="true">»</span>
+									</a>
+								</li>
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="deleteForm" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 class="text-primary fw-bold m-0">Confirmer la suppression de {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<label class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement supprimer {object_name} ?<br></label>
+					<div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeForm()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="supprimerKey();">Supprimer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
