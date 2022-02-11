@@ -3,6 +3,7 @@
 namespace App\Entity\panel;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * SteamKeys
@@ -23,10 +24,10 @@ class SteamKeys
      * @var string
      *
      * @ORM\Column(name="steamKey", type="string", length=64, nullable=false)
+     * 
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $steamKey;
+    private $steamKey; 
 
     /**
      * @var string|null
@@ -43,9 +44,9 @@ class SteamKeys
     private $tag;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="date", type="string", length=24, nullable=false)
+     * @ORM\Column(name="date", type="datetime", nullable=false)
      */
     private $date;
 
@@ -66,7 +67,7 @@ class SteamKeys
         return $this->steamKey;
     }
 
-    public function setSteamKey(string $steamKey): self
+    public function setSteamKey(?string $steamKey): self
     {
         $this->steamKey = $steamKey;
 
@@ -97,12 +98,12 @@ class SteamKeys
         return $this;
     }
 
-    public function getdate(): ?string
+    public function getdate(): ?\DateTime
     {
         return $this->date;
     }
 
-    public function setdate(?string $date): self
+    public function setdate(?\DateTime $date): self
     {
         $this->date = $date;
 

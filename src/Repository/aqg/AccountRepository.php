@@ -29,6 +29,15 @@ class AccountRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
+    public function getAllUserName() {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT UserName, SteamID FROM Account';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
     public function getPlayCount()
     {
         $conn = $this->getEntityManager()->getConnection();

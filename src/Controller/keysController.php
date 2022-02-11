@@ -13,6 +13,7 @@ use Symfony\Component\Constraints as Assert;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\panel\SteamKeys;
+use App\Entity\aqg\Account;
 
 class keysController extends AbstractController
 {
@@ -21,35 +22,76 @@ class keysController extends AbstractController
      */
     public function keys(ManagerRegistry $doctrine, Session $session): Response
     {
-        $listeKeys = $doctrine
-                            ->getRepository(SteamKeys::class)
-                            ->findAll();
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
 
-    return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys]);
+        $listeKeys = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->findAll();
+
+        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
 
     /**
-     * @Route("/keys/supKeys", name="supKeys")
+     * @Route("/keys/delKey", name="delKey")
      */
-    public function supKeys(ManagerRegistry $doctrine,Request $request, Session $session): Response
+    public function delKey(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
+
         $listeKeys = $doctrine
-                            ->getRepository(SteamKeys::class)
-                            ->findAll();
+            ->getRepository(SteamKeys::class)
+            ->findAll();
 
-            $entityManager = $doctrine->getManager();
-            
-            $keys = $request->request->get("keys");
+        $entityManager = $doctrine->getManager();
 
-            $listeKeys2 = $doctrine
-                                ->getRepository(SteamKeys::class)
-                                ->find($keys);
+        $keys = $request->request->get("key");
 
-                                
+        $listeKeys2 = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->find($keys);
 
-            $entityManager->remove($listeKeys2);
-            $entityManager->flush();
 
-    return $this->render('KeysTable.html.twig', ['listeKeys' =>$listeKeys, 'listeKeys2' => $listeKeys2]);
+
+        $entityManager->remove($listeKeys2);
+        $entityManager->flush();
+
+        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
+    }
+
+    /**
+     * @Route("/keys/addKey", name="addKey")
+     */
+    public function addKey(ManagerRegistry $doctrine, Request $request, Session $session): Response
+    {
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
+
+        date_default_timezone_set('Europe/Paris');
+        $listeKeys = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->findAll();
+
+        $entityManager = $doctrine->getManager();
+
+        $steamKey = $request->request->get("steamKey");
+        $description = $request->request->get("description");
+        $tag = $request->request->get("tag");
+        $steamId = $request->request->get("steamId");
+        $date = new \DateTime('now');
+
+        $key = new SteamKeys();
+
+        $key->setSteamKey($steamKey);
+        $key->setdescription($description);
+        $key->settag($tag);
+        $key->setSteamId($steamId);
+        $key->setdate($date);
+
+        $entityManager->persist($key);
+        $entityManager->flush();
+
+        return new Response('Saved new product with id ');
     }
 }
