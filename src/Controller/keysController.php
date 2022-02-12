@@ -7,9 +7,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Constraints as Assert;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\panel\SteamKeys;
@@ -18,60 +15,40 @@ use App\Entity\aqg\Account;
 class keysController extends AbstractController
 {
     /**
-     * @Route("/keys", name="keys")
-     */
-    public function keys(ManagerRegistry $doctrine, Session $session): Response
-    {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
-
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
-
-        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
-    }
-
-    /**
-     * @Route("/keys/delKey", name="delKey")
+     * @Route("/keys/delete", name="delKey")
      */
     public function delKey(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
         $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
-
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
 
         $entityManager = $doctrine->getManager();
 
         $keys = $request->request->get("key");
 
-        $listeKeys2 = $doctrine
+        $listeKeys = $doctrine
             ->getRepository(SteamKeys::class)
             ->find($keys);
 
-
-
-        $entityManager->remove($listeKeys2);
+        $entityManager->remove($listeKeys);
         $entityManager->flush();
+
+        $listeKeys = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->find($keys);
 
         return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
 
     /**
-     * @Route("/keys/addKey", name="addKey")
+     * @Route("/keys/add", name="addKey")
      */
-    public function addKey(ManagerRegistry $doctrine, Request $request, Session $session): Response
+    public function add(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
         $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
 
         date_default_timezone_set('Europe/Paris');
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
 
         $entityManager = $doctrine->getManager();
 
@@ -92,6 +69,10 @@ class keysController extends AbstractController
         $entityManager->persist($key);
         $entityManager->flush();
 
-        return new Response('Saved new product with id ');
+        $listeKeys = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->findAll();
+
+        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
 }

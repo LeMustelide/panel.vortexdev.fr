@@ -16,16 +16,6 @@ use App\Entity\aqg\Account;
 
 class AccountController extends AbstractController
 {
-    /**
-     * @Route("/Account", name="Account")
-     */
-    public function Account(ManagerRegistry $doctrine, Session $session): Response
-    {
-        $listeAccount = $doctrine
-                            ->getRepository(Account::class)
-                            ->findAll();
 
-    return $this->render('UserTable.html.twig', ['listeAccount' => $listeAccount]);
-    }
 
 }

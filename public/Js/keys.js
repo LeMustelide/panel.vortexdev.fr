@@ -1,30 +1,29 @@
 
 function deleteKey(key){
     $.ajax({
-        url: "/keys/delKey",
+        url: "/keys/delete",
         type : "POST",
         cache: false,
         data:{
             'key' : key,
         },
         success: function(data) {
-            // console.log(key);
+            document.location.reload(true);
+            /*var elem = document.getElementById("row"+key);
+            elem.remove();*/
         },
     });
-    elem =document.getElementById("row"+key);
-    elem.remove();
+
 }
 
 function addKey(){
-    steamKey = document.getElementById("steamKey").value;
-    console.log(steamKey);
-    description = document.getElementById("description").value;
-    tag = document.getElementById("tag").value;
-    select = document.getElementById("selectAccount");
-    steamId = select.options[select.selectedIndex].value ;
-    // console.log(keys);
+    var steamKey = document.getElementById("steamKey").value;
+    var description = document.getElementById("description").value;
+    var tag = document.getElementById("tag").value;
+    var select = document.getElementById("selectAccount");
+    var steamId = select.options[select.selectedIndex].value ;
     $.ajax({
-        url: "/keys/addKey",
+        url: "/keys/add",
         type : "POST",
         cache: false,
         data:{
@@ -34,6 +33,9 @@ function addKey(){
             'steamId' : steamId,
         },
         success: function(data) {
+            document.location.reload(true);
+            /*var elem = document.createElement('tr');
+            document.getElementById('tbody').appendChild(elem);*/
         },
     });
 }

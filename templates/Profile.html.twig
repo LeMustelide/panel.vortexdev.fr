@@ -1,0 +1,88 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Profile - Panel{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4">Profil de {{ profile_name }}</h3>
+        <div class="row mb-3">
+            <div class="col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body text-center shadow" style="padding-bottom: 0px;"><i class="fas fa-user" style="font-size: 112px;margin-top: 14px;"></i>
+                        <p style="font-size: 26px;text-align: center;font-weight: bold;margin-top: 23px;margin-bottom: 0px;">{{ profile_name }}</p>
+                        <p style="color: rgb(156,156,156);">{{ steamID }}</p>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3" style="height: 57.1875px;">
+                        <h6 class="text-primary fw-bold m-0" style="padding-top: 4px;">Statistiques</h6>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="small fw-bold">Partie(s) joué(s)<span class="float-end">{{QuizPlayed}}</span></h4>
+                        <h4 class="small fw-bold">Partie(s) gagné(s)<span class="float-end">{{Win}}</span></h4>
+                        <h4 class="small fw-bold">Partie(s) perdu(s)<span class="float-end">{{lose}}</span></h4>
+                        <h4 class="small fw-bold">Quiz(s) créé(s)<span class="float-end">{{QuizCreated}}</span></h4>
+                        <h4 class="small fw-bold">Signalement(s)<span class="float-end">0</span></h4>
+                        <h4 class="small fw-bold">Signalement(s) Reçu(s)<span class="float-end">7</span></h4>
+                        <h4 class="small fw-bold">Bug(s) Rapporté(s)<span class="float-end">1</span></h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col" style="text-align: center;"><button class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</button></div>
+                    <div class="col" style="text-align: center;"><button class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Evertissement</button></div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col offset-xxl-0">
+                        <div class="card shadow mb-3">
+                            <div class="card-header py-3">
+                                <p class="text-primary m-0 fw-bold">Informations</p>
+                            </div>
+                            <div class="card-body" style="height: 187px;">
+                                <div class="row" style="padding-bottom: 21px;">
+                                    <div class="col"><label class="form-label" for="first_name"><strong>Biographie :</strong><br></label>
+                                        <p style="color: rgb(210,210,210);">{{ biography }}</p>
+                                    </div>
+                                </div>
+                                <form>
+                                    <div class="row">
+                                        <div class="col offset-xxl-0">
+                                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Dernière Activité :</strong><br></label>
+                                                <p style="color: rgb(210,210,210);">{{ last_activity|date('d-m-Y H:i') }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3"><label class="form-label" for="last_name"><strong>Création du compte :</strong><br></label>
+                                                <p style="color: rgb(210,210,210);">{{ first_activity|date('d-m-Y H:i') }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3"></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow mb-5">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Popup de démarrage</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form>
+                                    <div class="mb-3"><label class="form-label" for="signature"><strong>Message</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea></div>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1"><strong>Afficher à chaque démarrage</strong><br></label></div>
+                                    </div>
+                                    <div class="mb-3"><button class="btn btn-success btn-sm" type="button">Sauvegarder</button></div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -29,10 +29,21 @@ class AccountRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
-    public function getAllUserName() {
+    public function getAllUserName()
+    {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql = 'SELECT UserName, SteamID FROM Account';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
+    public function getAllUserNameNotUsedInSteamKey()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT UserName, SteamID FROM qxqp2383_AQG.Account aa WHERE NOT EXISTS(SELECT * FROM qxqp2383_panel.steamKeys psk WHERE psk.steamId = aa.SteamID)';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
         return $resultSet->fetchAllAssociative();

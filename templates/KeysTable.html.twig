@@ -16,103 +16,74 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container-fluid">
-		<h3 class="text-dark mb-4">Clés Steam</h3>
-		<div class="card shadow">
-			<div class="card-header py-3">
-				<p class="text-primary m-0 fw-bold">Clés Steam<br></p>
-			</div>
-			<div class="card-body">
-				<div class="row">
-					<div class="col-md-6 text-nowrap">
-						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-							<label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-									<option value="10" selected="">10</option>
-									<option value="25">25</option>
-									<option value="50">50</option>
-									<option value="100">100</option>
-								</select>&nbsp;</label>
-						</div>
-					</div>
-					<div class="col-md-6">
-						<div class="text-md-end dataTables_filter" id="dataTable_filter">
-							<button class="btn btn-primary" type="button" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);" onclick="openFormAdd()">Ajouter une clés</button>
-							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
-						</div>
-					</div>
-				</div>
-				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-					<table class="table my-0" id="dataTable">
-						<thead>
-							<tr>
-								<th>Id Steam</th>
-								<th>Clé Steam</th>
-								<th>Description</th>
-								<th>Étiquette</th>
-								<th>Date d'ajout</th>
-								<th style="width: 350px;">Actions</th>
-							</tr>
-						</thead>
-
-						<tbody>
-
-
-							{% for steamKeys in listeKeys %}
-
+    <div class="container-fluid">
+        <h3 class="text-dark mb-4" style="/*border-color: rgb(251,0,0);*/">Clés Steam</h3>
+        <div class="card shadow">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="text-primary fw-bold m-0">Clés générés</h6>
+                <div class="dropdown no-arrow"><button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button"><i class="far fa-eye-slash text-gray-400"></i></button>
+                    <div class="dropdown-menu shadow dropdown-menu-end animated--fade-in" style="/*background: rgb(64,63,63);*/"></div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 text-nowrap">
+                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Nombre de Clés :&nbsp;<select class="d-inline-block form-select form-select-sm" style="width: 72.328px;">
+                                    <option value="10" selected="">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>&nbsp;&nbsp;</label></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><button  onclick="openFormAdd()" class="btn btn-primary addbuton" type="button"><i class="fas fa-plus"></i></button><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
+                    </div>
+                </div>
+                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                    <table class="table my-0" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 10%;">Pseudo</th>
+                                <th style="width: 20%;">Clé Steam</th>
+                                <th style="width: 35%;">Description</th>
+                                <th style="width: 15%;">Étiquette</th>
+                                <th style="min-width: 10%;">Date d'ajout</th>
+                                <th style="width: 125px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           {% for steamKeys in listeKeys %}
 								<tr class="key" id="row{{steamKeys.steamkey}}">
-
-
 									<td>{{ steamKeys.steamId|e }}</td>
 									<td value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
 									<td>{{ steamKeys.description|e }}</td>
 									<td>{{ steamKeys.tag|e }}</td>
 									<td>{{ steamKeys.date|date('d-m-Y H:i') }}</td>
-
-
-									<td>
-										<button id="{{steamKeys.steamkey}}" class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;" onclick="openFormDelete('{{steamKeys.steamkey}}')">Supprimer</button>
-										<button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button>
-										<button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button>
-									</td>
+<td class="text-end"><button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;"><i class="fas fa-pencil-alt"></i></button><button class="btn btn-primary" type="button" style="background: #b0544b;border-color: #d96257;"><i class="fa fa-trash"></i></button></td>
 								</tr>
 							{% endfor %}
-						</tbody>
-					</table>
-				</div>
-				<div class="row">
-					<div class="col-md-6 align-self-center">
-						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
-					</div>
-					<div class="col-md-6">
-						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-							<ul class="pagination">
-								<li class="page-item disabled">
-									<a class="page-link" href="#" aria-label="Previous">
-										<span aria-hidden="true">«</span>
-									</a>
-								</li>
-								<li class="page-item active">
-									<a class="page-link" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#">3</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#" aria-label="Next">
-										<span aria-hidden="true">»</span>
-									</a>
-								</li>
-							</ul>
-						</nav>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<div id="deleteForm" style="display:none">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
+                    </div>
+                    <div class="col-md-6">
+                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                            <ul class="pagination">
+                                <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="deleteForm" style="display:none">
 			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
 			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
 				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
@@ -136,19 +107,19 @@
 				</div>
 				<div class="card-body">
 					<label class="form-label text-start" style="color: rgb(255,255,255);">Clé Steam</label>
-					<div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="xxxxx-xxxxx-xxxxx" id="steamKey"></div>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="xxxxx-xxxxx-xxxxx" id="steamKey"></div>
 					<br>
 					<label class="form-label text-start" style="color: rgb(255,255,255);">Description</label>
-					<div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Description" id="description"></div>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Description" id="description"></div>
 					<br>
 					<label class="form-label text-start" style="color: rgb(255,255,255);">Étiquette</label>
-					<div class="col-sm-6 mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Étiquette" id="tag"></div>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Étiquette" id="tag"></div>
 					<br>
 					<label class="form-label">Comptes</label>
 					<select id="selectAccount" class="d-inline-block form-select form-select-sm">
-						<option value="null" selected="">Aucun</option>
+						<option value="" selected="">Aucun</option>
 					{% for name in username %}
-							<option value="{{name['SteamID']}}">{{name['UserName']}}</option>
+							<option value="{{name['SteamID']}}">{{name['UserName']}} - {{name['SteamID']}}</option>
 					{% endfor %}
 					</select>
 					<div style="text-align: center;padding-top: 7px;">
@@ -158,8 +129,6 @@
 				</div>
 			</div>
 		</div>
-
-	</div>
-
+    </div>
 
 {% endblock %}

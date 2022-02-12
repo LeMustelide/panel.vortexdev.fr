@@ -1,18 +1,18 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Table - Panel{% endblock %}
+{% block title %}Utilisateurs - Panel{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Liste des utilisateurs</h3>
+        <h3 class="text-light mb-4">Comptes Utilisateurs</h3>
         <div class="card shadow">
             <div class="card-header py-3">
-                <p class="text-primary m-0 fw-bold">Liste des utilisateurs</p>
+                <p class="text-primary m-0 fw-bold">Tous les comptes</p>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
+                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Nombre de comptes :&nbsp;<select class="d-inline-block form-select form-select-sm" style="width: 90px;">
                                     <option value="10" selected="">10</option>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
@@ -20,40 +20,40 @@
                                 </select>&nbsp;</label></div>
                     </div>
                     <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Search"></label></div>
+                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
                     </div>
                 </div>
                 <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
                     <table class="table my-0" id="dataTable">
                         <thead>
                             <tr>
+                                <th>Pseudo</th>
                                 <th>SteamID</th>
-                                <th>UserName</th>
-                                <th>Bio</th>
-                                <th>QuizPlayed</th>
-                                <th>win</th>
-                                <th>lose</th>
-                                <th>QuizCreated</th>
-                                <th style="width: 350px;">Actions</th>
+                                <th>Biographie</th>
+                                <th style="width: 200px;">Première connexion</th>
+                                <th style="width: 200px;">Dernière connexion</th>
+                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
                             {% for Account in listeAccount %}
-
-                                <td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
                                 <td>{{ Account.username|e }}</td>
+                                <td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
                                 <td>{{ Account.bio|e }}</td>
-                                <td>{{ Account.quizplayed|e }}</td>
-                                <td>{{ Account.win|e }}</td>
-                                <td>{{ Account.lose|e }}</td>
-                                <td>{{ Account.quizcreated|e }}</td>
+                                <td>{{ Account.CreationDate|date('d-m-Y H:i') }}</td>
+                                <td>{{ Account.CreationDate|date('d-m-Y H:i') }}</td>
 
-                                <td><button class="btn btn-primary" type="button" style="margin-right: 30px;">Details</button><button class="btn btn-primary" type="button">Modifier</button></td>
+                                <td><button class="btn btn-primary" type="button" onclick="window.location.href='Profile/{{Account.SteamID}}'"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="width: 24px;height: 24px;">
+                                    <path d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z" fill="currentColor"></path>
+                                    <path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor"></path>
+                                    <path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 16C16 15.4477 15.5523 15 15 15H3Z" fill="currentColor"></path>
+                                </svg></button></td>
                             </tr>
-
                             {% endfor %}
                         </tbody>
+                        <tfoot>
+                            <tr></tr>
+                        </tfoot>
                     </table>
                 </div>
                 <div class="row">
