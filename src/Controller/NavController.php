@@ -27,10 +27,14 @@ class NavController extends AbstractController
             "reports_count" => $reportsCount['number']
         ]);
     }
-    #[Route('/quizList', name: 'quizList')]
-    public function quizList()
+    #[Route('/quizList/{size}/{page}', name: 'quizList', defaults: ['size' => 10, 'page' => 1])]
+    public function quizList(int $size, int $page, ManagerRegistry $doctrine)
     {
-        return $this->render('QuizTable.html.twig');
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $quizList = $customerEntityManager->getRepository(Quizinformations::class, 'aqg')->getQuizList($size,$page);
+        $quizCount =$customerEntityManager->getRepository(Quizinformations::class, 'aqg')->getQuizCount();
+
+        return $this->render('QuizTable.html.twig', ['quizList' => $quizList, 'page' => $page, 'size' => $size, 'quizCount' => $quizCount['number']]);
     }
     #[Route('/keys', name: 'keys')]
     public function keys(ManagerRegistry $doctrine)

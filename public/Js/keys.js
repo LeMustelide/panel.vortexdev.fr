@@ -32,11 +32,14 @@ function addKey(){
             'tag' : tag,
             'steamId' : steamId,
         },
-        success: function(data) {
+        success: function() {
             document.location.reload(true);
             /*var elem = document.createElement('tr');
             document.getElementById('tbody').appendChild(elem);*/
         },
+        error: function() {
+            alert('erreur ajax');
+        }
     });
 }
 

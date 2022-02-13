@@ -4,77 +4,100 @@
 
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-dark mb-4">Clés Steam</h3>
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <p class="text-primary m-0 fw-bold">Clés Steam<br></p>
+    <h3 class="text-dark mb-4">Quizs</h3>
+    <div class="card shadow">
+        <div class="card-header py-3">
+            <p class="text-primary m-0 fw-bold">Listes de tous les Quizs</p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 text-nowrap">
+                    <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                        <label class="form-label">Nombre de Quizs :
+                            <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/quizList/'+this.value+'/{{ page }}'">
+                                <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
+                </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable"><label class="form-label">Show&nbsp;<select class="d-inline-block form-select form-select-sm">
-                                    <option value="10" selected="">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>&nbsp;</label></div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><button class="btn btn-primary" type="button" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);">Ajouter une clés</button><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
-                    </div>
+            <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+                <table class="table my-0" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 50px;">Status</th>
+                            <th style="min-width: 170px;">Nom du Quiz</th>
+                            <th style="min-width: 165px;">Description</th>
+                            <th style="min-width: 110px;">Propriétaire(s)</th>
+                            <th style="min-width: 100px;">Modifié le</th>
+                            <th style="min-width: 100px;">Créé le</th>
+                            <th style="min-width: 62px;">Joué</th>
+                            <th style="text-align: center;min-width: 20px;"><i class="fa fa-star-half-full" style="font-size: 18px;"></i></th>
+                            <th style="text-align: center;min-width: 20px;"><i class="fa fa-warning" style="font-size: 18px;"></i></th>
+                            <th style="min-width: 160px;width: 160px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for quiz in quizList %}
+                        <tr>
+                            <td style="text-align: center;">
+                                {% if quiz.publish == 1 %}
+                                    <i class="fas fa-dot-circle" style="font-size: 29px;color: rgb(160,255,102);padding-top: 9px;"></i>
+                                {% else %}
+                                    <i class="far fa-dot-circle" style="font-size: 29px;color: rgb(255,111,102);padding-top: 9px;"></i>
+                                {% endif %}
+                            </td>
+                            <td style="text-decoration: underline;font-weight: bold;">{{ quiz.Name }}</td>
+                            <td>{{ quiz.Description}}</td>
+                            <td style="col"><a style="color: #ffffff;" href='/Profile/{{ quiz.SteamID}}'>{{ quiz.CreatorName }}</td>
+                            <td>{{ quiz.UpdateDate|date('d/m/Y H:i') }}</td>
+                            <td>{{ quiz.CreationDate|date('d/m/Y H:i') }}</td>
+                            <td>X</td>
+                            <td style="text-align: center;">
+                            {% if quiz.publish == 1 %}
+                                {{ quiz.Rating}}
+                            {% else %}
+                                
+                            {% endif %}
+                                </td>
+                            <td style="text-align: center;font-weight: bold;text-decoration:  underline;">0</td>
+                            <td style="text-align: right;">
+                            {% if quiz.publish == 1 %}
+                                <button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);width: 97px;">Dépublier</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
+                            {% else %}
+                                <button class="btn btn-primary" type="button" style="background: #434343;border-color: #828282;width: 97px;">Publier</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-md-6 align-self-center">
+                    <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
                 </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table my-0" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>Pseudo</th>
-                                <th>Clé Steam</th>
-                                <th>Description</th>
-                                <th>Étiquette</th>
-                                <th>Date d'ajout</th>
-                                <th style="width: 350px;">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>FireFull</td>
-                                <td>Accountant</td>
-                                <td>Tokyo</td>
-                                <td>Dev</td>
-                                <td>18/03/2020</td>
-                                <td><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Supprimer</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 25px;">Bannir</button><button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);">Modifier</button></td>
-                            </tr>
-                            <tr></tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td><strong>Pseudo</strong></td>
-                                <td><strong>Clé Steam</strong></td>
-                                <td><strong>Description</strong></td>
-                                <td><strong>Étiquette</strong></td>
-                                <td><strong>Date d'ajout</strong></td>
-                                <td><strong>Actions</strong></td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
+                <div class="col-md-6">
+                    <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                        <ul class="pagination">
+                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                            {% if page > 2 %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
+                            {% if page > 1 %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
+                            <li class="page-item active"><a class="page-link" href="/quizList/{{ size }}/{{ 1 }}">{{ page }}</a></li>
+                            {% if quizCount > ((page + 1) * size) - (size) %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a></li>{% endif %}
+                            {% if quizCount > ((page + 2) * size) - (size) %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a></li>{% endif %}
+                            <li class="page-item {% if quizCount <= ((page + 1) * size) - (size) %} disabled {% endif %}"><a class="page-link" href="/quizList/{{ size }}/{{ page + 1 }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

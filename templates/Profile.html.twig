@@ -29,7 +29,7 @@
                 </div>
                 <div class="row">
                     <div class="col" style="text-align: center;"><button class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</button></div>
-                    <div class="col" style="text-align: center;"><button class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Evertissement</button></div>
+                    <div class="col" style="text-align: center;"><button class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Avertissement</button></div>
                 </div>
             </div>
             <div class="col-lg-8">
@@ -49,12 +49,12 @@
                                     <div class="row">
                                         <div class="col offset-xxl-0">
                                             <div class="mb-3"><label class="form-label" for="first_name"><strong>Dernière Activité :</strong><br></label>
-                                                <p style="color: rgb(210,210,210);">{{ last_activity|date('d-m-Y H:i') }}</p>
+                                                <p style="color: rgb(210,210,210);">{{ last_activity|date('d/m/Y H:i') }}</p>
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="mb-3"><label class="form-label" for="last_name"><strong>Création du compte :</strong><br></label>
-                                                <p style="color: rgb(210,210,210);">{{ first_activity|date('d-m-Y H:i') }}</p>
+                                                <p style="color: rgb(210,210,210);">{{ first_activity|date('d/m/Y H:i') }}</p>
                                             </div>
                                         </div>
                                     </div>
