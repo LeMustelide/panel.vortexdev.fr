@@ -29,6 +29,29 @@ class ReportsRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
+    public function getReportCount()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) AS number FROM Reports';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
+    }
+
+    public function getReportList($size = 10, $page = 1){
+        $conn = $this->getEntityManager()->getConnection();
+        if($page>1){
+            $page = ($page-1) * $size;
+        }else{
+            $page = $page - 1;
+        }
+        $sql = 'SELECT ID, Title, Description, Date, Status, SteamID, QuizID, Type FROM Reports LIMIT '.$page.','.$size;
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Reports[] Returns an array of Reports objects
     //  */

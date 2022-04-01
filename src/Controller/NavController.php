@@ -48,13 +48,22 @@ class NavController extends AbstractController
 
         return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
-    #[Route('/account', name: 'account')]
-    public function account(ManagerRegistry $doctrine)
+    #[Route('/account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]
+    public function account(int $size, int $page, ManagerRegistry $doctrine)
     {
-        $listeAccount = $doctrine
-            ->getRepository(Account::class)
-            ->findAll();
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $listeAccount = $customerEntityManager->getRepository(Account::class, 'aqg')->getAccountList($size,$page);
+        $userCount = $customerEntityManager->getRepository(Account::class, 'aqg')->getUserCount();
 
-        return $this->render('UserTable.html.twig', ['listeAccount' => $listeAccount]);
+        return $this->render('UserTable.html.twig', ['page' => $page, 'size' => $size, 'listeAccount' => $listeAccount, 'userCount' => $userCount['number']]);
+    }
+    #[Route('/reportList/{size}/{page}', name: 'reportList', defaults: ['size' => 10, 'page' => 1])]
+    public function reportList(int $size, int $page, ManagerRegistry $doctrine)
+    {
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $reportList = $customerEntityManager->getRepository(Reports::class, 'aqg')->getReportList($size,$page);
+        $reportCount = $customerEntityManager->getRepository(Reports::class, 'aqg')->getReportCount();
+
+        return $this->render('ReportTable.html.twig', ['page' => $page, 'size' => $size, 'reportList' => $reportList, 'reportCount' => $reportCount['number']]);
     }
 }

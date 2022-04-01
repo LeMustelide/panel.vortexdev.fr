@@ -86,7 +86,7 @@
                 <div class="col-md-6">
                     <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                         <ul class="pagination">
-                            <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+                            <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="/quizList/{{ size }}/{{ page - 1 }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
                             {% if page > 2 %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
                             {% if page > 1 %}<li class="page-item"><a class="page-link" href="/quizList/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
                             <li class="page-item active"><a class="page-link" href="/quizList/{{ size }}/{{ 1 }}">{{ page }}</a></li>

@@ -3,6 +3,7 @@
 namespace App\Entity\aqg;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Account
@@ -97,6 +98,20 @@ class Account
      * @ORM\Column(name="CreationDate", type="datetime", nullable=false)
      */
     private $creationdate;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="ConnectionDate", type="datetime", nullable=false)
+     */
+    private $connectiondate;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="Ban", type="integer", nullable=false)
+     */
+    private $ban;
 
     public function getSteamid(): ?string
     {
@@ -235,5 +250,16 @@ class Account
         return $this;
     }
 
+    public function getConnectiondate(): ?\DateTimeInterface
+    {
+        return $this->connectiondate;
+    }
+
+    public function setConnectiondate(\DateTimeInterface $connectiondate): self
+    {
+        $this->connectiondate = $connectiondate;
+
+        return $this;
+    }
 
 }
