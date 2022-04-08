@@ -17,11 +17,11 @@ function deleteKey(key){
 }
 
 function addKey(){
-    var steamKey = document.getElementById("steamKey").value;
-    var description = document.getElementById("description").value;
-    var tag = document.getElementById("tag").value;
-    var select = document.getElementById("selectAccount");
-    var steamId = select.options[select.selectedIndex].value ;
+    let steamKey = document.getElementById("steamKey").value;
+    let description = document.getElementById("description").value;
+    let tag = document.getElementById("tag").value;
+    let select = document.getElementById("selectAccount");
+    let steamId = select.options[select.selectedIndex].value ;
     $.ajax({
         url: "/keys/add",
         type : "POST",
@@ -46,7 +46,6 @@ function addKey(){
 
 function openFormDelete(id)
 {
-    console.log('deleteKey('+id+')');
     document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment supprimer : "+ id + " ?";
     document.getElementById("popUpHeadText").textContent = "Confirmer la suppression de : "+ id;
     document.getElementById("action").setAttribute('onclick','deleteKey(\''+id+'\'),closeFormDelete()');
@@ -66,4 +65,53 @@ function openFormAdd()
 function closeFormAdd() 
 {
     document.getElementById("addForm").style.display = "none";
+}
+
+function openFormModify(key)
+{
+    document.getElementById("popUpHeadTextModify").textContent = "modify la clé : "+ key;
+
+    let description = document.getElementById("row"+key).querySelector("#description").textContent;
+    let tag = document.getElementById("row"+key).querySelector("#tag").textContent;
+    let steamID = document.getElementById("row"+key).querySelector("#steamID").textContent;
+    
+    document.getElementById("steamKeyModify").value = key;
+    document.getElementById("descriptionModify").value = description;
+    document.getElementById("tagModify").value = tag;
+    document.getElementById("selectAccountModify").value = steamID;
+
+    document.getElementById("modifyForm").style.display = "block";
+}
+
+function closeFormModify()
+{
+    document.getElementById("modifyForm").style.display = "none";
+}
+
+function modifyKey(){
+    let steamKey = document.getElementById("steamKeyModify").value;
+    let description = document.getElementById("descriptionModify").value;
+    let tag = document.getElementById("tagModify").value;
+    let select = document.getElementById("selectAccountModify");
+    let steamId = select.options[select.selectedIndex].value ;
+    $.ajax({
+        url: "/keys/modify",
+        type : "POST",
+        cache: false,
+        data:{
+            'steamKey' : steamKey,
+            'description' : description,
+            'tag' : tag,
+            'steamId' : steamId,
+        },
+        success: function() {
+            document.location.reload(true);
+            /*var elem = document.createElement('tr');
+            document.getElementById('tbody').appendChild(elem);*/
+        },
+        error: function() {
+            alert('erreur ajax');
+        }
+    });
+    $('#dataTable').load(document.URL +  ' #dataTable');
 }

@@ -403,7 +403,8 @@
   }
   
   .table-responsive {
-    overflow: hidden;
+    overflow: auto;
+    max-height: 45vh;
   }
   
   .table tbody tr {

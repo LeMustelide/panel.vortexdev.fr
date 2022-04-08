@@ -20,7 +20,7 @@
 		<h3 class="text-dark mb-4" style="/*border-color: rgb(251,0,0);*/">Clés Steam</h3>
 		<div class="card shadow">
 			<div class="card-header d-flex justify-content-between align-items-center">
-				<h6 class="text-primary fw-bold m-0">Clés générés</h6>
+				<h6 class="text-primary fw-bold m-0">Clés générées</h6>
 				<div class="dropdown no-arrow">
 					<button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
 						<i class="far fa-eye-slash text-gray-400"></i>
@@ -32,12 +32,14 @@
 				<div class="row">
 					<div class="col-md-6 text-nowrap">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-							<label class="form-label">Nombre de Clés :&nbsp;<select class="d-inline-block form-select form-select-sm" style="width: 72.328px;">
-									<option value="10" selected="">10</option>
-									<option value="25">25</option>
-									<option value="50">50</option>
-									<option value="100">100</option>
-								</select>&nbsp;&nbsp;</label>
+							<label class="form-label">Nombre de Clés :
+                            <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/keys/'+this.value+'/{{ page }}'">
+                                <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+                                <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+                                <option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+                                <option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+                            </select>
+                        </label>
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -64,13 +66,13 @@
 						<tbody>
 							{% for steamKeys in listeKeys %}
 								<tr class="key" id="row{{steamKeys.steamkey}}">
-									<td>{{ steamKeys.steamId|e }}</td>
+									<td id="steamID" value="{{ steamKeys.steamId|e }}">{{ steamKeys.steamId|e }}</td>
 									<td value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
-									<td>{{ steamKeys.description|e }}</td>
-									<td>{{ steamKeys.tag|e }}</td>
+									<td id="description">{{ steamKeys.description|e }}</td>
+									<td id="tag">{{ steamKeys.tag|e }}</td>
 									<td>{{ steamKeys.date|date('d/m/Y H:i') }}</td>
 									<td class="text-end">
-										<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;">
+										<button class="btn btn-primary" onclick="openFormModify('{{steamKeys.steamkey}}')" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;">
 											<i class="fas fa-pencil-alt"></i>
 										</button>
 										<button class="btn btn-primary" onclick="openFormDelete('{{steamKeys.steamkey}}')" type="button" style="background: #b0544b;border-color: #d96257;">
@@ -89,25 +91,13 @@
 					<div class="col-md-6">
 						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
 							<ul class="pagination">
-								<li class="page-item disabled">
-									<a class="page-link" href="#" aria-label="Previous">
-										<span aria-hidden="true">«</span>
-									</a>
-								</li>
-								<li class="page-item active">
-									<a class="page-link" href="#">1</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#">2</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#">3</a>
-								</li>
-								<li class="page-item">
-									<a class="page-link" href="#" aria-label="Next">
-										<span aria-hidden="true">»</span>
-									</a>
-								</li>
+								<li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
+								{% if page > 2 %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
+								{% if page > 1 %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
+								<li class="page-item active"><a class="page-link" href="/keys/{{ size }}/{{ 1 }}">{{ page }}</a></li>
+								{% if keysCount > ((page + 1) * size) - (size) %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a></li>{% endif %}
+								{% if keysCount > ((page + 2) * size) - (size) %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a></li>{% endif %}
+								<li class="page-item {% if keysCount <= ((page + 1) * size) - (size) %} disabled {% endif %}"><a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
 							</ul>
 						</nav>
 					</div>
@@ -157,6 +147,39 @@
 					</select>
 					<div style="text-align: center;padding-top: 7px;">
 						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormAdd()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="addKey();">Ajouter</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="modifyForm" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: table;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadTextModify" class="text-primary fw-bold m-0">modify la clé {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<label class="form-label text-start" style="color: rgb(255,255,255);">Clé Steam</label>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="xxxxx-xxxxx-xxxxx" id="steamKeyModify" value="{object_name}"></div>
+					<br>
+					<label class="form-label text-start" style="color: rgb(255,255,255);">Description</label>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Description" id="descriptionModify"></div>
+					<br>
+					<label class="form-label text-start" style="color: rgb(255,255,255);">Étiquette</label>
+					<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Étiquette" id="tagModify"></div>
+					<br>
+					<label class="form-label">Comptes</label>
+					<select id="selectAccountModify" class="d-inline-block form-select form-select-sm">
+						<option value="">Aucun</option>
+						{% for name in allUsername %}
+							<option value="{{name['SteamID']}}">{{name['UserName']}}
+								-
+								{{name['SteamID']}}</option>
+						{% endfor %}
+					</select>
+					<div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormModify()">Annuler</button>
 						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="addKey();">Ajouter</button>
 					</div>
 				</div>

@@ -75,4 +75,40 @@ class keysController extends AbstractController
 
         return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
+
+    /**
+     * @Route("/keys/modify", name="modifyKey")
+     */
+    public function modify(ManagerRegistry $doctrine, Request $request, Session $session): Response
+    {
+        $customerEntityManager = $doctrine->getManager('aqg');
+        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
+
+        date_default_timezone_set('Europe/Paris');
+
+        $entityManager = $doctrine->getManager();
+
+        $steamKey = $request->request->get("steamKey");
+        $description = $request->request->get("description");
+        $tag = $request->request->get("tag");
+        $steamId = $request->request->get("steamId");
+        $date = new \DateTime('now');
+
+        $key = new SteamKeys();
+
+        $key->setSteamKey($steamKey);
+        $key->setdescription($description);
+        $key->settag($tag);
+        $key->setSteamId($steamId);
+        $key->setdate($date);
+
+        $entityManager->persist($key);
+        $entityManager->flush();
+
+        $listeKeys = $doctrine
+            ->getRepository(SteamKeys::class)
+            ->findAll();
+
+        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
+    }
 }

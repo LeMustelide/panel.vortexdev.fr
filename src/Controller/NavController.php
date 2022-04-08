@@ -36,17 +36,33 @@ class NavController extends AbstractController
 
         return $this->render('QuizTable.html.twig', ['quizList' => $quizList, 'page' => $page, 'size' => $size, 'quizCount' => $quizCount['number']]);
     }
-    #[Route('/keys', name: 'keys')]
-    public function keys(ManagerRegistry $doctrine)
+    #[Route('/keys/{size}/{page}', name: 'keys', defaults: ['size' => 10, 'page' => 1])]
+    public function keys(int $size, int $page, ManagerRegistry $doctrine)
     {
         $customerEntityManager = $doctrine->getManager('aqg');
         $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
+        $allUsername = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
 
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
+        if($page>1){
+            $start = ($page-1) * $size;
+        }else{
+            $start = $page - 1;
+        }
 
-        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
+        $listeKeys = $doctrine->getRepository(SteamKeys::class)
+            ->findBy(
+                array(),
+                null,
+                $size,
+                $start
+            );
+        
+        $keys = $doctrine->getRepository(SteamKeys::class)
+        ->findAll();
+
+        $keysCount = count($keys);
+
+        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
     }
     #[Route('/account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]
     public function account(int $size, int $page, ManagerRegistry $doctrine)
