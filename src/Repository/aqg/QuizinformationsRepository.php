@@ -45,7 +45,7 @@ class QuizinformationsRepository extends ServiceEntityRepository
         }else{
             $page = $page - 1;
         }
-        $sql = 'SELECT ID,SteamID,(SELECT UserName FROM Account WHERE Account.SteamID= QuizInformations.SteamID) as CreatorName,Name,Description,Difficulty,Lifes,Skip,SpecificOrder,PublicQuiz.Rating,UpdateDate,CreationDate, EXISTS(SELECT * FROM PublicQuiz WHERE QuizID = ID) AS publish FROM `QuizInformations` LEFT JOIN PublicQuiz ON PublicQuiz.QuizID = QuizInformations.ID LIMIT '.$page.','.$size;
+        $sql = 'SELECT ID,SteamID,(SELECT UserName FROM Account WHERE Account.SteamID= QuizInformations.SteamID) as CreatorName,Name,Description,Difficulty,Lifes,Skip,SpecificOrder,PublicQuiz.Rating,UpdateDate,CreationDate,PublicQuiz.PlayNumber as PlayNumber, EXISTS(SELECT * FROM PublicQuiz WHERE QuizID = ID) AS publish FROM `QuizInformations` LEFT JOIN PublicQuiz ON PublicQuiz.QuizID = QuizInformations.ID LIMIT '.$page.','.$size;
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
         return $resultSet->fetchAllAssociative();

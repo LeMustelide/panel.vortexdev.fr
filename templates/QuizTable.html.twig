@@ -13,7 +13,7 @@
             <div class="row">
                 <div class="col-md-6 text-nowrap">
                     <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                        <label class="form-label">Nombre de Quizs :
+                        <label class="form-label">Nombre de lignes :
                             <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/quizList/'+this.value+'/{{ page }}'">
                                 <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
                                 <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
@@ -53,12 +53,12 @@
                                     <i class="far fa-dot-circle" style="font-size: 29px;color: rgb(255,111,102);padding-top: 9px;"></i>
                                 {% endif %}
                             </td>
-                            <td style="text-decoration: underline;font-weight: bold;">{{ quiz.Name }}</td>
+                            <td style="text-decoration: underline;font-weight: bold;"><a href="/quiz/{{ quiz.ID }}">{{ quiz.Name }}</a></td>
                             <td>{{ quiz.Description}}</td>
                             <td style="col"><a style="color: #ffffff;" href='/Profile/{{ quiz.SteamID}}'>{{ quiz.CreatorName }}</td>
                             <td>{{ quiz.UpdateDate|date('d/m/Y H:i') }}</td>
                             <td>{{ quiz.CreationDate|date('d/m/Y H:i') }}</td>
-                            <td>X</td>
+                            <td>{{ quiz.PlayNumber }}</td>
                             <td style="text-align: center;">
                             {% if quiz.publish == 1 %}
                                 {{ quiz.Rating}}

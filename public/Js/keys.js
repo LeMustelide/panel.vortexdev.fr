@@ -69,16 +69,17 @@ function closeFormAdd()
 
 function openFormModify(key)
 {
-    document.getElementById("popUpHeadTextModify").textContent = "modify la clé : "+ key;
-
     let description = document.getElementById("row"+key).querySelector("#description").textContent;
     let tag = document.getElementById("row"+key).querySelector("#tag").textContent;
     let steamID = document.getElementById("row"+key).querySelector("#steamID").textContent;
+    let steamKey = document.getElementById("row"+key).querySelector("#steamKey").textContent;
     
-    document.getElementById("steamKeyModify").value = key;
+    document.getElementById("popUpHeadTextModify").textContent = "modify la clé : "+ steamKey;
+    document.getElementById("steamKeyModify").value = steamKey;
     document.getElementById("descriptionModify").value = description;
     document.getElementById("tagModify").value = tag;
     document.getElementById("selectAccountModify").value = steamID;
+    document.getElementById("id").value = key;
 
     document.getElementById("modifyForm").style.display = "block";
 }
@@ -89,6 +90,7 @@ function closeFormModify()
 }
 
 function modifyKey(){
+    let id = document.getElementById("id").value;
     let steamKey = document.getElementById("steamKeyModify").value;
     let description = document.getElementById("descriptionModify").value;
     let tag = document.getElementById("tagModify").value;
@@ -99,6 +101,7 @@ function modifyKey(){
         type : "POST",
         cache: false,
         data:{
+            "id" : id,
             'steamKey' : steamKey,
             'description' : description,
             'tag' : tag,
@@ -113,5 +116,5 @@ function modifyKey(){
             alert('erreur ajax');
         }
     });
-    $('#dataTable').load(document.URL +  ' #dataTable');
+    //$('#dataTable').load(document.URL +  ' #dataTable');
 }

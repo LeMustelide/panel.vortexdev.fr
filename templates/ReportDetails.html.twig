@@ -1,0 +1,156 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Details Signalement - Panel
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<h3 class="text-dark mb-4">Signalement n°{{ Report.id }}</h3>
+		<div class="row mb-3">
+			<div class="col-md-6 col-lg-4 col-xl-4">
+				<div class="card shadow mb-3" style="height: 100%;">
+					<div class="card-header py-3">
+						<p class="text-primary m-0 fw-bold">Informations</p>
+					</div>
+					<div class="card-body">
+						<div class="d-flex flex-column justify-content-center align-items-start h-100">
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="fas fa-user"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Utilisateur</h6>
+									<p class="mb-0">
+										<a href="/Profile/{{user.SteamID}}">
+											{{user.UserName}}
+										</a>
+									</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="far fa-flag"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Status</h6>
+									<p class="mb-0">{{ Report.status }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="fa fa-warning"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Type</h6>
+									<p class="mb-0">{{ Report.type.Name }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16" class="bi bi-calendar-date">
+										<path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"></path>
+										<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+									</svg>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Date</h6>
+									<p class="mb-0">{{ Report.Date|date('d/m/Y H:i') }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="fa fa-question"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Quiz</h6>
+									<p class="mb-0">
+										{% if quiz.name is defined %}
+											<a href="#">
+												{{ quiz.name }}
+											</a>
+										{% else %}
+											{{ quiz }}
+										{% endif %}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				<div class="card shadow mb-3" style="height: 100%;">
+					<div class="card-header py-3">
+						<p class="text-primary m-0 fw-bold">Contenu</p>
+					</div>
+					<div class="card-body">
+						<form class="d-flex d-xxl-flex flex-column justify-content-between" style="height: 100%;">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Titre</strong>
+										</label>
+										<p>{{ Report.title }}</p>
+									</div>
+									<div class="mb-3">
+										<label class="form-label" for="first_name">
+											<strong>Descirption</strong><br></label>
+										<p>{{ Report.Description }}</p>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<div class="row justify-content-center">
+											{% if Report.status == 'En attente' %}
+												<div class="col-auto">
+													<a class="btn btn-success btn-icon-split" role="button" href="/report/solve/{{ Report.id }}">
+														<span class="text-white-50 icon">
+															<i class="fas fa-check"></i>
+														</span>
+														<span class="text-white text">Résolu</span>
+													</a>
+												</div>
+											{% else %}
+												<div class="col-auto">
+													<a class="btn btn-warning btn-icon-split" role="button" href="/report/reopen/{{ Report.id }}">
+														<span class="text-white-50 icon">
+															<svg class="bi bi-arrow-return-left" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16">
+																<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
+															</svg>
+														</span>
+														<span class="text-white text">Rouvrir</span>
+													</a>
+												</div>
+											{% endif %}
+											<div class="col-auto">
+												<a class="btn btn-danger btn-icon-split" role="button" href="/report/delete/{{ Report.id }}">
+													<span class="text-white-50 icon">
+														<i class="fas fa-trash"></i>
+													</span>
+													<span class="text-white text">Supprimer</span>
+												</a>
+											</div>
+											{% if Report.status == 'En attente' %}
+												<div class="col-auto order-last">
+													<a class="btn btn-secondary btn-icon-split" role="button" href="/report/close/{{ Report.id }}">
+														<span class="text-white-50 icon">
+															<i class="fas fa-arrow-right"></i>
+														</span>
+														<span class="text-white text">Sans suite</span>
+													</a>
+												</div>
+											{% endif %}
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

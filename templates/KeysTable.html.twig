@@ -1,7 +1,7 @@
 {% extends "base.html.twig" %}
 
 {% block title %}
-	Table - panel
+	Clés - panel
 {% endblock %}
 
 {% block javascripts %}
@@ -30,24 +30,30 @@
 			</div>
 			<div class="card-body">
 				<div class="row">
-					<div class="col-md-6 text-nowrap">
+					<div class="col-md-6 text-nowrap align-self-center">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-							<label class="form-label">Nombre de Clés :
-                            <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/keys/'+this.value+'/{{ page }}'">
-                                <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
-                                <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
-                                <option value="50" {% if size == 50 %} selected {% endif %}>50</option>
-                                <option value="100" {% if size == 100 %} selected {% endif %}>100</option>
-                            </select>
-                        </label>
+							<label class="form-label">Nombre de lignes :
+								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/keys/'+this.value+'/{{ page }}'">
+									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+									<option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+								</select>
+							</label>
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="text-md-end dataTables_filter" id="dataTable_filter">
-							<button onclick="openFormAdd()" class="btn btn-primary addbuton" type="button">
-								<i class="fas fa-plus"></i>
-							</button>
-							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
+						<div id="dataTable_filter" class="text-md-end dataTables_filter">
+							<div class="row row-cols-2 justify-content-end align-items-center">
+								<div class="col-auto">
+									<button onclick="openFormAdd()" class="btn btn-primary addbuton" type="button">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+								</div>
+								<div class="col-auto">
+									<label class="col-form-label"><input class="form-control form-control-sm" type="search" aria-controls="dataTable" placeholder="Rechercher"/></label>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -65,17 +71,17 @@
 						</thead>
 						<tbody>
 							{% for steamKeys in listeKeys %}
-								<tr class="key" id="row{{steamKeys.steamkey}}">
-									<td id="steamID" value="{{ steamKeys.steamId|e }}">{{ steamKeys.steamId|e }}</td>
-									<td value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
+								<tr class="key" id="row{{steamKeys.id}}">
+									<td id="steamID" value="{{steamKeys.steamId|e }}">{{ steamKeys.steamId|e }}</td>
+									<td id="steamKey" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
 									<td id="description">{{ steamKeys.description|e }}</td>
 									<td id="tag">{{ steamKeys.tag|e }}</td>
 									<td>{{ steamKeys.date|date('d/m/Y H:i') }}</td>
 									<td class="text-end">
-										<button class="btn btn-primary" onclick="openFormModify('{{steamKeys.steamkey}}')" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;">
+										<button class="btn btn-primary" onclick="openFormModify('{{steamKeys.id}}')" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;">
 											<i class="fas fa-pencil-alt"></i>
 										</button>
-										<button class="btn btn-primary" onclick="openFormDelete('{{steamKeys.steamkey}}')" type="button" style="background: #b0544b;border-color: #d96257;">
+										<button class="btn btn-primary" onclick="openFormDelete('{{steamKeys.id}}')" type="button" style="background: #b0544b;border-color: #d96257;">
 											<i class="fa fa-trash"></i>
 										</button>
 									</td>
@@ -86,18 +92,44 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6 align-self-center">
-						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur 27</p>
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur {{ keysCount }}</p>
 					</div>
 					<div class="col-md-6">
 						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
 							<ul class="pagination">
-								<li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-								{% if page > 2 %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
-								{% if page > 1 %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
-								<li class="page-item active"><a class="page-link" href="/keys/{{ size }}/{{ 1 }}">{{ page }}</a></li>
-								{% if keysCount > ((page + 1) * size) - (size) %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a></li>{% endif %}
-								{% if keysCount > ((page + 2) * size) - (size) %}<li class="page-item"><a class="page-link" href="/keys/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a></li>{% endif %}
-								<li class="page-item {% if keysCount <= ((page + 1) * size) - (size) %} disabled {% endif %}"><a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
+								<li class="page-item {% if page == 1 %} disabled {% endif %}">
+									<a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}" aria-label="Previous">
+										<span aria-hidden="true">«</span>
+									</a>
+								</li>
+								{% if page > 2 %}
+									<li class="page-item">
+										<a class="page-link" href="/keys/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a>
+									</li>
+								{% endif %}
+								{% if page > 1 %}
+									<li class="page-item">
+										<a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a>
+									</li>
+								{% endif %}
+								<li class="page-item active">
+									<a class="page-link" href="/keys/{{ size }}/{{ 1 }}">{{ page }}</a>
+								</li>
+								{% if keysCount > ((page + 1) * size) - (size) %}
+									<li class="page-item">
+										<a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a>
+									</li>
+								{% endif %}
+								{% if keysCount > ((page + 2) * size) - (size) %}
+									<li class="page-item">
+										<a class="page-link" href="/keys/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a>
+									</li>
+								{% endif %}
+								<li class="page-item {% if keysCount <= ((page + 1) * size) - (size) %} disabled {% endif %}">
+									<a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}" aria-label="Next">
+										<span aria-hidden="true">»</span>
+									</a>
+								</li>
 							</ul>
 						</nav>
 					</div>
@@ -178,9 +210,10 @@
 								{{name['SteamID']}}</option>
 						{% endfor %}
 					</select>
+					<input id="id" style="display:none;">
 					<div style="text-align: center;padding-top: 7px;">
 						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormModify()">Annuler</button>
-						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="addKey();">Ajouter</button>
+						<button class="btn btn-primary addbuton" id="action" type="button" style="margin-right: 0px;text-align: right;" onclick="modifyKey();">Modifier</button>
 					</div>
 				</div>
 			</div>

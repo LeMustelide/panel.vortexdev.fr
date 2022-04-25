@@ -40,9 +40,7 @@ class keysController extends AbstractController
         return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
 
-    /**
-     * @Route("/keys/add", name="addKey")
-     */
+    #[Route('/keys/add', name: 'addKey', priority: 2)]
     public function add(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
         $customerEntityManager = $doctrine->getManager('aqg');
@@ -76,39 +74,27 @@ class keysController extends AbstractController
         return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
     }
 
-    /**
-     * @Route("/keys/modify", name="modifyKey")
-     */
+    #[Route('/keys/modify', name: 'modifyKey', priority: 2)]
     public function modify(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
-
-        date_default_timezone_set('Europe/Paris');
-
         $entityManager = $doctrine->getManager();
 
         $steamKey = $request->request->get("steamKey");
         $description = $request->request->get("description");
         $tag = $request->request->get("tag");
         $steamId = $request->request->get("steamId");
-        $date = new \DateTime('now');
+        $id = $request->request->get("id");
 
-        $key = new SteamKeys();
+        $key = $doctrine->getRepository(SteamKeys::class)->find($id);
 
         $key->setSteamKey($steamKey);
         $key->setdescription($description);
         $key->settag($tag);
         $key->setSteamId($steamId);
-        $key->setdate($date);
 
         $entityManager->persist($key);
         $entityManager->flush();
 
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
-
-        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
+        return $this->redirect('/keys');
     }
 }

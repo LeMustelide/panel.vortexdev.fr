@@ -1,85 +1,129 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Signalements - Panel{% endblock %}
+{% block title %}Signalements - Panel
+{% endblock %}
 
 {% block content %}
-    <div class="container-fluid">
-        <h3 class="text-light mb-4">Signalements</h3>
-        <div class="card shadow">
-            <div class="card-header py-3">
-                <p class="text-primary m-0 fw-bold">Tous les signalements</p>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6 text-nowrap">
-                        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                            <label class="form-label">Nombre de signalements :
-                                <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/account/'+this.value+'/{{ page }}'">
-                                    <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
-                                    <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
-                                    <option value="50" {% if size == 50 %} selected {% endif %}>50</option>
-                                    <option value="100" {% if size == 100 %} selected {% endif %}>100</option>
-                                </select>
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-md-end dataTables_filter" id="dataTable_filter"><label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label></div>
-                    </div>
-                </div>
-                <div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-                    <table class="table my-0" id="dataTable">
-                        <thead>
-                            <tr>
-                                <th>Titre</th>
-                                <th>SteamID</th>
-                                <th style="width: 200px;">Date</th>
-                                <th style="width: 100px;">Cible</th>
-                                <th style="width: 100px;">Type</th>
-                                <th style="width: 100px;">Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for report in reportList %}
-                                <td>{{ report.Title|e }}</td>
-                                <td id="keystr" value="{{report.SteamID}}">{{ report.SteamID|e }}</td>
-                                <td>{{ report.Date|date('d/m/Y H:i') }}</td>
-                                <td>{{ report.QuizID|e }}</td>
-                                <td>{{ report.Type|e }}</td>
-                                <td>{{ report.Status|e }}</td>
+	<div class="container-fluid">
+		<h3 class="text-light mb-4">Signalements</h3>
+		<div class="card shadow">
+			<div class="card-header py-3">
+				<p class="text-primary m-0 fw-bold">Tous les signalements</p>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col text-nowrap">
+						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+							<label class="form-label">Nombre de lignes :
+								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/'+this.value+'/{{ page }}'">
+									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+									<option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+								</select>
+							</label>
+						</div>
+					</div>
+                    <div class="col text-nowrap">
+						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+							<label class="form-label">Status :
+								<select class="d-inline-block form-select form-select-sm" style="width: auto;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/'+this.value+'/{{ page }}'">
+									<option value="10" {% if size == 10 %} selected {% endif %}>En attente</option>
+									<option value="25" {% if size == 25 %} selected {% endif %}>Sans suite</option>
+									<option value="50" {% if size == 50 %} selected {% endif %}>Résolu</option>
+								</select>
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="text-md-end dataTables_filter" id="dataTable_filter">
+							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+					<table class="table my-0" id="dataTable">
+						<thead>
+							<tr>
+								<th>Titre</th>
+								<th>SteamID</th>
+								<th style="width: 200px;">Date</th>
+								<th style="width: 100px;">Cible</th>
+								<th style="width: 100px;">Type</th>
+								<th style="width: 100px;">Status</th>
+                                <th style="width: 100px;">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for report in reportList %}
+								<td>{{ report.Title|e }}</td>
+								<td id="keystr" value="{{report.SteamID}}">{{ report.SteamID|e }}</td>
+								<td>{{ report.Date|date('d/m/Y H:i') }}</td>
+								<td>{{ report.QuizID|e }}</td>
+								<td>{{ report.Type|e }}</td>
+								<td>{{ report.Status|e }}</td>
 
-                                <td><button class="btn btn-primary" type="button" onclick="window.location.href='Profile/'"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" style="width: 24px;height: 24px;">
-                                    <path d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z" fill="currentColor"></path>
-                                    <path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor"></path>
-                                    <path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 16C16 15.4477 15.5523 15 15 15H3Z" fill="currentColor"></path>
-                                </svg></button></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                        <tfoot>
-                            <tr></tr>
-                        </tfoot>
-                    </table>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="/account/{{ size }}/{{ page - 1 }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                {% if page > 2 %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
-                                {% if page > 1 %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
-                                <li class="page-item active"><a class="page-link" href="/account/{{ size }}/{{ 1 }}">{{ page }}</a></li>
-                                {% if reportCount > ((page + 1) * size) - (size) %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a></li>{% endif %}
-                                {% if reportCount > ((page + 2) * size) - (size) %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a></li>{% endif %}
-                                <li class="page-item {% if reportCount <= ((page + 1) * size) - (size) %} disabled {% endif %}"><a class="page-link" href="/account/{{ size }}/{{ page + 1 }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+								<td>
+									<button class="btn btn-primary" type="button" onclick="window.location.href='report/{{report.ID}}'">
+										<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewbox="0 0 24 24" fill="none" style="width: 24px;height: 24px;">
+											<path d="M2 8C2 7.44772 2.44772 7 3 7H21C21.5523 7 22 7.44772 22 8C22 8.55228 21.5523 9 21 9H3C2.44772 9 2 8.55228 2 8Z" fill="currentColor"></path>
+											<path d="M2 12C2 11.4477 2.44772 11 3 11H21C21.5523 11 22 11.4477 22 12C22 12.5523 21.5523 13 21 13H3C2.44772 13 2 12.5523 2 12Z" fill="currentColor"></path>
+											<path d="M3 15C2.44772 15 2 15.4477 2 16C2 16.5523 2.44772 17 3 17H15C15.5523 17 16 16.5523 16 16C16 15.4477 15.5523 15 15 15H3Z" fill="currentColor"></path>
+										</svg>
+									</button>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+					<tfoot>
+						<tr></tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="row">
+				<div class="col-md-6 align-self-center">
+					<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+				</div>
+				<div class="col-md-6">
+					<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+						<ul class="pagination">
+							<li class="page-item {% if page == 1 %} disabled {% endif %}">
+								<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}" aria-label="Previous">
+									<span aria-hidden="true">«</span>
+								</a>
+							</li>
+							{% if page > 2 %}
+								<li class="page-item">
+									<a class="page-link" href="/account/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a>
+								</li>
+							{% endif %}
+							{% if page > 1 %}
+								<li class="page-item">
+									<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a>
+								</li>
+							{% endif %}
+							<li class="page-item active">
+								<a class="page-link" href="/account/{{ size }}/{{ 1 }}">{{ page }}</a>
+							</li>
+							{% if reportCount > ((page + 1) * size) - (size) %}
+								<li class="page-item">
+									<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a>
+								</li>
+							{% endif %}
+							{% if reportCount > ((page + 2) * size) - (size) %}
+								<li class="page-item">
+									<a class="page-link" href="/account/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a>
+								</li>
+							{% endif %}
+							<li class="page-item {% if reportCount <= ((page + 1) * size) - (size) %} disabled {% endif %}">
+								<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}" aria-label="Next">
+									<span aria-hidden="true">»</span>
+								</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

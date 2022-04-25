@@ -3,7 +3,6 @@
 namespace App\Entity\aqg;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Account

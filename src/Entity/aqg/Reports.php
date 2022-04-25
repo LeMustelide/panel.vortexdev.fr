@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Entity\aqg;
+use App\Entity\aqg\Account;
+use App\Entity\aqg\ReportsStatus;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -40,10 +42,20 @@ class Reports
      *
      * @ORM\ManyToOne(targetEntity="ReportsType")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="Type", referencedColumnName="ID")
+     *   @ORM\JoinColumn(name="Type", referencedColumnName="Name")
      * })
      */
     private $type;
+
+    /**
+     * @var \ReportsStatus
+     *
+     * @ORM\ManyToOne(targetEntity="ReportsStatus")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="Status", referencedColumnName="Name")
+     * })
+     */
+    private $status;
 
     /**
      * @var \Quizinformations
@@ -64,6 +76,13 @@ class Reports
      * })
      */
     private $steamid;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="Date", type="datetime", nullable=false)
+     */
+    private $date;
 
     public function getId(): ?int
     {
@@ -118,6 +137,18 @@ class Reports
         return $this;
     }
 
+    public function getStatus(): ?string //?ReportsStatus
+    {
+        return $this->status->getName();
+    }
+
+    public function setStatus(?ReportsStatus $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
     public function getSteamid(): ?Account
     {
         return $this->steamid;
@@ -130,5 +161,8 @@ class Reports
         return $this;
     }
 
-
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
 }

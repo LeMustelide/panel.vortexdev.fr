@@ -25,3 +25,17 @@ doctrine:
                     dir: '%kernel.project_dir%/src/Entity/aqg'
                     prefix: 'App\Entity\aqg'
                     alias: aqg
+doctrine_mongodb:
+    connections:
+      default:
+          server: '%env(resolve:MONGODB_URL)%'
+          options: {} 
+    default_database: AQG
+    document_managers:
+      default:
+          mappings:
+            MyBundle5:
+              type: annotation
+              dir: '%kernel.project_dir%/src/Document'
+              alias: aqgLog
+              prefix: App\Document\

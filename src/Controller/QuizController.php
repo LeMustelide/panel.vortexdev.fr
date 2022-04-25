@@ -4,23 +4,23 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\aqg\Quizinformations;
+use App\Repository\aqg\QuizinformationsRepository;
+use App\Repository\aqg\AccountRepository;
+use App\Repository\aqg\PublicquizRepository;
+use App\Repository\aqg\QuizcontentRepository;
+use App\Repository\aqg\ScoreboardRepository;
+
 
 class QuizController extends AbstractController
 {
-    /**
-     * @Route("/quiz/{quizId}", name="quiz")
-     */
-    public function quiz(string $quizId, ManagerRegistry $doctrine): Response
+    #[Route('/quiz/{quizid}', name: 'quiz')]
+    public function quiz(string $quizid, AccountRepository $Accounts, QuizinformationsRepository $Quiz, PublicquizRepository $PublicQuiz, QuizcontentRepository $QuizContent, ScoreboardRepository $Score)
     {
-        $Quiz = $doctrine
-            ->getRepository(Quizinformations::class)
-            ->find($quizId);
-        $name = $Quiz->getName();
-        return $this->render('Profile.html.twig', [
-            'quiz_name' => $name
-        ]);
+        $quiz = $Quiz->find($quizid);
+        $user = $Accounts->find($quiz->getSteamid());
+        $publicQuiz = $PublicQuiz->find($quizid);
+        $quizContent = $QuizContent->findBy(['quizid' => $quizid]);
+        $scores = $Score->findBy(['quizid' => $quizid]);
+        return $this->render('QuizDetails.html.twig', ['quiz' => $quiz, 'user' => $user, 'publicQuiz' => $publicQuiz, 'quizContent' => $quizContent, 'scores' => $scores]);
     }
 }

@@ -1,0 +1,296 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Details Signalement - Panel
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid" style="overflow: auto; max-height: calc(100vh - 95px);">
+		<h3 class="text-dark mb-4">Quiz n°{{ quiz.ID }}</h3>
+		<div class="row mb-3">
+			<div class="col-md-6 col-lg-4 col-xl-4">
+				<div class="card shadow mb-3" style="height: 100%;">
+					<div class="card-header py-3">
+						<p class="text-primary m-0 fw-bold">Informations</p>
+					</div>
+					<div class="card-body">
+						<div class="d-flex flex-column justify-content-center align-items-start h-100">
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="fas fa-user"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Propriétaire</h6>
+									<p class="mb-0">{{ user.UserName }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16" class="bi bi-calendar-date">
+										<path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"></path>
+										<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+									</svg>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Date de création</h6>
+									<p class="mb-0">{{ quiz.CreationDate|date('d/m/Y H:i') }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16" class="bi bi-calendar-date">
+										<path d="M6.445 11.688V6.354h-.633A12.6 12.6 0 0 0 4.5 7.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675zm1.188-1.305c.047.64.594 1.406 1.703 1.406 1.258 0 2-1.066 2-2.871 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684zm2.953-2.317c0 .696-.559 1.18-1.184 1.18-.601 0-1.144-.383-1.144-1.2 0-.823.582-1.21 1.168-1.21.633 0 1.16.398 1.16 1.23z"></path>
+										<path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"></path>
+									</svg>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Date de modification</h6>
+									<p class="mb-0">{{ quiz.UpdateDate|date('d/m/Y H:i') }}</p>
+								</div>
+							</div>
+							<div class="d-flex align-items-center p-3">
+								<div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon">
+									<i class="fa fa-question"></i>
+								</div>
+								<div class="px-2">
+									<h6 class="fw-bold mb-0">Nombre de signalements</h6>
+									<p class="mb-0">0</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-8">
+				<div class="card shadow mb-3" style="height: 100%;">
+					<div class="card-header py-3">
+						<p class="text-primary m-0 fw-bold">Details</p>
+					</div>
+					<div class="card-body">
+						<form class="d-flex d-xxl-flex flex-column justify-content-between" style="height: 100%;">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Titre</strong>
+										</label><input class="form-control" type="text" name="Title" placeholder="Titre" style="width: 75%;" required="" minlength="5" value="{{ quiz.Name }}"></div>
+									<div class="mb-3">
+										<label class="form-label" for="first_name">
+											<strong>Description</strong><br></label>
+									</div>
+									<textarea class="form-control" name="Description" placeholder="Description" rows="5">{{ quiz.Description }}</textarea>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="text-center mb-3">
+										<button class="btn btn-success btn-icon-split" type="submit">
+											<span class="text-white-50 icon">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text-white text">Sauvegarder</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-3">
+				<div class="card shadow mb-4">
+					<div class="card-header py-3">
+						<h6 class="text-primary m-0 fw-bold">Actions</h6>
+					</div>
+					<div class="card-body">
+						<div class="col d-xxl-flex flex-column align-content-around align-items-xxl-start">
+                            {% if publicQuiz is not null %}
+                                <a class="btn btn-warning btn-icon-split" role="button" style="margin-bottom: 14px;">
+                                    <span class="text-white-50 icon" style="width: 38px;padding-right: 0px;padding-left: 0px;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
+                                    <span class="text-white text">Dépublier</span>
+                                </a>
+                            {% else %} 
+                                <a class="btn btn-success btn-icon-split" role="button" style="margin-bottom: 14px;">
+                                    <span class="text-white-50 icon" style="width: 38px;padding-right: 0px;padding-left: 0px;">
+                                        <i class="fas fa-arrow-up"></i>
+                                    </span>
+                                    <span class="text-white text">Publier</span>
+                                </a>
+                                
+                            {% endif %}
+
+							<a class="btn btn-danger btn-icon-split" role="button">
+								<span class="text-white-50 icon">
+									<i class="fas fa-trash"></i>
+								</span>
+								<span class="text-white text">Supprimer le Quiz</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-9">
+				<div class="card shadow mb-4">
+					<div class="card-header d-flex justify-content-between align-items-center">
+						<h6 class="text-primary fw-bold m-0">Statistiques</h6>
+						<div class="dropdown no-arrow">
+							<button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
+								<i class="fas fa-ellipsis-v text-gray-400"></i>
+							</button>
+							<div class="dropdown-menu dropdown-menu-end shadow animated--fade-in">
+								<h6 class="dropdown-header text-center">
+									<strong>Statistique</strong>
+								</h6>
+								<a class="dropdown-item" href="#">&nbsp;Action</a>
+								<a class="dropdown-item" href="#">&nbsp;Another action</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="#">&nbsp;Something else here</a>
+							</div>
+						</div>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col">
+								<div class="card shadow border-start-primary py-2">
+									<div class="card-body">
+										<div class="row align-items-center no-gutters">
+											<div class="col me-2">
+												<div class="text-uppercase text-primary fw-bold text-xs mb-1">
+													<span>Nombre de parties jouées</span>
+												</div>
+												<div class="text-dark fw-bold h5 mb-0">
+													<span>{% if publicQuiz is not null %}{{ publicQuiz.PlayNumber }}{% else %} _ {% endif %}</span>
+												</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-calendar fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card shadow border-start-warning py-2">
+									<div class="card-body">
+										<div class="row align-items-center no-gutters">
+											<div class="col me-2">
+												<div class="text-uppercase text-warning fw-bold text-xs mb-1">
+													<span>nombre de note</span>
+												</div>
+												<div class="text-dark fw-bold h5 mb-0">
+													<span>{% if publicQuiz is not null %}{{ publicQuiz.RatingNumber }}{% else %} _ {% endif %}</span>
+												</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-comments fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="card shadow border-start-success py-2">
+									<div class="card-body">
+										<div class="row align-items-center no-gutters">
+											<div class="col me-2">
+												<div class="text-uppercase text-success fw-bold text-xs mb-1">
+													<span>note</span>
+												</div>
+												<div class="text-dark fw-bold h5 mb-0">
+													<span>{% if publicQuiz is not null %}{{ publicQuiz.Rating }}{% else %} _ {% endif %}</span>
+												</div>
+											</div>
+											<div class="col-auto">
+												<i class="fas fa-star fa-2x text-gray-300"></i>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="card shadow mb-4">
+					<div class="card-header py-3">
+						<h6 class="text-primary m-0 fw-bold">Questions</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table table-hover">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Question</th>
+										<th>Type</th>
+										<th class="text-center" style="width: 100px;">Actions</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for Question in quizContent %}
+                                        <tr>
+                                            <td>{{ Question.ID }}</td>
+                                            <td>{{ Question.Question }}</td>
+                                            <td>{{ Question.Type.Name }}</td>
+                                            <td>
+                                                <div class="row g-0 row-cols-2">
+                                                    <div class="col">
+                                                        <a class="btn btn-warning btn-circle ms-1" role="button">
+                                                            <i class="fa fa-pencil text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col">
+                                                        <a class="btn btn-danger btn-circle ms-1" role="button">
+                                                            <i class="fas fa-trash text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col">
+				<div class="card shadow mb-4">
+					<div class="card-header py-3">
+						<h6 class="text-primary m-0 fw-bold">Scores</h6>
+					</div>
+					<div class="card-body">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th>Joueur</th>
+										<th>Score</th>
+										<th>Date</th>
+									</tr>
+								</thead>
+								<tbody>
+                                    {% for score in scores %}
+                                        <tr>
+                                            <td>{{ score.SteamID.UserName}}</td>
+                                            <td>{{ score.Score}}</td>
+                                            <td>{{ score.Date|date('d/m/Y H:i')}}</td>
+                                        </tr>
+                                    {% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

@@ -14,6 +14,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 class SteamKeys
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
      * @var string|null
      *
      * @ORM\Column(name="steamId", type="string", length=64, nullable=true)
@@ -24,8 +33,6 @@ class SteamKeys
      * @var string
      *
      * @ORM\Column(name="steamKey", type="string", length=64, nullable=false)
-     * 
-     * @ORM\Id
      */
     private $steamKey; 
 
@@ -49,6 +56,11 @@ class SteamKeys
      * @ORM\Column(name="date", type="datetime", nullable=false)
      */
     private $date;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getSteamId(): ?string
     {
