@@ -12,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Quizcontent[]    findAll()
  * @method Quizcontent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
+
 class QuizcontentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

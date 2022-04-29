@@ -1,0 +1,346 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Question - panel
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<h3 class="text-dark mb-4">Question n°{{ id }}</h3>
+		<form action="{{ path('questionModify', {id: id} ) }}" method="post" class="d-flex d-xxl-flex flex-column justify-content-between" style="height: 100%;">
+			<div class="row mb-3">
+				<div class="col-lg-12">
+					<div class="card shadow mb-3" style="height: 100%;">
+						<div class="card-header py-3">
+							<p class="text-primary m-0 fw-bold">Options</p>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Type de question :</strong>
+										</label>
+										<select name="type" id="questionType" class="form-select">
+											<option value="3" {% if quizContent.type.id == 3 %} selected="" {% endif %}>QCM</option>
+											<option value="2" {% if quizContent.type.id == 2 %} selected="" {% endif %}>Vrai ou Faux</option>
+											<option value="1" {% if quizContent.type.id == 1 %} selected="" {% endif %}>Texte</option>
+										</select>
+									</div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponses requises :</strong>
+											<br>
+										</label>
+										<input class="form-control" type="number" name="require" value="{{ quizContent.requiredcorrectanswer }}" min="1" max="3" step="1"></div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Temps :</strong><br></label>
+										<div class="form-check form-switch form-check-inline">
+											<input class="form-check-input" type="checkbox" id="formCheck-5" name="enableTimer" {% if quizContent.timer > 0 %} checked="" {% endif %}>
+											<label class="form-check-label" for="formCheck-5"></label>
+										</div><input id="timerInput" class="form-control" type="number" name="time" min="5" max="360" step="1" value="{% if quizContent.timer > 0 %}{{ quizContent.timer }}{% else %}30" disabled="" {% endif %}>
+									</div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Difficulté :</strong>
+										</label>
+										<select name="difficulty" class="form-select">
+											<option value="1" {% if quizContent.difficulty == 1 %} selected="" {% endif %}>Facile</option>
+											<option value="2" {% if quizContent.difficulty == 2 %} selected="" {% endif %}>Normale</option>
+											<option value="3" {% if quizContent.difficulty == 3 %} selected="" {% endif %}>Difficile</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-3" id="QCM" {% if quizContent.type.id != 3 %} hidden {% endif %}>
+				<div class="col-lg-12">
+					<div class="card shadow mb-3" style="height: 100%;">
+						<div class="card-header py-3">
+							<p class="text-primary m-0 fw-bold">QCM</p>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Question :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Question" name="questionQCM" id="questionQCM">{{ quizContent.Question }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 1 :</strong>
+											<br>
+										</label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 1" name="rep1QCM" id="rep1QCM">{{ quizContent.answer1 }}</textarea>
+										<div class="form-check d-xxl-flex justify-content-xxl-center">
+											<input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-right: 8px;" checked="" disabled="">
+											<label class="form-check-label" for="formCheck-1">Correct</label>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 2 :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 2" name="rep2QCM" id="rep2QCM">{{ quizContent.answer2 }}</textarea>
+										<div class="form-check d-xxl-flex justify-content-xxl-center">
+											<input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-right: 8px;" name="Correct2" {% if quizContent.numbercorrectanswer > 1 %} checked="" {% endif %}>
+											<label class="form-check-label" for="formCheck-2">Correct</label>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 3 :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 3" name="rep3QCM" id="rep3QCM">{{ quizContent.answer3 }}</textarea>
+										<div class="form-check d-xxl-flex justify-content-xxl-center">
+											<input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-right: 8px;" name="Correct3" {% if quizContent.numbercorrectanswer > 2 %} checked="" {% elseif quizContent.numbercorrectanswer == 1 %} disabled="" {% endif %}>
+											<label class="form-check-label" for="formCheck-3">Correct</label>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 4 :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 4" name="rep4QCM" id="rep4QCM">{{ quizContent.answer4 }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-auto mx-auto">
+									<div class="text-center mb-3">
+										<button class="btn btn-success btn-icon-split" type="submit">
+											<span class="text-white-50 icon">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text-white text">Sauvegarder</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-3" id="VF" {% if quizContent.type.id != 2 %} hidden {% endif %}>
+				<div class="col-lg-12">
+					<div class="card shadow mb-3" style="height: 100%;">
+						<div class="card-header py-3">
+							<p class="text-primary m-0 fw-bold">Vrai ou Faux</p>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Question :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Question" name="questionVF" id="questionVF">{{ quizContent.Question }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 1 :</strong>
+											<br>
+										</label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 1" name="rep1VF" id="rep1VF">{{ quizContent.answer1 }}</textarea>
+										<div class="form-check d-xxl-flex justify-content-xxl-center">
+											<input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-right: 8px;" checked="" disabled="">
+											<label class="form-check-label" for="formCheck-1">Correct</label>
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Réponse 2 :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Réponse 2" name="rep2VF" id="rep2VF">{{ quizContent.answer2 }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-auto mx-auto">
+									<div class="text-center mb-3">
+										<button class="btn btn-success btn-icon-split" type="submit">
+											<span class="text-white-50 icon">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text-white text">Sauvegarder</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row mb-3" id="TEXT" {% if quizContent.type.id != 1 %} hidden {% endif %}>
+				<div class="col-lg-12">
+					<div class="card shadow mb-3" style="height: 100%;">
+						<div class="card-header py-3">
+							<p class="text-primary m-0 fw-bold">Texte</p>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<div class="mb-3">
+										<label class="form-label" for="username">
+											<strong>Question :</strong><br></label>
+										<textarea class="form-control" required="" rows="2" maxlength="200" minlength="1" style="resize: none;" placeholder="Question" name="questionTEXT" id="questionTEXT">{{ quizContent.Question }}</textarea>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-4">
+									<div class="mb-3" id="listRep">
+										<label class="form-label" for="username">
+											<strong>Bonne réponses :</strong>
+                                            <br/>
+                                        </label>
+                                        {% if quizContent.answer1 != "" %}
+                                            <div id="reponseText" class="row">
+                                                <div class="col"><input class="form-control" type="text" name="textAnswer[]" style="margin-bottom: 5px;" value="{{ quizContent.answer1|split(';')[0] }}" /></div>
+                                                <div class="col-2" style="width: 50px;padding-right: 0px;padding-left: 0px;"></div>
+                                            </div>
+                                        {% else %}
+                                            <div id="reponseText" class="row">
+                                                <div class="col"><input class="form-control" type="text" name="textAnswer[]" style="margin-bottom: 5px;"/></div>
+                                                <div class="col-2" style="width: 50px;padding-right: 0px;padding-left: 0px;"></div>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if ';' in quizContent.answer1 %}
+                                            {% for answer in quizContent.answer1|split(';')[1:] %}
+                                                <div id="reponseText" class="row">
+                                                    <div class="col">
+                                                        <input class="form-control" name="textAnswer[]" type="text" style="margin-bottom: 5px;" value="{{ answer }}"/>
+                                                    </div>
+                                                    <div class="col-2" style="width: 50px;padding-right: 0px;padding-left: 0px;">
+                                                        <a class="btn btn-danger btn-circle ms-1" id="delRow" role="button">
+                                                            <i class="fas fa-trash text-white"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+   
+                                    </div>
+									<a class="btn btn-success btn-circle ms-1" role="button" id="addRow">
+										<i class="fas fa-plus text-white"></i>
+									</a>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-auto mx-auto">
+									<div class="text-center mb-3">
+										<button class="btn btn-success btn-icon-split" type="submit">
+											<span class="text-white-50 icon">
+												<i class="fas fa-check"></i>
+											</span>
+											<span class="text-white text">Sauvegarder</span>
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+    <script type="text/javascript">
+        document.getElementById("formCheck-2").addEventListener("click", function() {
+            var checkBox = document.getElementById("formCheck-2");
+            var nextcheck = document.getElementById("formCheck-3");
+            if (checkBox.checked == true){
+                nextcheck.disabled = false;
+            } else {
+                nextcheck.disabled = true;
+                nextcheck.checked = false;
+            }
+        }, false);
+        document.getElementById("formCheck-5").addEventListener("click", function() {
+            var checkBox = document.getElementById("formCheck-5");
+            var timer = document.getElementById("timerInput");
+            if (checkBox.checked == true){
+                timer.disabled = false;
+            } else {
+                timer.disabled = true;
+            }
+        }, false);
+        document.getElementById("questionType").addEventListener("change", function() {
+            select = document.getElementById("questionType");
+            switch (select.value) {
+                case '1':
+                    document.getElementById("TEXT").hidden = false ;
+
+                    document.getElementById("QCM").hidden = true ;
+                    document.getElementById("questionQCM").required = false;
+                    document.getElementById("rep1QCM").required = false;
+                    document.getElementById("rep2QCM").required = false;
+                    document.getElementById("rep3QCM").required = false;
+                    document.getElementById("rep4QCM").required = false;
+
+                    document.getElementById("VF").hidden = true ;
+                    document.getElementById("questionVF").required = false;
+                    document.getElementById("rep1VF").required = false;
+                    document.getElementById("rep2VF").required = false;                    
+                    
+                    break;
+                case '2':
+                    document.getElementById("VF").hidden = false ;
+
+                    document.getElementById("TEXT").hidden = true ;
+                    document.getElementById("questionTEXT").required = false;
+
+                    document.getElementById("QCM").hidden = true ;
+                    document.getElementById("rep1QCM").required = false;
+                    document.getElementById("rep2QCM").required = false;
+                    document.getElementById("rep3QCM").required = false;
+                    document.getElementById("rep4QCM").required = false;
+                    break;
+                case '3':
+                    document.getElementById("QCM").hidden = false ;
+
+                    document.getElementById("VF").hidden = true ;
+                    document.getElementById("questionVF").required = false;
+                    document.getElementById("rep1VF").required = false;
+                    document.getElementById("rep2VF").required = false;
+
+                    document.getElementById("TEXT").hidden = true ;
+                    document.getElementsById("questionTEXT").required = false;
+                    break;
+            }
+        });
+        document.getElementById("addRow").addEventListener("click", function() {
+            p = document.createElement('div');
+            p.innerHTML = '<div id="reponseText" class="row"><div class="col"><input class="form-control" name="textAnswer[]" type="text" style="margin-bottom: 5px;" /></div><div class="col-2" style="width: 50px;padding-right: 0px;padding-left: 0px;"><a class="btn btn-danger btn-circle ms-1" id="delRow" role="button"><i class="fas fa-trash text-white"></i></a></div></div>';
+            document.getElementById("listRep").appendChild(p);
+        });
+        document.getElementById("listRep").addEventListener("click", function(e) {
+            if(e.target && e.target.id== 'delRow'){
+                e.target.parentNode.parentNode.remove();
+            }
+        });
+    </script>
+{% endblock %}
