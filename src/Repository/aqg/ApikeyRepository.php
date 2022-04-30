@@ -19,6 +19,29 @@ class ApikeyRepository extends ServiceEntityRepository
         parent::__construct($registry, Apikey::class);
     }
 
+    public function getKeyCount()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = 'SELECT COUNT(*) AS number FROM ApiKey';
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAssociative();
+    }
+
+    public function getKeyList($size = 10, $page = 1){
+        $conn = $this->getEntityManager()->getConnection();
+        if($page>1){
+            $page = ($page-1) * $size;
+        }else{
+            $page = $page - 1;
+        }
+        $sql = 'SELECT * FROM ApiKey LIMIT '.$page.','.$size;
+        $stmt = $conn->prepare($sql);
+        $resultSet = $stmt->executeQuery();
+        return $resultSet->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Apikey[] Returns an array of Apikey objects
     //  */
