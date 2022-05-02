@@ -62,26 +62,17 @@ class Publicquiz
     private $quizid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
-     *
-     * @ORM\ManyToMany(targetEntity="Tags", inversedBy="quizid")
-     * @ORM\JoinTable(name="quiztags",
-     *   joinColumns={
-     *     @ORM\JoinColumn(name="QuizID", referencedColumnName="QuizID")
-     *   },
-     *   inverseJoinColumns={
-     *     @ORM\JoinColumn(name="TagID", referencedColumnName="ID")
-     *   }
-     * )
-     */
-    private $tagid;
-
-    /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($quizRef)
     {
         $this->tagid = new \Doctrine\Common\Collections\ArrayCollection();
+        $id = $quizRef->getId();
+
+        $this->quizid = $quizRef;
+        $this->universalid = $this->generateUniversalID($id);
+        $this->private = 0;
+        $this->explicit = 0;
     }
 
     public function getUniversalid(): ?string
@@ -178,6 +169,23 @@ class Publicquiz
         $this->tagid->removeElement($tagid);
 
         return $this;
+    }
+
+    public function generateUniversalID($QuizID){
+        $QuizID = strrev($QuizID);
+        $UniversalID = '';
+        for($i = 5;$i >= 0; $i--){
+            if(isset($QuizID[$i])){
+                $UniversalID = $UniversalID.$QuizID[$i];
+            }
+            else{
+                $UniversalID = $UniversalID.'0';
+            }
+            if($i == 3){
+                $UniversalID = $UniversalID.'-';
+            }
+        }
+        return $UniversalID;
     }
 
 }

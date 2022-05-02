@@ -1,10 +1,10 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Utilisateurs - Panel{% endblock %}
+{% block title %}Administrateurs - Panel{% endblock %}
 
 {% block content %}
     <div class="container-fluid">
-        <h3 class="text-light mb-4">Comptes Utilisateurs</h3>
+        <h3 class="text-light mb-4">Comptes administrateurs</h3>
         <div class="card shadow">
             <div class="card-header py-3">
                 <p class="text-primary m-0 fw-bold">Tous les comptes</p>
@@ -31,12 +31,9 @@
                     <table class="table my-0" id="dataTable">
                         <thead>
                             <tr>
-                                <th>Pseudo</th>
-                                <th>SteamID</th>
-                                <th>Biographie</th>
-                                <th style="width: 200px;">Première connexion</th>
+                                <th>Mail</th>
+                                <th>Role</th>
                                 <th style="width: 200px;">Dernière connexion</th>
-                                <th style="width: 100px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>

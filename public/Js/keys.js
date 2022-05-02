@@ -7,17 +7,11 @@ function deleteKey(key){
         data:{
             'key' : key,
         },
-        success: function(data) {
-            document.location.reload(true);
-            /*var elem = document.getElementById("row"+key);
-            elem.remove();*/
-        },
     });
-
 }
 
 function addKey(){
-    let steamKey = document.getElementById("steamKey").value;
+    let steamKey = document.getElementById("steamKeyForm").value;
     let description = document.getElementById("description").value;
     let tag = document.getElementById("tag").value;
     let select = document.getElementById("selectAccount");
@@ -31,11 +25,6 @@ function addKey(){
             'description' : description,
             'tag' : tag,
             'steamId' : steamId,
-        },
-        success: function() {
-            document.location.reload(true);
-            /*var elem = document.createElement('tr');
-            document.getElementById('tbody').appendChild(elem);*/
         },
         error: function() {
             alert('erreur ajax');
@@ -109,12 +98,9 @@ function modifyKey(){
         },
         success: function() {
             document.location.reload(true);
-            /*var elem = document.createElement('tr');
-            document.getElementById('tbody').appendChild(elem);*/
         },
         error: function() {
             alert('erreur ajax');
         }
     });
-    //$('#dataTable').load(document.URL +  ' #dataTable');
 }

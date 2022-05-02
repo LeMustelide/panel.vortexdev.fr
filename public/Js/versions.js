@@ -1,7 +1,7 @@
 
-function deleteQuiz(id){
+function deleteVersion(id){
     $.ajax({
-        url: "/quiz/delete",
+        url: "/version/delete",
         type : "POST",
         cache: false,
         data:{
@@ -13,10 +13,9 @@ function deleteQuiz(id){
     });
 }
 
-
-function publishQuiz(id){
+function disableVersion(id){
     $.ajax({
-        url: "/quiz/publish",
+        url: "/version/disable",
         type : "POST",
         cache: false,
         data:{
@@ -28,9 +27,9 @@ function publishQuiz(id){
     });
 }
 
-function unpublishQuiz(id){
+function enableVersion(id){
     $.ajax({
-        url: "/quiz/unpublish",
+        url: "/version/enable",
         type : "POST",
         cache: false,
         data:{
@@ -47,25 +46,25 @@ function openFormDelete(id)
     document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment supprimer : "+ id + " ?";
     document.getElementById("popUpHeadText").textContent = "Confirmer la suppression de : "+ id;
     document.getElementById("action").textContent = "Supprimer";
-    document.getElementById("action").setAttribute('onclick','deleteQuiz(\''+id+'\'),closeForm()');
+    document.getElementById("action").setAttribute('onclick','deleteVersion(\''+id+'\'),closeForm()');
     document.getElementById("Form").style.display = "block";
 }
 
-function openFormPublish(id)
+function openFormDisable(id)
 {
-    document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment publier : "+ id + " ?";
-    document.getElementById("popUpHeadText").textContent = "Confirmer la publication du quiz : "+ id;
-    document.getElementById("action").textContent = "Publier";
-    document.getElementById("action").setAttribute('onclick','publishQuiz(\''+id+'\'),closeForm()');
+    document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment désactiver la version : "+ id + " ?";
+    document.getElementById("popUpHeadText").textContent = "Confirmer la désactivation de la version : "+ id;
+    document.getElementById("action").textContent = "désaciver";
+    document.getElementById("action").setAttribute('onclick','disableVersion(\''+id+'\'),closeForm()');
     document.getElementById("Form").style.display = "block";
 }
 
-function openFormUnpublish(id)
+function openFormEnable(id)
 {
-    document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment dépublier : "+ id + " ?";
-    document.getElementById("popUpHeadText").textContent = "Confirmer la dépublication du quiz : "+ id;
-    document.getElementById("action").textContent = "Dépublier";
-    document.getElementById("action").setAttribute('onclick','unpublishQuiz(\''+id+'\'),closeForm()');
+    document.getElementById("popUpBodyText").textContent = "Voulez-vous vraiment activer la version : "+ id + " ?";
+    document.getElementById("popUpHeadText").textContent = "Confirmer l'activation de la version : "+ id;
+    document.getElementById("action").textContent = "Activer";
+    document.getElementById("action").setAttribute('onclick','enableVersion(\''+id+'\'),closeForm()');
     document.getElementById("Form").style.display = "block";
 }
 

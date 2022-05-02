@@ -3,6 +3,12 @@
 {% block title %}versions - panel
 {% endblock %}
 
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('Js/versions.js') }}"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid">
     <h3 class="text-dark mb-4">Versions d'API</h3>
@@ -45,10 +51,21 @@
                                 <td>{{version.CreationDate}}</td>
                                 <td>{{version.CreationDate}}</td>
                                 <td class="text-center">
+                                    {% if version.disable == 1 %}
+                                    <button class="btn btn-primary" onclick="openFormEnable({{ version.Id }})" type="button" style="background: #414141;border-color: #5e5e5e;">
+                                        <i class="fas fa-check text-white"></i>
+                                    </button>
+                                    {% else %}
+                                    <button class="btn btn-primary" onclick="openFormDisable({{ version.Id }})" type="button" style="background: #414141;border-color: #5e5e5e;">
+                                        <i class="fas fa-times-circle text-white"></i>
+                                    </button>
+                                    {% endif %}
+                                    <!--
                                     <button class="btn btn-primary" onclick="openFormModify('1')" type="button" style="background: #414141;border-color: #5e5e5e;">
                                         <i class="fas fa-pencil-alt"></i>
                                     </button>
-                                    <button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red)">
+                                    -->
+                                    <button class="btn btn-primary" onclick="openFormDelete('1')" type="button" style="background: var(--bs-red);border-color: var(--bs-red)">
                                         <i class="fa fa-trash"></i>
                                     </button>
                                 </td>
@@ -74,6 +91,22 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="Form" style="display:none">
+        <div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Confirmer la suppression de {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<label id="popUpBodyText" class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement supprimer :?<br></label>
+					<div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeForm()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="deleteKey();">Supprimer</button>
+					</div>
+				</div>
+			</div>
+		</div>
     </div>
 </div>
 {% endblock %}

@@ -2,6 +2,12 @@
 
 {% block title %}Quiz - panel{% endblock %}
 
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('Js/quizList.js') }}"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+{% endblock %}
+
 {% block content %}
     <div class="container-fluid">
     <h3 class="text-dark mb-4">Quizs</h3>
@@ -34,7 +40,7 @@
                             <th style="width: 50px;">Status</th>
                             <th style="min-width: 170px;">Nom du Quiz</th>
                             <th style="min-width: 165px;">Description</th>
-                            <th style="min-width: 110px;">Propriétaire(s)</th>
+                            <th style="min-width: 110px;">Propriétaire</th>
                             <th style="min-width: 100px;">Modifié le</th>
                             <th style="min-width: 100px;">Créé le</th>
                             <th style="min-width: 62px;">Joué</th>
@@ -53,7 +59,7 @@
                                     <i class="far fa-dot-circle" style="font-size: 29px;color: rgb(255,111,102);padding-top: 9px;"></i>
                                 {% endif %}
                             </td>
-                            <td style="text-decoration: underline;font-weight: bold;"><a href="/quiz/{{ quiz.ID }}">{{ quiz.Name }}</a></td>
+                            <td style="text-decoration: underline;font-weight: bold;"><a style="color: #ffffff;" href="/quiz/{{ quiz.ID }}">{{ quiz.Name }}</a></td>
                             <td>{{ quiz.Description}}</td>
                             <td style="col"><a style="color: #ffffff;" href='/Profile/{{ quiz.SteamID}}'>{{ quiz.CreatorName }}</td>
                             <td>{{ quiz.UpdateDate|date('d/m/Y H:i') }}</td>
@@ -69,10 +75,9 @@
                             <td style="text-align: center;font-weight: bold;text-decoration:  underline;">0</td>
                             <td style="text-align: right;">
                             {% if quiz.publish == 1 %}
-                                <button class="btn btn-primary" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);width: 97px;">Dépublier</button>
-                                <button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-primary" onclick="openFormUnpublish('{{quiz.ID}}')" type="button" style="background: var(--bs-orange);border-color: var(--bs-orange);width: 97px;">Dépublier</button><button class="btn btn-primary" onclick="openFormDelete('{{quiz.ID}}')" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
                             {% else %}
-                                <button class="btn btn-primary" type="button" style="background: #434343;border-color: #828282;width: 97px;">Publier</button><button class="btn btn-primary" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-primary" onclick="openFormPublish('{{quiz.ID}}')" type="button" style="background: #434343;border-color: #828282;width: 97px;">Publier</button><button class="btn btn-primary" onclick="openFormDelete('{{quiz.ID}}')" type="button" style="background: var(--bs-red);border-color: var(--bs-red);margin-right: 0px;margin-left: 7px;"><i class="fa fa-trash"></i></button>
                             {% endif %}
                             </td>
                         </tr>
@@ -99,6 +104,22 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div id="Form" style="display:none">
+        <div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Confirmer la suppression de {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<label id="popUpBodyText" class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement supprimer :?<br></label>
+					<div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeForm()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="deleteKey();">Supprimer</button>
+					</div>
+				</div>
+			</div>
+		</div>
     </div>
 </div>
 {% endblock %}

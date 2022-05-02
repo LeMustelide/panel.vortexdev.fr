@@ -73,7 +73,6 @@ class QuestionController extends AbstractController
 
         $type = $AnswerType->find($type);
 
-
         $quizContent->setRequiredcorrectanswer($require);
         $quizContent->setDifficulty($difficulty);
         $quizContent->setTimer($timer);

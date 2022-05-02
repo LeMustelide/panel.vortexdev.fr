@@ -12,16 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\panel\SteamKeys;
 use App\Entity\aqg\Account;
 
-class keysController extends AbstractController
+class KeysController extends AbstractController
 {
-    /**
-     * @Route("/keys/delete", name="delKey")
-     */
-    public function delKey(ManagerRegistry $doctrine, Request $request, Session $session): Response
+    #[Route('/keys/delete', name: 'delKey', priority: 2)]
+    public function delKey(ManagerRegistry $doctrine, Request $request): Response
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
-
         $entityManager = $doctrine->getManager();
 
         $keys = $request->request->get("key");
@@ -33,21 +28,13 @@ class keysController extends AbstractController
         $entityManager->remove($listeKeys);
         $entityManager->flush();
 
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->find($keys);
-
-        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
+        return $this->redirect('/keys');
     }
 
     #[Route('/keys/add', name: 'addKey', priority: 2)]
     public function add(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
-
         date_default_timezone_set('Europe/Paris');
-
         $entityManager = $doctrine->getManager();
 
         $steamKey = $request->request->get("steamKey");
@@ -67,11 +54,8 @@ class keysController extends AbstractController
         $entityManager->persist($key);
         $entityManager->flush();
 
-        $listeKeys = $doctrine
-            ->getRepository(SteamKeys::class)
-            ->findAll();
 
-        return $this->render('KeysTable.html.twig', ['listeKeys' => $listeKeys, 'username' => $username]);
+        return $this->redirect('/keys');
     }
 
     #[Route('/keys/modify', name: 'modifyKey', priority: 2)]

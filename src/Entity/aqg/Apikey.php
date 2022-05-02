@@ -49,6 +49,13 @@ class Apikey
      */
     private $lastuse;
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="disable", type="integer", nullable=false)
+     */
+    private $disable;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -98,6 +105,18 @@ class Apikey
     public function setLastuse(\DateTimeInterface $lastuse): self
     {
         $this->lastuse = $lastuse;
+
+        return $this;
+    }
+
+    public function getDisable(): ?int
+    {
+        return $this->disable;
+    }
+
+    public function setDisable(int $disable): self
+    {
+        $this->disable = $disable;
 
         return $this;
     }
