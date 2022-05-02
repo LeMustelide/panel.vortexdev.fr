@@ -72,7 +72,7 @@ class NavController extends AbstractController
     }
 
     #[Route('/keys/{size}/{page}', name: 'keys', defaults: ['size' => 10, 'page' => 1])]
-    public function keys(int $size, int $page, ManagerRegistry $doctrine)
+    public function keys(int $size, int $page, ManagerRegistry $doctrine, AccountRepository $Accounts)
     {
         $customerEntityManager = $doctrine->getManager('aqg');
         $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
@@ -92,12 +92,25 @@ class NavController extends AbstractController
                 $start
             );
         
+        $pseudo = array();
+        
+        foreach($listeKeys as $key){
+            $account = $Accounts->find($key->getSteamId());
+            if($account){
+                $name = $account->getUsername();
+            }
+            else{
+                $name = '';
+            }
+            $pseudo[$key->getId()] = ($name);
+        }
+
         $keys = $doctrine->getRepository(SteamKeys::class)
         ->findAll();
 
         $keysCount = count($keys);
 
-        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
+        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'pseudo' => $pseudo, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
     }
 
     #[Route('/account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]

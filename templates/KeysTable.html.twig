@@ -72,7 +72,7 @@
 						<tbody>
 							{% for steamKeys in listeKeys %}
 								<tr class="key" id="row{{steamKeys.id}}">
-									<td id="steamID" value="{{steamKeys.steamId|e }}">{{ steamKeys.steamId|e }}</td>
+									<td id="steamID" value="{{steamKeys.steamId|e }}">{{ pseudo[steamKeys.id]|e }}</td>
 									<td id="steamKey" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
 									<td id="description">{{ steamKeys.description|e }}</td>
 									<td id="tag">{{ steamKeys.tag|e }}</td>
