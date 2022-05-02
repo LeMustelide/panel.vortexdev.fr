@@ -604,7 +604,7 @@ class ComposerStaticInit098965d24d167bb759e1a4d9b85834db
         'App\\Controller\\ProfileController' => __DIR__ . '/../..' . '/src/Controller/ProfileController.php',
         'App\\Controller\\QuizController' => __DIR__ . '/../..' . '/src/Controller/QuizController.php',
         'App\\Controller\\ReportController' => __DIR__ . '/../..' . '/src/Controller/ReportController.php',
-        'App\\Controller\\keysController' => __DIR__ . '/../..' . '/src/Controller/keysController.php',
+        'App\\Controller\\KeysController' => __DIR__ . '/../..' . '/src/Controller/KeysController.php',
         'App\\Entity\\DoctrineMigrationVersions' => __DIR__ . '/../..' . '/src/Entity/DoctrineMigrationVersions.php',
         'App\\Entity\\aqg\\Account' => __DIR__ . '/../..' . '/src/Entity/aqg/Account.php',
         'App\\Entity\\aqg\\Answercategories' => __DIR__ . '/../..' . '/src/Entity/aqg/Answercategories.php',

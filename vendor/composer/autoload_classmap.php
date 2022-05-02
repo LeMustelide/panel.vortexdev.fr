@@ -12,7 +12,7 @@ return array(
     'App\\Controller\\ProfileController' => $baseDir . '/src/Controller/ProfileController.php',
     'App\\Controller\\QuizController' => $baseDir . '/src/Controller/QuizController.php',
     'App\\Controller\\ReportController' => $baseDir . '/src/Controller/ReportController.php',
-    'App\\Controller\\keysController' => $baseDir . '/src/Controller/keysController.php',
+    'App\\Controller\\KeysController' => $baseDir . '/src/Controller/KeysController.php',
     'App\\Entity\\DoctrineMigrationVersions' => $baseDir . '/src/Entity/DoctrineMigrationVersions.php',
     'App\\Entity\\aqg\\Account' => $baseDir . '/src/Entity/aqg/Account.php',
     'App\\Entity\\aqg\\Answercategories' => $baseDir . '/src/Entity/aqg/Answercategories.php',

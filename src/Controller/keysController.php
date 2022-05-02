@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\panel\SteamKeys;
-use App\Entity\aqg\Account;
 
 class KeysController extends AbstractController
 {
