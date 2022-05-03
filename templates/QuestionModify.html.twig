@@ -33,7 +33,7 @@
 											<strong>Réponses requises :</strong>
 											<br>
 										</label>
-										<input class="form-control" type="number" name="require" value="{{ quizContent.requiredcorrectanswer }}" min="1" max="3" step="1"></div>
+										<input class="form-control" type="number" name="require" id="requireRep" value="{{ quizContent.requiredcorrectanswer }}" min="1" max="3" step="1"></div>
 								</div>
 								<div class="col">
 									<div class="mb-3">
@@ -211,7 +211,7 @@
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-lg-4">
+								<div class="col-lg-8">
 									<div class="mb-3" id="listRep">
 										<label class="form-label" for="username">
 											<strong>Bonne réponses :</strong>
@@ -293,6 +293,7 @@
             switch (select.value) {
                 case '1':
                     document.getElementById("TEXT").hidden = false ;
+					document.getElementById("requireRep").disabled = true ;
 
                     document.getElementById("QCM").hidden = true ;
                     document.getElementById("questionQCM").required = false;
@@ -309,6 +310,7 @@
                     break;
                 case '2':
                     document.getElementById("VF").hidden = false ;
+					document.getElementById("requireRep").disabled = true ;
 
                     document.getElementById("TEXT").hidden = true ;
                     document.getElementById("questionTEXT").required = false;
@@ -321,6 +323,7 @@
                     break;
                 case '3':
                     document.getElementById("QCM").hidden = false ;
+					document.getElementById("requireRep").disabled = false ;
 
                     document.getElementById("VF").hidden = true ;
                     document.getElementById("questionVF").required = false;
