@@ -40,7 +40,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for Account in listeAccount %}
+                            {% for Account in pagination %}
                                 <td>{{ Account.UserName|e }}</td>
                                 <td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
                                 <td>{{ Account.Bio|e }}</td>
@@ -61,22 +61,16 @@
                     </table>
                 </div>
                 <div class="row">
-                    <div class="col-md-6 align-self-center">
-                        <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de {{ page * size - size + 1}} à {{ page * size }} sur {{ userCount }}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                            <ul class="pagination">
-                                <li class="page-item {% if page == 1 %} disabled {% endif %}"><a class="page-link" href="/account/{{ size }}/{{ page - 1 }}" aria-label="Previous"><span aria-hidden="true">«</span></a></li>
-                                {% if page > 2 %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a></li>{% endif %}
-                                {% if page > 1 %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a></li>{% endif %}
-                                <li class="page-item active"><a class="page-link" href="/account/{{ size }}/{{ 1 }}">{{ page }}</a></li>
-                                {% if userCount > ((page + 1) * size) - (size) %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a></li>{% endif %}
-                                {% if userCount > ((page + 2) * size) - (size) %}<li class="page-item"><a class="page-link" href="/account/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a></li>{% endif %}
-                                <li class="page-item {% if userCount <= ((page + 1) * size) - (size) %} disabled {% endif %}"><a class="page-link" href="/account/{{ size }}/{{ page + 1 }}" aria-label="Next"><span aria-hidden="true">»</span></a></li>
-                            </ul>
-                        </nav>
-                    </div>
+                   <div class="col-md-6 align-self-center">
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de {{ page * size - size + 1}} à {% if page * size > pagination.getTotalItemCount %}{{pagination.getTotalItemCount}}{% else %}{{ page * size }}{% endif %} sur {{ pagination.getTotalItemCount }} </p>
+					</div>
+					<div class="col-md-6">
+						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+							<ul class="pagination">
+								{{ knp_pagination_render(pagination) }}
+							</ul>
+						</nav>
+					</div>
                 </div>
             </div>
         </div>

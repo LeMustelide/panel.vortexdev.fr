@@ -8,15 +8,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use App\Entity\aqg\Account;
-use App\Entity\aqg\Quizinformations;
-use App\Entity\aqg\Reports;
 use App\Entity\panel\SteamKeys;
 use App\Document\Log as aqgLog;
 use App\Repository\aqg\QuizinformationsRepository;
 use App\Repository\aqg\AccountRepository;
 use App\Repository\aqg\ReportsRepository;
 use App\Repository\aqg\ApikeyRepository;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Request;
+
 
 class NavController extends AbstractController
 {
@@ -62,41 +62,31 @@ class NavController extends AbstractController
     }
 
     #[Route('/quizList/{size}/{page}', name: 'quizList', defaults: ['size' => 10, 'page' => 1])]
-    public function quizList(int $size, int $page, ManagerRegistry $doctrine)
+    public function quizList(int $size, int $page, QuizinformationsRepository $Quizinformations, PaginatorInterface $paginator, Request $request)
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $quizList = $customerEntityManager->getRepository(Quizinformations::class, 'aqg')->getQuizList($size,$page);
-        $quizCount = $customerEntityManager->getRepository(Quizinformations::class, 'aqg')->getQuizCount();
+        $quizList = $Quizinformations->getQuizList();
+        $pagination = $paginator->paginate(
+            $quizList, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
 
-        return $this->render('QuizTable.html.twig', ['quizList' => $quizList, 'page' => $page, 'size' => $size, 'quizCount' => $quizCount['number']]);
+        return $this->render('QuizTable.html.twig', ['quizList' => $quizList, 'page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 
     #[Route('/keys/{size}/{page}', name: 'keys', defaults: ['size' => 10, 'page' => 1])]
-    public function keys(int $size, int $page, ManagerRegistry $doctrine, AccountRepository $Accounts)
+    public function keys(int $size, int $page, ManagerRegistry $doctrine, AccountRepository $Accounts, PaginatorInterface $paginator, Request $request)
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $username = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserNameNotUsedInSteamKey();
-        $allUsername = $customerEntityManager->getRepository(Account::class, 'aqg')->getAllUserName();
-
-        if($page>1){
-            $start = ($page-1) * $size;
-        }else{
-            $start = $page - 1;
-        }
+        $username = $Accounts->getAllUserNameNotUsedInSteamKey();
+        $allUsername = $Accounts->getAllUserName();
 
         $listeKeys = $doctrine->getRepository(SteamKeys::class)
-            ->findBy(
-                array(),
-                null,
-                $size,
-                $start
-            );
-        
+            ->findAll();
         $pseudo = array();
         
         foreach($listeKeys as $key){
             $account = $Accounts->find($key->getSteamId());
-            if($account){
+            if($account){ 
                 $name = $account->getUsername();
             }
             else{
@@ -105,41 +95,48 @@ class NavController extends AbstractController
             $pseudo[$key->getId()] = ($name);
         }
 
-        $keys = $doctrine->getRepository(SteamKeys::class)
-        ->findAll();
+        $pagination = $paginator->paginate(
+            $listeKeys, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
 
-        $keysCount = count($keys);
-
-        return $this->render('KeysTable.html.twig', ['page' => $page, 'size' => $size,'listeKeys' => $listeKeys, 'pseudo' => $pseudo, 'username' => $username, 'allUsername' => $allUsername ,'keysCount' => $keysCount]);
+        return $this->render('KeysTable.html.twig', ['size' => $size, 'page' => $page,'listeKeys' => $listeKeys, 'pseudo' => $pseudo, 'username' => $username, 'allUsername' => $allUsername, 'pagination' => $pagination]);
     }
 
     #[Route('/account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]
-    public function account(int $size, int $page, ManagerRegistry $doctrine)
+    public function account(int $size, int $page, AccountRepository $Account, PaginatorInterface $paginator, Request $request)
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
-        $listeAccount = $customerEntityManager->getRepository(Account::class, 'aqg')->getAccountList($size,$page);
-        $userCount = $customerEntityManager->getRepository(Account::class, 'aqg')->getUserCount();
+        $listeAccount = $Account->getAccountList();
+        $pagination = $paginator->paginate(
+            $listeAccount, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
 
-        return $this->render('UserTable.html.twig', ['page' => $page, 'size' => $size, 'listeAccount' => $listeAccount, 'userCount' => $userCount['number']]);
+        return $this->render('UserTable.html.twig', ['page' => $page, 'size' => $size, 'listeAccount' => $listeAccount, 'pagination' => $pagination]);
     }
 
     #[Route('/reportList/{size}/{page}/{sort}/{filter}', name: 'reportList', defaults: ['size' => 10, 'page' => 1, 'sort' => 'date', 'filter' => 'all'])]
     public function reportList(int $size, int $page, string $sort, string $filter, ReportsRepository $report, ManagerRegistry $doctrine)
     {
-        $customerEntityManager = $doctrine->getManager('aqg');
         $reportList = $report->getReportList($size, $page, $sort, $filter);
         $reportCount = $report->getReportCount();
 
-        //return new JsonResponse($reportList);
         return $this->render('ReportTable.html.twig', ['page' => $page, 'size' => $size, 'reportList' => $reportList, 'sort' => $sort, 'filter' => $filter, 'reportCount' => $reportCount['number']]);
     }
 
     #[Route('/versionList/{size}/{page}', name: 'versionList', defaults: ['size' => 10, 'page' => 1])]
-    public function versionList(int $size, int $page, ApikeyRepository $apiKey)
+    public function versionList(int $size, int $page, ApikeyRepository $apiKey, PaginatorInterface $paginator, Request $request)
     {
-        $keyCount = $apiKey->getKeyCount();
         $keyList = $apiKey->getKeyList($size, $page);
-        return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'keyList' => $keyList, 'keyCount' => $keyCount['number']]);
+        $pagination = $paginator->paginate(
+            $keyList, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
+
+        return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'keyList' => $keyList, 'pagination' => $pagination]);
     }
 
     #[Route('/log/{page}/{sort}', name: 'log', defaults: ['page' => 1, 'sort' => 'date'])]
