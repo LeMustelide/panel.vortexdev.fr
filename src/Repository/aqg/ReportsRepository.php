@@ -39,15 +39,24 @@ class ReportsRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
-    public function getReportList($size = 10, $page = 1){
+    public function getReportList($size = 10, $page = 1, $sort = 'date' ,$status = 'all'){
         $conn = $this->getEntityManager()->getConnection();
         if($page>1){
             $page = ($page-1) * $size;
         }else{
             $page = $page - 1;
         }
-        $sql = 'SELECT ID, Title, Description, Date, Status, SteamID, QuizID, Type FROM Reports LIMIT '.$page.','.$size;
-        $stmt = $conn->prepare($sql);
+        //$sql = 'SELECT ID, Title, Description, Date, Status, SteamID, QuizID, Type FROM Reports LIMIT '.$page.','.$size;
+        if($status != 'all'){
+            $stmt = $conn->prepare('SELECT ID, Title, Description, Date, Status, SteamID, QuizID, Type FROM Reports WHERE Status = :status ORDER BY :sort LIMIT :page, :size');
+            $stmt->bindParam('status', $status);
+        }
+        else{
+            $stmt = $conn->prepare('SELECT ID, Title, Description, Date, Status, SteamID, QuizID, Type FROM Reports ORDER BY :sort LIMIT :page, :size');
+        }
+        $stmt->bindParam('sort', $sort);
+        $stmt->bindParam('page', $page, \PDO::PARAM_INT);
+        $stmt->bindParam('size', $size, \PDO::PARAM_INT);
         $resultSet = $stmt->executeQuery();
         return $resultSet->fetchAllAssociative();
     }

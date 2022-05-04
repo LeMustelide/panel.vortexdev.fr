@@ -1,6 +1,13 @@
 {% extends "base.html.twig" %}
 
-{% block title %}Details Signalement - Panel
+{% block title %}
+	Details Signalement - Panel
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('Js/quizList.js') }}"></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block content %}
@@ -106,14 +113,14 @@
 					<div class="card-body">
 						<div class="col d-xxl-flex flex-column align-content-around align-items-xxl-start">
                             {% if publicQuiz is not null %}
-                                <a class="btn btn-warning btn-icon-split" role="button" style="margin-bottom: 14px;">
+                                <a class="btn btn-warning btn-icon-split" role="button" style="margin-bottom: 14px;" onclick="openFormUnpublish('{{quiz.ID}}')">
                                     <span class="text-white-50 icon" style="width: 38px;padding-right: 0px;padding-left: 0px;">
                                         <i class="fas fa-exclamation-triangle"></i>
                                     </span>
                                     <span class="text-white text">Dépublier</span>
                                 </a>
                             {% else %} 
-                                <a class="btn btn-success btn-icon-split" role="button" style="margin-bottom: 14px;">
+                                <a class="btn btn-success btn-icon-split" role="button" style="margin-bottom: 14px;" onclick="openFormPublish('{{quiz.ID}}')">
                                     <span class="text-white-50 icon" style="width: 38px;padding-right: 0px;padding-left: 0px;">
                                         <i class="fas fa-arrow-up"></i>
                                     </span>
@@ -122,7 +129,7 @@
                                 
                             {% endif %}
 
-							<a class="btn btn-danger btn-icon-split" role="button">
+							<a class="btn btn-danger btn-icon-split" role="button" onclick="openFormDelete('{{quiz.ID}}'), window.location.replace('/quizList');" >
 								<span class="text-white-50 icon">
 									<i class="fas fa-trash"></i>
 								</span>
@@ -287,6 +294,22 @@
                                     {% endfor %}
 								</tbody>
 							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="Form" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+				<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
+					<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+						<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Confirmer la suppression de {object_name}</h6>
+					</div>
+					<div class="card-body">
+						<label id="popUpBodyText" class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement supprimer :?<br></label>
+						<div style="text-align: center;padding-top: 7px;">
+							<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeForm()">Annuler</button>
+							<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="deleteKey();">Supprimer</button>
 						</div>
 					</div>
 				</div>

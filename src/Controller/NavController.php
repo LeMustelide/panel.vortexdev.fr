@@ -123,14 +123,15 @@ class NavController extends AbstractController
         return $this->render('UserTable.html.twig', ['page' => $page, 'size' => $size, 'listeAccount' => $listeAccount, 'userCount' => $userCount['number']]);
     }
 
-    #[Route('/reportList/{size}/{page}', name: 'reportList', defaults: ['size' => 10, 'page' => 1])]
-    public function reportList(int $size, int $page, ManagerRegistry $doctrine)
+    #[Route('/reportList/{size}/{page}/{sort}/{filter}', name: 'reportList', defaults: ['size' => 10, 'page' => 1, 'sort' => 'date', 'filter' => 'all'])]
+    public function reportList(int $size, int $page, string $sort, string $filter, ReportsRepository $report, ManagerRegistry $doctrine)
     {
         $customerEntityManager = $doctrine->getManager('aqg');
-        $reportList = $customerEntityManager->getRepository(Reports::class, 'aqg')->getReportList($size,$page);
-        $reportCount = $customerEntityManager->getRepository(Reports::class, 'aqg')->getReportCount();
+        $reportList = $report->getReportList($size, $page, $sort, $filter);
+        $reportCount = $report->getReportCount();
 
-        return $this->render('ReportTable.html.twig', ['page' => $page, 'size' => $size, 'reportList' => $reportList, 'reportCount' => $reportCount['number']]);
+        //return new JsonResponse($reportList);
+        return $this->render('ReportTable.html.twig', ['page' => $page, 'size' => $size, 'reportList' => $reportList, 'sort' => $sort, 'filter' => $filter, 'reportCount' => $reportCount['number']]);
     }
 
     #[Route('/versionList/{size}/{page}', name: 'versionList', defaults: ['size' => 10, 'page' => 1])]
@@ -144,7 +145,7 @@ class NavController extends AbstractController
     #[Route('/log/{page}/{sort}', name: 'log', defaults: ['page' => 1, 'sort' => 'date'])]
     public function log(int $page, DocumentManager $dm, string $sort = 'date')
     {
-        $size= 50;
+        $size = 100;
         $logCount = count($dm->getRepository(aqgLog::class)->findAll());
         if($sort=='date'){
             $log = $dm->createQueryBuilder(aqgLog::class)

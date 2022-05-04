@@ -15,7 +15,7 @@
 					<div class="col text-nowrap">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
 							<label class="form-label">Nombre de lignes :
-								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/'+this.value+'/{{ page }}'">
+								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/'+this.value+'/{{ page }}/{{ sort }}/{{ filter }}'">
 									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
 									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
 									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
@@ -27,10 +27,11 @@
                     <div class="col text-nowrap">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
 							<label class="form-label">Status :
-								<select class="d-inline-block form-select form-select-sm" style="width: auto;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/'+this.value+'/{{ page }}'">
-									<option value="10" {% if size == 10 %} selected {% endif %}>En attente</option>
-									<option value="25" {% if size == 25 %} selected {% endif %}>Sans suite</option>
-									<option value="50" {% if size == 50 %} selected {% endif %}>Résolu</option>
+								<select class="d-inline-block form-select form-select-sm" style="width: auto;" onchange="window.location.href = '/'+(window.location.pathname.split('/')[1])+'/{{ size }}/{{ page }}/{{ sort }}/'+this.value">
+									<option value="all" {% if filter == 'all' %} selected {% endif %}>Tout</option>
+									<option value="En attente" {% if filter == 'En attente' %} selected {% endif %}>En attente</option>
+									<option value="Sans suite" {% if filter == 'Sans suite' %} selected {% endif %}>Sans suite</option>
+									<option value="Résolu" {% if filter == 'Résolu' %} selected {% endif %}>Résolu</option>
 								</select>
 							</label>
 						</div>
@@ -51,7 +52,7 @@
 								<th style="width: 100px;">Cible</th>
 								<th style="width: 100px;">Type</th>
 								<th style="width: 100px;">Status</th>
-                                <th style="width: 100px;">Action</th>
+								<th style="width: 100px;">Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -72,55 +73,56 @@
 										</svg>
 									</button>
 								</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
-			</div>
-			<div class="row">
-				<div class="col-md-6 align-self-center">
-					<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
 				</div>
-				<div class="col-md-6">
-					<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-						<ul class="pagination">
-							<li class="page-item {% if page == 1 %} disabled {% endif %}">
-								<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}" aria-label="Previous">
-									<span aria-hidden="true">«</span>
-								</a>
-							</li>
-							{% if page > 2 %}
-								<li class="page-item">
-									<a class="page-link" href="/account/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a>
+				<div class="row">
+					<div class="col-md-6 align-self-center">
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing 1 to 10 of 27</p>
+					</div>
+					<div class="col-md-6">
+						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+							<ul class="pagination">
+								<li class="page-item {% if page == 1 %} disabled {% endif %}">
+									<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}" aria-label="Previous">
+										<span aria-hidden="true">«</span>
+									</a>
 								</li>
-							{% endif %}
-							{% if page > 1 %}
-								<li class="page-item">
-									<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a>
+								{% if page > 2 %}
+									<li class="page-item">
+										<a class="page-link" href="/account/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a>
+									</li>
+								{% endif %}
+								{% if page > 1 %}
+									<li class="page-item">
+										<a class="page-link" href="/account/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a>
+									</li>
+								{% endif %}
+								<li class="page-item active">
+									<a class="page-link" href="/account/{{ size }}/{{ 1 }}">{{ page }}</a>
 								</li>
-							{% endif %}
-							<li class="page-item active">
-								<a class="page-link" href="/account/{{ size }}/{{ 1 }}">{{ page }}</a>
-							</li>
-							{% if reportCount > ((page + 1) * size) - (size) %}
-								<li class="page-item">
-									<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a>
+								{% if reportCount > ((page + 1) * size) - (size) %}
+									<li class="page-item">
+										<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a>
+									</li>
+								{% endif %}
+								{% if reportCount > ((page + 2) * size) - (size) %}
+									<li class="page-item">
+										<a class="page-link" href="/account/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a>
+									</li>
+								{% endif %}
+								<li class="page-item {% if reportCount <= ((page + 1) * size) - (size) %} disabled {% endif %}">
+									<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}" aria-label="Next">
+										<span aria-hidden="true">»</span>
+									</a>
 								</li>
-							{% endif %}
-							{% if reportCount > ((page + 2) * size) - (size) %}
-								<li class="page-item">
-									<a class="page-link" href="/account/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a>
-								</li>
-							{% endif %}
-							<li class="page-item {% if reportCount <= ((page + 1) * size) - (size) %} disabled {% endif %}">
-								<a class="page-link" href="/account/{{ size }}/{{ page + 1 }}" aria-label="Next">
-									<span aria-hidden="true">»</span>
-								</a>
-							</li>
-						</ul>
-					</nav>
+							</ul>
+						</nav>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>{% endblock %}
+{% endblock %}

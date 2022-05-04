@@ -50,7 +50,7 @@
 					</div>
 				</div>
 				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
-					<table class="table my-0" id="dataTable">
+					<table class="table table-sm my-0" id="dataTable">
 						<thead>
 							<tr>
 								<th style="width: 10%;"><a {% if sort != 'action' %} href="/log/{{ page }}/action" {% elseif sort != 'naction' %} href="/log/{{ page }}/naction" {% endif %}>Action</a>{% if sort == 'action' %} <i class="fas fa-arrow-up"></i> {% elseif sort == 'naction' %}<i class="fas fa-arrow-down"></i> {% endif %} </th>
