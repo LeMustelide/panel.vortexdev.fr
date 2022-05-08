@@ -37,7 +37,7 @@
 									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
 									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
 									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
-									<option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+									<option value="100" {% if size  == 100 %} selected {% endif %}>100</option>
 								</select>
 							</label>
 						</div>
@@ -70,7 +70,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							{% for steamKeys in listeKeys %}
+							{% for steamKeys in pagination %}
 								<tr class="key" id="row{{steamKeys.id}}">
 									<td id="steamID" value="{{steamKeys.steamId|e }}">{{ pseudo[steamKeys.id]|e }}</td>
 									<td id="steamKey" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
@@ -92,44 +92,12 @@
 				</div>
 				<div class="row">
 					<div class="col-md-6 align-self-center">
-						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de 1 à 10 sur {{ keysCount }}</p>
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de {{ page * size - size + 1}} à {% if page * size > pagination.getTotalItemCount %}{{pagination.getTotalItemCount}}{% else %}{{ page * size }}{% endif %} sur {{ pagination.getTotalItemCount }} </p>
 					</div>
 					<div class="col-md-6">
 						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
 							<ul class="pagination">
-								<li class="page-item {% if page == 1 %} disabled {% endif %}">
-									<a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}" aria-label="Previous">
-										<span aria-hidden="true">«</span>
-									</a>
-								</li>
-								{% if page > 2 %}
-									<li class="page-item">
-										<a class="page-link" href="/keys/{{ size }}/{{ page - 2 }}">{{ page - 2}}</a>
-									</li>
-								{% endif %}
-								{% if page > 1 %}
-									<li class="page-item">
-										<a class="page-link" href="/keys/{{ size }}/{{ page - 1 }}">{{ page - 1}}</a>
-									</li>
-								{% endif %}
-								<li class="page-item active">
-									<a class="page-link" href="/keys/{{ size }}/{{ 1 }}">{{ page }}</a>
-								</li>
-								{% if keysCount > ((page + 1) * size) - (size) %}
-									<li class="page-item">
-										<a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}">{{ page + 1}}</a>
-									</li>
-								{% endif %}
-								{% if keysCount > ((page + 2) * size) - (size) %}
-									<li class="page-item">
-										<a class="page-link" href="/keys/{{ size }}/{{ page + 2 }}">{{ page + 2}}</a>
-									</li>
-								{% endif %}
-								<li class="page-item {% if keysCount <= ((page + 1) * size) - (size) %} disabled {% endif %}">
-									<a class="page-link" href="/keys/{{ size }}/{{ page + 1 }}" aria-label="Next">
-										<span aria-hidden="true">»</span>
-									</a>
-								</li>
+								{{ knp_pagination_render(pagination) }}
 							</ul>
 						</nav>
 					</div>

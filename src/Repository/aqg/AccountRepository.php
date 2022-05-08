@@ -70,14 +70,9 @@ class AccountRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative()['number'];
     }
 
-    public function getAccountList($size = 10, $page = 1){
+    public function getAccountList(){
         $conn = $this->getEntityManager()->getConnection();
-        if($page>1){
-            $page = ($page-1) * $size;
-        }else{
-            $page = $page - 1;
-        }
-        $sql = 'SELECT SteamID, UserName, Bio, QuizPlayed, Win, Lose, QuizCreated, MultiplayerQuizPlayed, YourQuizPlayed, CreationDate, ConnectionDate, Ban FROM Account LIMIT '.$page.','.$size;
+        $sql = 'SELECT SteamID, UserName, Bio, QuizPlayed, Win, Lose, QuizCreated, MultiplayerQuizPlayed, YourQuizPlayed, CreationDate, ConnectionDate, Ban FROM Account';
         $stmt = $conn->prepare($sql);
         $resultSet = $stmt->executeQuery();
         return $resultSet->fetchAllAssociative();
