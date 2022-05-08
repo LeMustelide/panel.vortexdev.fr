@@ -136,14 +136,25 @@ class NavController extends AbstractController
             $size /*limit per page*/
         );
 
-        return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'keyList' => $keyList, 'pagination' => $pagination]);
+        return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 
-    #[Route('/log/{page}/{sort}', name: 'log', defaults: ['page' => 1, 'sort' => 'date'])]
-    public function log(int $page, DocumentManager $dm, string $sort = 'date')
+    #[Route('/log/{page}/{filter}', name: 'log', defaults: ['page' => 1, 'filter' => 'all'])]
+    public function log(int $page, DocumentManager $dm, PaginatorInterface $paginator, Request $request)
     {
         $size = 100;
-        $logCount = count($dm->getRepository(aqgLog::class)->findAll());
+        // $logCount = count($dm->getRepository(aqgLog::class)->findAll());
+
+        $log = $dm->createQueryBuilder(aqgLog::class)
+            ->sort('_id', 'desc')
+            ->getQuery();
+        $pagination = $paginator->paginate(
+            $log, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
+
+        /*
         if($sort=='date'){
             $log = $dm->createQueryBuilder(aqgLog::class)
             ->sort('_id', 'desc')
@@ -176,7 +187,8 @@ class NavController extends AbstractController
             ->getQuery()
             ->execute();
         }
-        
-        return $this->render('Log.html.twig', ['page' => $page, 'size' => $size, 'Logs' => $log, 'logCount' => $logCount, 'sort' => $sort]);
+        */
+
+        return $this->render('Log.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 }
