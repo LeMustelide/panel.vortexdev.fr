@@ -72,3 +72,13 @@ function closeForm()
 {
     document.getElementById("Form").style.display = "none";
 }
+
+function openFormAdd()
+{
+    document.getElementById("addForm").style.display = "block";
+}
+
+function closeFormAdd()
+{
+    document.getElementById("addForm").style.display = "none";
+}

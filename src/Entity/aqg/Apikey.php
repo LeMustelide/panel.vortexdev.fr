@@ -36,6 +36,13 @@ class Apikey
     private $version;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string", length=64, nullable=false)
+     */
+    private $description;
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(name="CreationDate", type="datetime", nullable=false)
@@ -52,7 +59,7 @@ class Apikey
     /**
      * @var int
      *
-     * @ORM\Column(name="disable", type="integer", nullable=false)
+     * @ORM\Column(name="disable", type="integer", nullable=true)
      */
     private $disable;
 
@@ -81,6 +88,18 @@ class Apikey
     public function setVersion(string $version): self
     {
         $this->version = $version;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }

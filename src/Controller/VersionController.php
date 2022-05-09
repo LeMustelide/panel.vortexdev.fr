@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\aqg\ApikeyRepository;
+use App\Entity\aqg\Apikey;
 
 
 class VersionController extends AbstractController
@@ -51,6 +52,29 @@ class VersionController extends AbstractController
 
         $version->setDisable(0);
 
+        $entityManager->persist($version);
+        $entityManager->flush();
+
+        return $this->redirect('/versionList');
+    }
+
+    #[Route('/version/add', name: 'addVersion', priority: 2)]
+    public function addVersion(ManagerRegistry $doctrine, Request $request)
+    {
+        $entityManager = $doctrine->getManager('aqg');
+        $versionNumber = $request->request->get("versionNumber");
+        $apiKey = $request->request->get("apiKey");
+        $description = $request->request->get("descriptionAdd");
+        $date = new \DateTime('now');
+
+        $version = new Apikey();
+
+        $version->setVersion($versionNumber);
+        $version->setApiKey($apiKey);
+        $version->setDescription($description);
+        $version->setCreationdate($date);
+        $version->setDisable(0);
+        
         $entityManager->persist($version);
         $entityManager->flush();
 
