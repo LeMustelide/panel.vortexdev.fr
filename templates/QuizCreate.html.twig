@@ -1,0 +1,67 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Création d'un Quiz - panel{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="overflow: auto;max-height: calc(100vh - 90px);">
+    <h3 class="text-dark mb-4">Nouveau Quiz</h3>
+    <form class="d-flex d-xxl-flex flex-column justify-content-between" style="height: 100%;" method="POST" action="/quiz/create">
+        <div class="row mb-3">
+            <div class="col-lg-8">
+                <div class="card shadow mb-3" style="height: 100%;">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Informations</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <div class="mb-3"><label class="form-label" for="title"><strong>Titre</strong></label><input class="form-control" type="text" name="title" placeholder="Titre" style="width: 75%;" required="" minlength="4"></div>
+                                <div class="mb-3"><label class="form-label" for="description"><strong>Descirption</strong><br></label></div><textarea class="form-control" name="description" placeholder="Description" rows="5"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" style="padding-top: 25px;">
+                            <div class="col">
+                                <div class="text-center d-flex justify-content-evenly mb-3" style="margin-bottom:0px !important">
+                                    <button class="btn btn-success btn-icon-split" type="submit"><span class="text-white-50 icon"><i class="fas fa-check"></i></span><span class="text-white text">Sauvegarder</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-4 col-xl-4 mb-auto">
+                <div class="card shadow mb-3" style="height: 100%;">
+                    <div class="card-header py-3">
+                        <p class="text-primary m-0 fw-bold">Paramètres</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex flex-column justify-content-center align-items-start h-100">
+                            <div class="d-flex align-items-center p-3">
+                                <div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon"><i class="fas fa-heart"></i></div>
+                                <div class="px-2">
+                                    <h6 class="fw-bold mb-0">Nombre de vies :</h6>
+                                    <p class="mb-0"></p>
+                                    <select name="lifes" class="d-inline-block form-select form-select-sm">
+                                        <option value="1" selected="">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3" selected="">3</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center p-3">
+                                <div class="bs-icon-md bs-icon-rounded bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block bs-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-skip-end-fill">
+                                        <path d="M12.5 4a.5.5 0 0 0-1 0v3.248L5.233 3.612C4.693 3.3 4 3.678 4 4.308v7.384c0 .63.692 1.01 1.233.697L11.5 8.753V12a.5.5 0 0 0 1 0V4z"></path>
+                                    </svg></div>
+                                <div class="px-2">
+                                    <h6 class="fw-bold mb-0">Passer les questions :</h6>
+                                    <div class="form-check form-switch"><input name="skip" class="form-check-input" type="checkbox" id="formCheck-1" checked=""><label class="form-check-label order-1" for="formCheck-1"></label></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

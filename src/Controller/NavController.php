@@ -143,51 +143,15 @@ class NavController extends AbstractController
     public function log(int $page, DocumentManager $dm, PaginatorInterface $paginator, Request $request)
     {
         $size = 100;
-        // $logCount = count($dm->getRepository(aqgLog::class)->findAll());
 
         $log = $dm->createQueryBuilder(aqgLog::class)
             ->sort('_id', 'desc')
             ->getQuery();
         $pagination = $paginator->paginate(
-            $log, /* query NOT result */
-            $request->query->getInt('page', $page), /*page number*/
-            $size /*limit per page*/
+            $log,
+            $request->query->getInt('page', $page), 
+            $size 
         );
-
-        /*
-        if($sort=='date'){
-            $log = $dm->createQueryBuilder(aqgLog::class)
-            ->sort('_id', 'desc')
-            ->limit($size)
-            ->skip(($page-1)*$size)
-            ->getQuery()
-            ->execute();
-        }
-        elseif($sort == 'ndate'){
-            $log = $dm->createQueryBuilder(aqgLog::class)
-            ->sort('_id', 'asc')
-            ->limit($size)
-            ->skip(($page-1)*$size)
-            ->getQuery()
-            ->execute();
-        }
-        elseif($sort == 'action'){
-            $log = $dm->createQueryBuilder(aqgLog::class)
-            ->sort('url', 'desc')
-            ->limit($size)
-            ->skip(($page-1)*$size)
-            ->getQuery()
-            ->execute();
-        }
-        elseif($sort == 'naction'){
-            $log = $dm->createQueryBuilder(aqgLog::class)
-            ->sort('url', 'asc')
-            ->limit($size)
-            ->skip(($page-1)*$size)
-            ->getQuery()
-            ->execute();
-        }
-        */
 
         return $this->render('Log.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }

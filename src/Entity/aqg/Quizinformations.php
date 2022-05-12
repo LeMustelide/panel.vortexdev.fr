@@ -18,6 +18,7 @@ class Quizinformations
      * @ORM\Column(name="ID", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
@@ -66,9 +67,9 @@ class Quizinformations
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="UpdateDate", type="datetime", nullable=false, options={"default"="CURRENT_TIMESTAMP"})
+     * @ORM\Column(name="UpdateDate", type="datetime", nullable=false)
      */
-    private $updatedate = 'CURRENT_TIMESTAMP';
+    private $updatedate;
 
     /**
      * @var \DateTime

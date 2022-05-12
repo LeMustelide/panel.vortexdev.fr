@@ -12,6 +12,7 @@ use App\Repository\aqg\PublicquizRepository;
 use App\Repository\aqg\QuizcontentRepository;
 use App\Repository\aqg\ScoreboardRepository;
 use App\Entity\aqg\Publicquiz;
+use App\Entity\aqg\Quizinformations;
 
 
 class QuizController extends AbstractController
@@ -85,6 +86,46 @@ class QuizController extends AbstractController
 
         $entityManager->persist($quiz);
         $entityManager->flush();
+
+        return $this->redirect('/quiz/'.$id);
+    }
+
+    #[Route('/quiz/createForm', name: 'createQuizForm', priority: 2)]
+    public function createQuizForm()
+    {
+        return $this->render('QuizCreate.html.twig');
+    }
+
+    #[Route('/quiz/create', name: 'createQuiz', priority: 2)]
+    public function QuizForm(ManagerRegistry $doctrine, Request $request, AccountRepository $Accounts)
+    {
+        $entityManager = $doctrine->getManager('aqg');
+        date_default_timezone_set('Europe/Paris');
+
+        $name = $request->request->get("title");
+        $description = $request->request->get("description");
+        $life = $request->request->get("lifes");
+        $skip = $request->request->get("skip");
+        $SteamID = $Accounts->find(0);
+        $date = new \DateTime();
+
+        $quiz = new Quizinformations();
+
+        $quiz->setName($name);
+        $quiz->setDescription($description);
+        $quiz->setLifes($life);
+        $quiz->setSkip($skip);
+        $quiz->setSteamid($SteamID);
+
+        $quiz->setDifficulty(0);
+        $quiz->setSpecificorder(0);
+        $quiz->setCreationdate($date);
+        $quiz->setUpdatedate($date);
+
+        $entityManager->persist($quiz);
+        $entityManager->flush();
+
+        $id = $quiz->getId();
 
         return $this->redirect('/quiz/'.$id);
     }
