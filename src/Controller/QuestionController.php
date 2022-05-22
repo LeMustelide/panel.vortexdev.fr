@@ -116,6 +116,7 @@ class QuestionController extends AbstractController
         
         $type = $request->request->get("type");
         $CorrectAnswer = 1;
+        $require = 1;
         switch($type){
             case 1:
                 $question = $request->request->get("questionTEXT");
@@ -130,7 +131,6 @@ class QuestionController extends AbstractController
                 $answer2 = $request->request->get("rep2VF");
                 $answer3 = "";
                 $answer4 = "";
-                $require = 1;
                 break;
             case 3:
                 $question = $request->request->get("questionQCM");
