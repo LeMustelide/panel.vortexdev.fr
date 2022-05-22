@@ -110,9 +110,7 @@ class QuestionController extends AbstractController
         if(!($request->request->get("enableTimer"))){
             $timer = 0;
         }
-        $require = $request->request->get("require");
         $difficulty = $request->request->get("difficulty");
-        
         
         $type = $request->request->get("type");
         $CorrectAnswer = 1;
@@ -133,6 +131,7 @@ class QuestionController extends AbstractController
                 $answer4 = "";
                 break;
             case 3:
+                $require = $request->request->get("require");
                 $question = $request->request->get("questionQCM");
                 $answer1 = $request->request->get("rep1QCM");
                 $answer2 = $request->request->get("rep2QCM");
