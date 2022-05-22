@@ -36,7 +36,7 @@ class KeysController extends AbstractController
         date_default_timezone_set('Europe/Paris');
         $entityManager = $doctrine->getManager();
 
-        $steamKey = $request->request->get("steamKey");
+        $steamKey = $request->request->get("steamKeyForm");
         $description = $request->request->get("description");
         $tag = $request->request->get("tag");
         $steamId = $request->request->get("steamId");
