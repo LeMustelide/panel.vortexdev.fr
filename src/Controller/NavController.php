@@ -139,12 +139,14 @@ class NavController extends AbstractController
         return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 
-    #[Route('/log/{page}/{filter}', name: 'log', defaults: ['page' => 1, 'filter' => 'all'])]
+    #[Route('/log/{page}', name: 'log', defaults: ['page' => 1])]
     public function log(int $page, DocumentManager $dm, PaginatorInterface $paginator, Request $request)
     {
         $size = 100;
+        $find = $request->request->get('search');
 
         $log = $dm->createQueryBuilder(aqgLog::class)
+            ->field('url')->where('function(){ var pattern = /.*'.str_replace('/', '\\/', $find).'.*/; return pattern.test(this.url); }')
             ->sort('_id', 'desc')
             ->getQuery();
         $pagination = $paginator->paginate(
@@ -153,6 +155,7 @@ class NavController extends AbstractController
             $size 
         );
 
-        return $this->render('Log.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
+        return $this->render('Log.html.twig', ['page' => $page, 'find' => $find, 'size' => $size, 'pagination' => $pagination]);
+        //return new JsonResponse($find);
     }
 }

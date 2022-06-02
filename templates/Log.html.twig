@@ -35,9 +35,13 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="text-md-end dataTables_filter" id="dataTable_filter">
-							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
-						</div>
+                        <form method="POST" action="/log">
+                            <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                                <label class="form-label">
+                                <input type="search" name="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher" value="{{find}}">
+                                </label>
+                            </div>
+                        </form>
 					</div>
 				</div>
 				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
