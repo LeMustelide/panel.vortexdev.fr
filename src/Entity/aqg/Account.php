@@ -261,4 +261,14 @@ class Account
         return $this;
     }
 
+    public function setBan(int $state)
+    {
+        $this->ban = $state;
+    }
+
+    public function getBan(): int
+    {
+        return $this->ban;
+    }
+
 }

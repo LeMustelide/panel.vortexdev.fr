@@ -28,6 +28,7 @@ class ProfileController extends AbstractController
         $QuizCreated = $Account->getQuizCreated();
         $reportsCount = $Accounts->getReportCount($steamId);
         return $this->render('Profile.html.twig', [
+            'account' => $Account,
             'profile_name' => $name,
             'steamID' => $steamId,
             'biography' => $bio, 

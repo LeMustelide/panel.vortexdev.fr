@@ -26,7 +26,11 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col" style="text-align: center;"><button class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</button></div>
+                {% if account.ban == 1 %}
+                    <div class="col" style="text-align: center;"><a href="/account/unban/{{steamID}}" class="btn btn-success" type="button" style="width: 130px;margin-bottom: 20px;">Débannir</a></div>
+                {% else %}
+                    <div class="col" style="text-align: center;"><a href="/account/ban/{{steamID}}" class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</a></div>
+                {% endif %}
                     <div class="col" style="text-align: center;"><button class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Avertissement</button></div>
                 </div>
             </div>
@@ -68,7 +72,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <form>
                                     <div class="mb-3"><label class="form-label" for="signature"><strong>Message</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea></div>
                                     <div class="mb-3">
