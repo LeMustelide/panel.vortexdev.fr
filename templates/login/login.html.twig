@@ -18,8 +18,8 @@
 		<body style="height: 100vh;">
 
 			<section class="login-dark" style="height: 100%;">
-				<form action="{{ path('login') }}" method="post" style="box-shadow: 10px 10px 9px rgba(15,15,15,0.6);">
-					<h2 class="visually-hidden">Login Form</h2><img src="assets/img/pannel.png" style="width: 250px;margin-left: -10px;margin-top: -20px;margin-bottom: 25px;">
+				<form action="{{ path('login') }}" method="post" style="box-shadow: 10px 10px 9px rgba(15,15,15,0.6);text-align: center;">
+					<h2 class="visually-hidden">Login Form</h2><img src="assets/img/clip_180x180.png" style="height: 100px;margin-left: -10px;margin-top: -20px;margin-bottom: 25px;">
 					<div class="mb-3"><input class="form-control" type="email" name="_username" placeholder="Email" value="{{ last_username }}"></div>
 					<div class="mb-3"><input class="form-control" type="password" name="_password" placeholder="Mot de passe"></div>
 					{% if error %}

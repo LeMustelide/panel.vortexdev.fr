@@ -2,89 +2,192 @@
 
 {% block title %}Profile - Panel{% endblock %}
 
+{% block javascripts %}
+	<script type="text/javascript" src="{{ asset('Js/profile.js') }}"></script>
+{% endblock %}
+
 {% block content %}
-    <div class="container-fluid">
-        <h3 class="text-dark mb-4">Profil de {{ profile_name }}</h3>
-        <div class="row mb-3">
-            <div class="col-lg-4">
-                <div class="card mb-3">
-                    <div class="card-body text-center shadow" style="padding-bottom: 0px;"><i class="fas fa-user" style="font-size: 112px;margin-top: 14px;"></i>
-                        <p style="font-size: 26px;text-align: center;font-weight: bold;margin-top: 23px;margin-bottom: 0px;">{{ profile_name }}</p>
-                        <p style="color: rgb(156,156,156);">{{ steamID }}</p>
-                    </div>
-                </div>
-                <div class="card shadow mb-4">
-                    <div class="card-header py-3" style="height: 57.1875px;">
-                        <h6 class="text-primary fw-bold m-0" style="padding-top: 4px;">Statistiques</h6>
-                    </div>
-                    <div class="card-body">
-                        <h4 class="small fw-bold">Partie(s) joué(s)<span class="float-end">{{QuizPlayed}}</span></h4>
-                        <h4 class="small fw-bold">Partie(s) gagné(s)<span class="float-end">{{Win}}</span></h4>
-                        <h4 class="small fw-bold">Partie(s) perdu(s)<span class="float-end">{{lose}}</span></h4>
-                        <h4 class="small fw-bold">Quiz(s) créé(s)<span class="float-end">{{QuizCreated}}</span></h4>
-                        <h4 class="small fw-bold">Signalement(s)<span class="float-end">{{reportsCount}}</span></h4>
-                    </div>
-                </div>
-                <div class="row">
-                {% if account.ban == 1 %}
-                    <div class="col" style="text-align: center;"><a href="/account/unban/{{steamID}}" class="btn btn-success" type="button" style="width: 130px;margin-bottom: 20px;">Débannir</a></div>
-                {% else %}
-                    <div class="col" style="text-align: center;"><a href="/account/ban/{{steamID}}" class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</a></div>
-                {% endif %}
-                    <div class="col" style="text-align: center;"><button class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Avertissement</button></div>
+<div class="container-fluid" style="overflow: auto; max-height: calc(100vh - 95px);">
+    <h3 class="text-dark mb-4">Profil de {{ account.UserName }}</h3>
+    <div class="row mb-3">
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body text-center shadow" style="padding-bottom: 0px;"><i class="fas fa-user" style="font-size: 112px;margin-top: 14px;"></i>
+                    <p style="font-size: 26px;text-align: center;font-weight: bold;margin-top: 23px;margin-bottom: 0px;">{{ account.UserName }}</p>
+                    <p style="color: rgb(156,156,156);">{{ account.SteamID }}</p>
                 </div>
             </div>
-            <div class="col-lg-8">
-                <div class="row">
-                    <div class="col offset-xxl-0">
-                        <div class="card shadow mb-3">
-                            <div class="card-header py-3">
-                                <p class="text-primary m-0 fw-bold">Informations</p>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3" style="height: 57.1875px;">
+                    <h6 class="text-primary fw-bold m-0" style="padding-top: 4px;">Statistiques</h6>
+                </div>
+                <div class="card-body">
+                    <h4 class="small fw-bold">Partie(s) joué(s)<span class="float-end">{{account.QuizPlayed}}</span></h4>
+                    <h4 class="small fw-bold">Partie(s) gagné(s)<span class="float-end">{{account.Win}}</span></h4>
+                    <h4 class="small fw-bold">Partie(s) perdu(s)<span class="float-end">{{account.Lose}}</span></h4>
+                    <h4 class="small fw-bold">Quiz(s) créé(s)<span class="float-end">{{account.QuizCreated}}</span></h4>
+                    <h4 class="small fw-bold">Signalement(s)<span class="float-end">{{reportsCount}}</span></h4>
+                </div>
+            </div>
+            <div class="row">
+            {% if account.ban == 1 %}
+                <div class="col" style="text-align: center;"><button onclick="openFormBan()" class="btn btn-success" type="button" style="width: 130px;margin-bottom: 20px;">Débannir</button></div>
+            {% else %}
+                <div class="col" style="text-align: center;"><button onclick="openFormBan()" class="btn btn-danger" type="button" style="width: 130px;margin-bottom: 20px;">Bannir</button></div>
+            {% endif %}
+                <div class="col" style="text-align: center;"><button onclick="openFormWarn()" class="btn btn-warning text-end" type="button" style="width: 130px;margin-bottom: 20px;">Avertissement</button></div>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col offset-xxl-0">
+                    <div class="card shadow mb-3">
+                        <div class="card-header py-3">
+                            <p class="text-primary m-0 fw-bold">Informations</p>
+                        </div>
+                        <div class="card-body" style="height: 187px;">
+                            <div class="row" style="padding-bottom: 21px;">
+                                <div class="col"><label class="form-label" for="first_name"><strong>Biographie :</strong><br></label>
+                                    <p style="color: rgb(210,210,210);">{{ account.Bio }}</p>
+                                </div>
                             </div>
-                            <div class="card-body" style="height: 187px;">
-                                <div class="row" style="padding-bottom: 21px;">
-                                    <div class="col"><label class="form-label" for="first_name"><strong>Biographie :</strong><br></label>
-                                        <p style="color: rgb(210,210,210);">{{ biography }}</p>
+                            <form>
+                                <div class="row">
+                                    <div class="col offset-xxl-0">
+                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Dernière Activité :</strong><br></label>
+                                            <p style="color: rgb(210,210,210);">{{ account.ConnectionDate|date('d/m/Y H:i') }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="mb-3"><label class="form-label" for="last_name"><strong>Création du compte :</strong><br></label>
+                                            <p style="color: rgb(210,210,210);">{{ account.CreationDate|date('d/m/Y H:i') }}</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <form>
-                                    <div class="row">
-                                        <div class="col offset-xxl-0">
-                                            <div class="mb-3"><label class="form-label" for="first_name"><strong>Dernière Activité :</strong><br></label>
-                                                <p style="color: rgb(210,210,210);">{{ last_activity|date('d/m/Y H:i') }}</p>
-                                            </div>
-                                        </div>
-                                        <div class="col">
-                                            <div class="mb-3"><label class="form-label" for="last_name"><strong>Création du compte :</strong><br></label>
-                                                <p style="color: rgb(210,210,210);">{{ first_activity|date('d/m/Y H:i') }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3"></div>
-                                </form>
-                            </div>
+                                <div class="mb-3"></div>
+                            </form>
                         </div>
                     </div>
                 </div>
-                <div class="card shadow mb-5">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 fw-bold">Popup de démarrage</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form>
-                                    <div class="mb-3"><label class="form-label" for="signature"><strong>Message</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea></div>
-                                    <div class="mb-3">
-                                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1"><strong>Afficher à chaque démarrage</strong><br></label></div>
-                                    </div>
-                                    <div class="mb-3"><button class="btn btn-success btn-sm" type="button">Sauvegarder</button></div>
-                                </form>
-                            </div>
+            </div>
+            <div class="card shadow mb-5">
+                <div class="card-header py-3">
+                    <p class="text-primary m-0 fw-bold">Popup de démarrage</p>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form>
+                                <div class="mb-3"><label class="form-label" for="signature"><strong>Message</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea></div>
+                                <div class="mb-3">
+                                    <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1"><strong>Afficher à chaque démarrage</strong><br></label></div>
+                                </div>
+                                <div class="mb-3"><button class="btn btn-success btn-sm" type="button">Sauvegarder</button></div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-lg-12">
+            <div class="card shadow mb-4">
+                <div class="card-header d-flex justify-content-between align-items-xxl-center py-3">
+                    <h6 class="text-primary m-0 fw-bold">Sanctions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="width:100px">Type</th>
+                                    <th style="width:300px">Administrateur</th>
+                                    <th>Raison</th>
+                                    <th style="width:175px">date</th>
+                                    <th class="text-center" style="width: 100px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for sanction in sanctions %}
+                                    <tr>
+                                        <td>{{ sanction.action.label }}</td>
+                                        <td>{{ sanction.user.email }}</td>
+                                        <td>{{ sanction.reason }}</td>
+                                        <td>{{ sanction.date|date('d/m/Y H:i') }}</td>
+                                        <td>
+                                            <div class="row g-0 row-cols-2">
+                                                <div class="col">
+                                                    <a class="btn btn-warning btn-circle ms-1" href='/question/' role="button">
+                                                        <i class="fa fa-pencil text-white"></i>
+                                                    </a>
+                                                </div>
+                                                <div class="col">
+                                                    <a class="btn btn-danger btn-circle ms-1" role="button">
+                                                        <i class="fas fa-trash text-white"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="FormBan" style="display:none">
+        <div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: table;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">{% if account.ban == 0 %}Confirmer la sanction de {{ account.UserName }}{% else %}Comfimer la fin de la sanction de {{ account.UserName }}{% endif %}</h6>
+				</div>
+				<div class="card-body">
+                    <form method="POST" action="/account/{% if account.ban == 0 %}ban{% else %}unban{% endif %}/{{ account.SteamID }}">
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Raison</label>
+						<div class="mb-3 mb-sm-0">
+                        <textarea class="form-control" rows="4" name="reason" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea>
+                        </div>
+						<br>
+						<div style="text-align: center;padding-top: 7px;">
+							<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormBan()">Annuler</button>
+							<button class="btn btn-danger" id="action" type="submit">Confirmer</button>
+						</div>
+					</form>
+					<!--<label id="popUpBodyText" class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement {% if account.ban == 0 %}bannir{% else %}débannir{% endif %} {{ account.UserName }} ?<br></label>-->
+					<!--
+                    <div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormBan()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" >Confirmer</button>
+					</div>
+                    -->
+				</div>
+			</div>
+		</div>
+    </div>
+
+    <div id="FormWarn" style="display:none">
+        <div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: table;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Avertissement</h6>
+				</div>
+				<div class="card-body">
+					<form method="POST" action="/account/warn/{{ account.SteamID }}">
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Raison</label>
+						<div class="mb-3 mb-sm-0">
+                        <textarea class="form-control" rows="4" name="reason" value="" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea>
+                        </div>
+						<br>
+						<div style="text-align: center;padding-top: 7px;">
+							<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormWarn()">Annuler</button>
+							<button class="btn btn-danger" id="action" type="submit">Ajouter</button>
+						</div>
+					</form>
+				</div>
+			</div>
+    </div>
+</div>
 {% endblock %}

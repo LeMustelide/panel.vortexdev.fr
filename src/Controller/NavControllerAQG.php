@@ -18,10 +18,15 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 
-class NavController extends AbstractController
+class NavControllerAQG extends AbstractController
 {
-    #[Route('/', name: 'dashboard')]
-    public function accueil(DocumentManager $dm, AccountRepository $Account, QuizinformationsRepository $Quizinformations, ReportsRepository $Report, HttpClientInterface $client)
+    #[Route('/', name: 'home')]
+    public function home()
+    {
+        return $this->render('Home.html.twig');
+    }
+    #[Route('/aqg', name: 'dashboardAQG')]
+    public function dashboard(DocumentManager $dm, AccountRepository $Account, QuizinformationsRepository $Quizinformations, ReportsRepository $Report, HttpClientInterface $client)
     {
         $userCount = $Account->getUserCount();
         $quizCount = $Quizinformations->getQuizCount();

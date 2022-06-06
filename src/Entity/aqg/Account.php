@@ -105,13 +105,6 @@ class Account
      */
     private $connectiondate;
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="Ban", type="integer", nullable=false)
-     */
-    private $ban;
-
     public function getSteamid(): ?string
     {
         return $this->steamid;
@@ -260,15 +253,4 @@ class Account
 
         return $this;
     }
-
-    public function setBan(int $state)
-    {
-        $this->ban = $state;
-    }
-
-    public function getBan(): int
-    {
-        return $this->ban;
-    }
-
 }

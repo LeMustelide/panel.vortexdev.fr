@@ -41,7 +41,7 @@
                         </thead>
                         <tbody>
                             {% for Account in pagination %}
-                                <td>{{ Account.UserName|e }}</td>
+                                <td {% if Account.ban == 1 %}style="color: red;"{% endif %}>{{ Account.UserName|e }}</td>
                                 <td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
                                 <td>{{ Account.Bio|e }}</td>
                                 <td>{{ Account.CreationDate|date('d/m/Y H:i') }}</td>

@@ -165,4 +165,11 @@ class Reports
     {
         return $this->date;
     }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
 }

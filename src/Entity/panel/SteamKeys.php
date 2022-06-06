@@ -3,13 +3,12 @@
 namespace App\Entity\panel;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * SteamKeys
+ * Steamkeys
  *
  * @ORM\Table(name="steamKeys", uniqueConstraints={@ORM\UniqueConstraint(name="steamKey", columns={"steamKey"})})
- * @ORM\Entity(repositoryClass="App\Repository\panel\SteamKeysRepository")
+ * @ORM\Entity
  */
 class SteamKeys
 {
@@ -27,14 +26,14 @@ class SteamKeys
      *
      * @ORM\Column(name="steamId", type="string", length=64, nullable=true)
      */
-    private $steamId;
+    private $steamid;
 
     /**
      * @var string
      *
      * @ORM\Column(name="steamKey", type="string", length=64, nullable=false)
      */
-    private $steamKey; 
+    private $steamkey;
 
     /**
      * @var string|null
@@ -62,64 +61,65 @@ class SteamKeys
         return $this->id;
     }
 
-    public function getSteamId(): ?string
+    public function getSteamid(): ?string
     {
-        return $this->steamId;
+        return $this->steamid;
     }
 
-    public function setSteamId(?string $steamId): self
+    public function setSteamid(?string $steamid): self
     {
-        $this->steamId = $steamId;
+        $this->steamid = $steamid;
 
         return $this;
     }
 
-    public function getSteamKey(): ?string
+    public function getSteamkey(): ?string
     {
-        return $this->steamKey;
+        return $this->steamkey;
     }
 
-    public function setSteamKey(?string $steamKey): self
+    public function setSteamkey(string $steamkey): self
     {
-        $this->steamKey = $steamKey;
+        $this->steamkey = $steamkey;
 
         return $this;
     }
 
-    public function getdescription(): ?string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    public function setdescription(?string $description): self
+    public function setDescription(?string $description): self
     {
         $this->description = $description;
 
         return $this;
     }
 
-    public function gettag(): ?string
+    public function getTag(): ?string
     {
         return $this->tag;
     }
 
-    public function settag(?string $tag): self
+    public function setTag(?string $tag): self
     {
         $this->tag = $tag;
 
         return $this;
     }
 
-    public function getdate(): ?\DateTime
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
-    public function setdate(?\DateTime $date): self
+    public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
 
         return $this;
     }
+
 
 }
