@@ -17,7 +17,7 @@ class ProfileController extends AbstractController
     {   
         $Account = $Accounts->getAccountDetails($steamId);
         $reportsCount = $Accounts->getReportCount($steamId);
-        $Sanction = $Sanctions->findBy(['steamid' => $steamId]);
+        $Sanction = $Sanctions->findBy(['steamid' => $steamId],['date' => 'DESC']);
         //$Sanctions = $Accounts->getSanctions($steamId);
         return $this->render('Profile.html.twig', [
             'account' => $Account,

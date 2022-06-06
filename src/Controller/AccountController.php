@@ -41,12 +41,13 @@ class AccountController extends AbstractController
     }
 
     #[Route('/account/unban/{steamId}', name: 'unbanAccount', priority: 2)]
-    public function unban(string $steamId, ManagerRegistry $doctrine, ActionTypeRepository $actionType, Security $security, UserRepository $users)
+    public function unban(string $steamId, Request $request, ManagerRegistry $doctrine, ActionTypeRepository $actionType, Security $security, UserRepository $users)
     {
         date_default_timezone_set('Europe/Paris');
         $entityManager = $doctrine->getManager();
 
         $date = new \DateTime('now');
+        $reason = $request->request->get("reason");
         $Type = $actionType->find(2);
         $user = $security->getUser();
         $userId = $user->getId();
@@ -54,6 +55,7 @@ class AccountController extends AbstractController
         $user = $users->find($userId);
         
         $ban = new Sanction();
+        $ban->setReason($reason);
         $ban->setAction($Type);
         $ban->setSteamId($steamId);
         $ban->setDate($date);
