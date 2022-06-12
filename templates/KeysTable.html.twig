@@ -33,7 +33,7 @@
 					<div class="col-md-6 align-self-center">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
 							<label class="form-label">Nombre de lignes :
-								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/keys/'+this.value+'/{{ page }}'">
+								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='{{ path('keys') }}/'+this.value+'/{{ page }}'">
 									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
 									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
 									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>

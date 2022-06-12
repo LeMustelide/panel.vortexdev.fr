@@ -38,4 +38,11 @@ security:
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_ADMIN } 
+        - { path: ^/, roles: ROLE_USER } 
+        - { path: ^/aqg, roles: ROLE_AQG } 
+        - { path: ^/manager, roles: ROLE_ADMIN } 
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_AQG, ROLE_VRTX, ROLE_USER
+        ROLE_AQG:         ROLE_USER
+        ROLE_VRTX:        ROLE_USER

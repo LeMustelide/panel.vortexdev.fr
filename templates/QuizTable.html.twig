@@ -20,7 +20,7 @@
                 <div class="col-md-6">
                     <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
                         <label class="form-label">Nombre de lignes :
-                            <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='/quizList/'+this.value+'/{{ page }}'">
+                            <select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='{{ path('quizList') }}/'+this.value+'/{{ page }}'">
                                 <option value="10" {% if size == 10 %} selected {% endif %}>10</option>
                                 <option value="25" {% if size == 25 %} selected {% endif %}>25</option>
                                 <option value="50" {% if size == 50 %} selected {% endif %}>50</option>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                        <a class="btn btn-primary" type="button" href="/quiz/createForm" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);">Créer un quiz</a>
+                        <a class="btn btn-primary" type="button" href="{{ path('createQuizForm') }}" style="margin-right: 40px;background: var(--bs-success);border-color: var(--bs-green);">Créer un quiz</a>
                         <label class="form-label">
                             <input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher">
                         </label>
@@ -64,9 +64,9 @@
                                     <i class="far fa-dot-circle" style="font-size: 29px;color: rgb(255,111,102);padding-top: 9px;"></i>
                                 {% endif %}
                             </td>
-                            <td style="text-decoration: underline;font-weight: bold;"><a style="color: #ffffff;" href="/quiz/{{ quiz.ID }}">{{ quiz.Name }}</a></td>
+                            <td style="text-decoration: underline;font-weight: bold;"><a style="color: #ffffff;" href="{{ path('quiz', {quizid:quiz.ID}) }}">{{ quiz.Name }}</a></td>
                             <td>{{ quiz.Description}}</td>
-                            <td style="col"><a style="color: #ffffff;" href='/Profile/{{ quiz.SteamID}}'>{{ quiz.CreatorName }}</td>
+                            <td style="col"><a style="color: #ffffff;" href='{{ path('profile', {steamId:quiz.SteamID}) }}'>{{ quiz.CreatorName }}</td>
                             <td>{{ quiz.UpdateDate|date('d/m/Y H:i') }}</td>
                             <td>{{ quiz.CreationDate|date('d/m/Y H:i') }}</td>
                             <td>{{ quiz.PlayNumber }}</td>

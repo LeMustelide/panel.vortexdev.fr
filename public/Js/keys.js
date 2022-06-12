@@ -1,7 +1,7 @@
 
 function deleteKey(key) {
     $.ajax({
-        url: "/keys/delete",
+        url: "/aqg/keys/delete",
         type: "POST",
         cache: false,
         data: {
@@ -17,7 +17,7 @@ function addKey() {
     let select = document.getElementById("selectAccount");
     let steamId = select.options[select.selectedIndex].value;
     $.ajax({
-        url: "/keys/add",
+        url: "/aqg/keys/add",
         type: "POST",
         cache: false,
         data: {
@@ -27,13 +27,13 @@ function addKey() {
             'steamId': steamId,
         },
         success: function (data) {
-            
+            document.location.reload(true);
         },
         error: function () {
             alert('erreur ajax');
         }
     });
-    document.location.reload(true);
+    
 }
 
 function openFormDelete(id) {
@@ -83,7 +83,7 @@ function modifyKey() {
     let select = document.getElementById("selectAccountModify");
     let steamId = select.options[select.selectedIndex].value;
     $.ajax({
-        url: "/keys/modify",
+        url: "/aqg/keys/modify",
         type: "POST",
         cache: false,
         data: {

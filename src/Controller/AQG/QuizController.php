@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ use App\Entity\aqg\Quizinformations;
 
 class QuizController extends AbstractController
 {
-    #[Route('/quiz/{quizid}', name: 'quiz')]
+    #[Route('quiz/{quizid}', name: 'quiz')]
     public function quiz(string $quizid, AccountRepository $Accounts, QuizinformationsRepository $Quiz, PublicquizRepository $PublicQuiz, QuizcontentRepository $QuizContent, ScoreboardRepository $Score)
     {
         $quiz = $Quiz->find($quizid);
@@ -28,7 +28,7 @@ class QuizController extends AbstractController
         return $this->render('QuizDetails.html.twig', ['quiz' => $quiz, 'user' => $user, 'publicQuiz' => $publicQuiz, 'quizContent' => $quizContent, 'scores' => $scores]);
     }
 
-    #[Route('/quiz/delete', name: 'delQuiz', priority: 2)]
+    #[Route('quiz/delete', name: 'delQuiz', priority: 2)]
     public function delQuiz(ManagerRegistry $doctrine, Request $request, QuizinformationsRepository $Quiz)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -41,7 +41,7 @@ class QuizController extends AbstractController
         return $this->redirect('/quizList');
     }
 
-    #[Route('/quiz/publish', name: 'publishQuiz', priority: 2)]
+    #[Route('quiz/publish', name: 'publishQuiz', priority: 2)]
     public function publishQuiz(ManagerRegistry $doctrine, Request $request, QuizinformationsRepository $quizInformation)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -57,7 +57,7 @@ class QuizController extends AbstractController
         return $this->redirect('/quizList');
     }
 
-    #[Route('/quiz/unpublish', name: 'unpublishQuiz', priority: 2)]
+    #[Route('quiz/unpublish', name: 'unpublishQuiz', priority: 2)]
     public function unpublishQuiz(ManagerRegistry $doctrine, Request $request, PublicquizRepository $Public)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -71,7 +71,7 @@ class QuizController extends AbstractController
         return $this->redirect('/quizList');
     }
 
-    #[Route('/quiz/editDetails', name: 'editDetailsQuiz', priority: 2)]
+    #[Route('quiz/editDetails', name: 'editDetailsQuiz', priority: 2)]
     public function editDetailsQuiz(ManagerRegistry $doctrine, Request $request, QuizinformationsRepository $quizInformation)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -90,13 +90,13 @@ class QuizController extends AbstractController
         return $this->redirect('/quiz/'.$id);
     }
 
-    #[Route('/quiz/createForm', name: 'createQuizForm', priority: 2)]
+    #[Route('quiz/createForm', name: 'createQuizForm', priority: 2)]
     public function createQuizForm()
     {
         return $this->render('QuizCreate.html.twig');
     }
 
-    #[Route('/quiz/create', name: 'createQuiz', priority: 2)]
+    #[Route('quiz/create', name: 'createQuiz', priority: 2)]
     public function QuizForm(ManagerRegistry $doctrine, Request $request, AccountRepository $Accounts)
     {
         $entityManager = $doctrine->getManager('aqg');

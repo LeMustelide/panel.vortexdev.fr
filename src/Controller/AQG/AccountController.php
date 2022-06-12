@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Security;
 
 class AccountController extends AbstractController
 {    
-    #[Route('/account/ban/{steamId}', name: 'banAccount', priority: 2)]
+    #[Route('account/ban/{steamId}', name: 'banAccount', priority: 2)]
     public function ban(string $steamId, Request $request, ManagerRegistry $doctrine, ActionTypeRepository $actionType, Security $security, UserRepository $users)
     {
         date_default_timezone_set('Europe/Paris');
@@ -40,7 +40,7 @@ class AccountController extends AbstractController
         return $this->redirect('/Profile/'.$steamId);
     }
 
-    #[Route('/account/unban/{steamId}', name: 'unbanAccount', priority: 2)]
+    #[Route('account/unban/{steamId}', name: 'unbanAccount', priority: 2)]
     public function unban(string $steamId, Request $request, ManagerRegistry $doctrine, ActionTypeRepository $actionType, Security $security, UserRepository $users)
     {
         date_default_timezone_set('Europe/Paris');
@@ -67,7 +67,7 @@ class AccountController extends AbstractController
         return $this->redirect('/Profile/'.$steamId);
     }
 
-    #[Route('/account/warn/{steamId}', name: 'warnAccount', priority: 2)]
+    #[Route('account/warn/{steamId}', name: 'warnAccount', priority: 2)]
     public function warn(string $steamId, Request $request, ManagerRegistry $doctrine, ActionTypeRepository $actionType, Security $security, UserRepository $users)
     {
         date_default_timezone_set('Europe/Paris');

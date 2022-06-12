@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,12 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class NavControllerAQG extends AbstractController
 {
-    #[Route('/', name: 'home')]
-    public function home()
-    {
-        return $this->render('Home.html.twig');
-    }
-    #[Route('/aqg', name: 'dashboardAQG')]
+    #[Route('/', name: 'dashboardAQG')]
     public function dashboard(DocumentManager $dm, AccountRepository $Account, QuizinformationsRepository $Quizinformations, ReportsRepository $Report, HttpClientInterface $client)
     {
         $userCount = $Account->getUserCount();
@@ -66,7 +61,7 @@ class NavControllerAQG extends AbstractController
         //return new JsonResponse($response['player_count']);
     }
 
-    #[Route('/quizList/{size}/{page}', name: 'quizList', defaults: ['size' => 10, 'page' => 1])]
+    #[Route('quizList/{size}/{page}', name: 'quizList', defaults: ['size' => 10, 'page' => 1])]
     public function quizList(int $size, int $page, QuizinformationsRepository $Quizinformations, PaginatorInterface $paginator, Request $request)
     {
         $quizList = $Quizinformations->getQuizList();
@@ -79,7 +74,7 @@ class NavControllerAQG extends AbstractController
         return $this->render('QuizTable.html.twig', ['quizList' => $quizList, 'page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 
-    #[Route('/keys/{size}/{page}', name: 'keys', defaults: ['size' => 10, 'page' => 1])]
+    #[Route('keys/{size}/{page}', name: 'keys', defaults: ['size' => 10, 'page' => 1])]
     public function keys(int $size, int $page, ManagerRegistry $doctrine, AccountRepository $Accounts, PaginatorInterface $paginator, Request $request)
     {
         $username = $Accounts->getAllUserNameNotUsedInSteamKey();
@@ -109,7 +104,7 @@ class NavControllerAQG extends AbstractController
         return $this->render('KeysTable.html.twig', ['size' => $size, 'page' => $page,'listeKeys' => $listeKeys, 'pseudo' => $pseudo, 'username' => $username, 'allUsername' => $allUsername, 'pagination' => $pagination]);
     }
 
-    #[Route('/account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]
+    #[Route('account/{size}/{page}', name: 'account', defaults: ['size' => 10, 'page' => 1])]
     public function account(int $size, int $page, AccountRepository $Account, PaginatorInterface $paginator, Request $request)
     {
         $listeAccount = $Account->getAccountList();
@@ -122,16 +117,20 @@ class NavControllerAQG extends AbstractController
         return $this->render('UserTable.html.twig', ['page' => $page, 'size' => $size, 'listeAccount' => $listeAccount, 'pagination' => $pagination]);
     }
 
-    #[Route('/reportList/{size}/{page}/{sort}/{filter}', name: 'reportList', defaults: ['size' => 10, 'page' => 1, 'sort' => 'date', 'filter' => 'all'])]
-    public function reportList(int $size, int $page, string $sort, string $filter, ReportsRepository $report, ManagerRegistry $doctrine)
+    #[Route('reportList/{size}/{page}/{filter}', name: 'reportList', defaults: ['size' => 10, 'page' => 1, 'filter' => 'all'])]
+    public function reportList(int $size, int $page, string $filter, ReportsRepository $report, PaginatorInterface $paginator, Request $request)
     {
-        $reportList = $report->getReportList($size, $page, $sort, $filter);
-        $reportCount = $report->getReportCount();
+        $reportList = $report->getReportList($filter);
+        $pagination = $paginator->paginate(
+            $reportList, /* query NOT result */
+            $request->query->getInt('page', $page), /*page number*/
+            $size /*limit per page*/
+        );
 
-        return $this->render('ReportTable.html.twig', ['page' => $page, 'size' => $size, 'reportList' => $reportList, 'sort' => $sort, 'filter' => $filter, 'reportCount' => $reportCount['number']]);
+        return $this->render('ReportTable.html.twig', ['size' => $size, 'page' => $page, 'pagination' => $pagination, 'filter' => $filter]);
     }
 
-    #[Route('/versionList/{size}/{page}', name: 'versionList', defaults: ['size' => 10, 'page' => 1])]
+    #[Route('versionList/{size}/{page}', name: 'versionList', defaults: ['size' => 10, 'page' => 1])]
     public function versionList(int $size, int $page, ApikeyRepository $apiKey, PaginatorInterface $paginator, Request $request)
     {
         $keyList = $apiKey->getKeyList($size, $page);
@@ -144,7 +143,7 @@ class NavControllerAQG extends AbstractController
         return $this->render('versionTable.html.twig', ['page' => $page, 'size' => $size, 'pagination' => $pagination]);
     }
 
-    #[Route('/log/{page}', name: 'log', defaults: ['page' => 1])]
+    #[Route('log/{page}', name: 'log', defaults: ['page' => 1])]
     public function log(int $page, DocumentManager $dm, PaginatorInterface $paginator, Request $request)
     {
         $size = 100;

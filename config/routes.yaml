@@ -1,5 +1,15 @@
-controllers:
-    resource: ../src/Controller/
+controllersAQG:
+    resource: ../src/Controller/AQG
+    type: annotation
+    prefix:   '/aqg'
+
+controllersManag:
+    resource: ../src/Controller/Manager
+    type: annotation
+    prefix:   '/manager'
+
+controllersMain:
+    resource: ../src/Controller/Main
     type: annotation
 
 kernel:

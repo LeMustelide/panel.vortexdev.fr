@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use App\Entity\aqg\Apikey;
 
 class VersionController extends AbstractController
 {
-    #[Route('/version/delete', name: 'deleteVersion', priority: 2)]
+    #[Route('version/delete', name: 'deleteVersion', priority: 2)]
     public function deleteVersion(ManagerRegistry $doctrine, Request $request, ApikeyRepository $Versions)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -26,7 +26,7 @@ class VersionController extends AbstractController
         return $this->redirect('/versionList');
     }
 
-    #[Route('/version/disable', name: 'disableVersion', priority: 2)]
+    #[Route('version/disable', name: 'disableVersion', priority: 2)]
     public function disableVersion(ManagerRegistry $doctrine, Request $request, ApikeyRepository $Versions)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -42,7 +42,7 @@ class VersionController extends AbstractController
         return $this->redirect('/versionList');
     }
 
-    #[Route('/version/enable', name: 'enableVersion', priority: 2)]
+    #[Route('version/enable', name: 'enableVersion', priority: 2)]
     public function enableVersion(ManagerRegistry $doctrine, Request $request, ApikeyRepository $Versions)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -58,7 +58,7 @@ class VersionController extends AbstractController
         return $this->redirect('/versionList');
     }
 
-    #[Route('/version/add', name: 'addVersion', priority: 2)]
+    #[Route('version/add', name: 'addVersion', priority: 2)]
     public function addVersion(ManagerRegistry $doctrine, Request $request)
     {
         $entityManager = $doctrine->getManager('aqg');

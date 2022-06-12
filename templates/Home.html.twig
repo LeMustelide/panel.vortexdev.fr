@@ -23,8 +23,15 @@
                 </a>
                 <hr class="sidebar-divider my-0">
                 <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link d-lg-flex justify-content-lg-start" href="{{ path('dashboardAQG') }}"><img height="19" src="assets/img/clip_180x180.png" style="padding-right: 4px;"><span class="d-lg-flex">VorTeXDev.fr</span></a></li>
-                    <li class="nav-item"><a class="nav-link d-lg-flex justify-content-lg-start" href="{{ path('dashboardAQG') }}"><img height="19" src="assets/img/AQGBorderless.png" style="padding-right: 4px;"><span class="d-lg-flex">AnotherQuizzGame</span></a>
+                    {% if is_granted('ROLE_VRTX')%}
+                        <li class="nav-item"><a class="nav-link d-lg-flex justify-content-lg-start" href="{{ path('dashboardAQG') }}"><img height="19" src="assets/img/clip_180x180.png" style="padding-right: 4px;"><span class="d-lg-flex">VorTeXDev.fr</span></a></li>
+                    {% endif %}
+                    {% if is_granted('ROLE_AQG')%}
+                        <li class="nav-item"><a class="nav-link d-lg-flex justify-content-lg-start" href="{{ path('dashboardAQG') }}"><img height="19" src="assets/img/AQGBorderless.png" style="padding-right: 4px;"><span class="d-lg-flex">AnotherQuizzGame</span></a>
+                    {% endif %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item"><a class="nav-link d-lg-flex justify-content-lg-start" href="{{ path('dashboardAQG') }}"><span class="d-lg-flex">Gestion</span></a>
+                    {% endif %}
                 </ul>
             </div>
         </nav>

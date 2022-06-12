@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use App\Entity\aqg\Quizcontent;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,14 +14,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class QuestionController extends AbstractController
 {
-    #[Route('/question/{id}', name: 'questionDetails', priority: 2)]
+    #[Route('question/{id}', name: 'questionDetails', priority: 2)]
     public function question(string $id, QuizcontentRepository $QuizContent)
     {
         $quizContent = $QuizContent->find($id);
         return $this->render('QuestionModify.html.twig', ['quizContent' => $quizContent, 'id' => $id]);
     }
 
-    #[Route('/question/modify/{id}', name: 'questionModify')]
+    #[Route('question/modify/{id}', name: 'questionModify')]
     public function questionModify(ManagerRegistry $doctrine, Request $request, string $id, QuizcontentRepository $QuizContent, AnswertypeRepository $AnswerType)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -93,13 +93,13 @@ class QuestionController extends AbstractController
         return $this->redirect('/question/'.$id);
     }
 
-    #[Route('/question/createForm/{id}', name: 'questionCreateForm')]
+    #[Route('question/createForm/{id}', name: 'questionCreateForm')]
     public function questionCreateForm(string $id,)
     {
         return $this->render('QuestionCreate.html.twig', ['id' => $id]);
     }
 
-    #[Route('/question/create/{id}', name: 'questionCreate')]
+    #[Route('question/create/{id}', name: 'questionCreate')]
     public function questionCreate(ManagerRegistry $doctrine, Request $request, string $id, AnswertypeRepository $AnswerType, QuizinformationsRepository $quizs)
     {
         $entityManager = $doctrine->getManager('aqg');

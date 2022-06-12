@@ -21,7 +21,7 @@
 								<div class="px-2">
 									<h6 class="fw-bold mb-0">Utilisateur</h6>
 									<p class="mb-0">
-										<a href="/Profile/{{user.SteamID}}">
+										<a href="{{ path('profile', {steamId:user.SteamID}) }}">
 											{{user.UserName}}
 										</a>
 									</p>
@@ -106,7 +106,7 @@
 										<div class="row justify-content-center">
 											{% if Report.status == 'En attente' %}
 												<div class="col-auto">
-													<a class="btn btn-success btn-icon-split" role="button" href="/report/solve/{{ Report.id }}">
+													<a class="btn btn-success btn-icon-split" role="button" href="{{ path('solveReport', {id:Report.id}) }}">
 														<span class="text-white-50 icon">
 															<i class="fas fa-check"></i>
 														</span>
@@ -115,7 +115,7 @@
 												</div>
 											{% else %}
 												<div class="col-auto">
-													<a class="btn btn-warning btn-icon-split" role="button" href="/report/reopen/{{ Report.id }}">
+													<a class="btn btn-warning btn-icon-split" role="button" href="{{ path('reopenReport', {id:Report.id}) }}">
 														<span class="text-white-50 icon">
 															<svg class="bi bi-arrow-return-left" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewbox="0 0 16 16">
 																<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"></path>
@@ -126,7 +126,7 @@
 												</div>
 											{% endif %}
 											<div class="col-auto">
-												<a class="btn btn-danger btn-icon-split" role="button" href="/report/delete/{{ Report.id }}">
+												<a class="btn btn-danger btn-icon-split" role="button" href="{{ path('deleteReport', {id:Report.id}) }}">
 													<span class="text-white-50 icon">
 														<i class="fas fa-trash"></i>
 													</span>
@@ -135,7 +135,7 @@
 											</div>
 											{% if Report.status == 'En attente' %}
 												<div class="col-auto order-last">
-													<a class="btn btn-secondary btn-icon-split" role="button" href="/report/close/{{ Report.id }}">
+													<a class="btn btn-secondary btn-icon-split" role="button" href="{{ path('closeReport', {id:Report.id}) }}">
 														<span class="text-white-50 icon">
 															<i class="fas fa-arrow-right"></i>
 														</span>

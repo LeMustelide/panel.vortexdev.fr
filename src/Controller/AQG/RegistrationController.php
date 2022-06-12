@@ -1,6 +1,6 @@
 <?php
 /*// src/Controller/RegistrationController.php
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 // ...
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

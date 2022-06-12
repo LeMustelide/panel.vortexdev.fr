@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +13,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ReportController extends AbstractController
 {
-    #[Route('/report/{id}', name: 'report')]
+    #[Route('report/{id}', name: 'report')]
     public function report(string $id, ReportsRepository $Reports, AccountRepository $Accounts, QuizinformationsRepository $Quiz)
     {
         $Report = $Reports->find($id);
@@ -29,7 +29,7 @@ class ReportController extends AbstractController
         return $this->render('ReportDetails.html.twig', ['Report' => $Report, 'user' => $user, 'quiz' => $quiz]);
     }
 
-    #[Route('/report/solve/{id}', name: 'solveReport')]
+    #[Route('report/solve/{id}', name: 'solveReport')]
     public function solve(string $id, ManagerRegistry $doctrine, ReportsRepository $Reports, ReportsStatusRepository $ReportsStatus)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -41,7 +41,7 @@ class ReportController extends AbstractController
         return $this->redirectToRoute('reportList');
     }
 
-    #[Route('/report/close/{id}', name: 'closeReport')]
+    #[Route('report/close/{id}', name: 'closeReport')]
     public function close(string $id, ManagerRegistry $doctrine, ReportsRepository $Reports, ReportsStatusRepository $ReportsStatus)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -53,7 +53,7 @@ class ReportController extends AbstractController
         return $this->redirectToRoute('reportList');
     }
 
-    #[Route('/report/delete/{id}', name: 'deleteReport')]
+    #[Route('report/delete/{id}', name: 'deleteReport')]
     public function delete(string $id, ManagerRegistry $doctrine, ReportsRepository $Reports, ReportsStatusRepository $ReportsStatus)
     {
         $entityManager = $doctrine->getManager('aqg');
@@ -64,7 +64,7 @@ class ReportController extends AbstractController
         return $this->redirectToRoute('reportList');
     }
 
-    #[Route('/report/reopen/{id}', name: 'reopenReport')]
+    #[Route('report/reopen/{id}', name: 'reopenReport')]
     public function reopen(string $id, ManagerRegistry $doctrine, ReportsRepository $Reports, ReportsStatusRepository $ReportsStatus)
     {
         $entityManager = $doctrine->getManager('aqg');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +13,7 @@ use App\Entity\panel\SteamKeys;
 
 class KeysController extends AbstractController
 {
-    #[Route('/keys/delete', name: 'delKey', priority: 2)]
+    #[Route('keys/delete', name: 'delKey', priority: 2)]
     public function delKey(ManagerRegistry $doctrine, Request $request): Response
     {
         $entityManager = $doctrine->getManager();
@@ -30,13 +30,13 @@ class KeysController extends AbstractController
         return $this->redirect('/keys');
     }
 
-    #[Route('/keys/add', name: 'addKey', priority: 2)]
+    #[Route('keys/add', name: 'addKey', priority: 2)]
     public function add(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
         date_default_timezone_set('Europe/Paris');
         $entityManager = $doctrine->getManager();
 
-        $steamKey = $request->request->get("steamKeyForm");
+        $steamKey = $request->request->get("steamKey");
         $description = $request->request->get("description");
         $tag = $request->request->get("tag");
         $steamId = $request->request->get("steamId");
@@ -57,7 +57,7 @@ class KeysController extends AbstractController
         return $this->redirect('/keys');
     }
 
-    #[Route('/keys/modify', name: 'modifyKey', priority: 2)]
+    #[Route('keys/modify', name: 'modifyKey', priority: 2)]
     public function modify(ManagerRegistry $doctrine, Request $request, Session $session): Response
     {
         $entityManager = $doctrine->getManager();

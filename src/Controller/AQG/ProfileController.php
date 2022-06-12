@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,9 +10,7 @@ use App\Repository\panel\SanctionRepository;
 
 class ProfileController extends AbstractController
 {
-    /**
-     * @Route("/Profile/{steamId}", name="profile")
-     */
+    #[Route('Profile/{steamId}', name: 'profile')]
     public function profile(string $steamId, AccountRepository $Accounts, SanctionRepository $Sanctions): Response
     {   
         $Account = $Accounts->getAccountDetails($steamId);
