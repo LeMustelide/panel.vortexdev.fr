@@ -27,7 +27,7 @@ class KeysController extends AbstractController
         $entityManager->remove($listeKeys);
         $entityManager->flush();
 
-        return $this->redirect('/keys');
+        return $this->redirect('/aqg/keys');
     }
 
     #[Route('keys/add', name: 'addKey', priority: 2)]
@@ -54,7 +54,7 @@ class KeysController extends AbstractController
         $entityManager->flush();
 
 
-        return $this->redirect('/keys');
+        return $this->redirect('/aqg/keys');
     }
 
     #[Route('keys/modify', name: 'modifyKey', priority: 2)]
@@ -78,6 +78,6 @@ class KeysController extends AbstractController
         $entityManager->persist($key);
         $entityManager->flush();
 
-        return $this->redirect('/keys');
+        return $this->redirect('/aqg/keys');
     }
 }

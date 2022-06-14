@@ -1,7 +1,7 @@
 
 function deleteQuiz(id){
     $.ajax({
-        url: "/quiz/delete",
+        url: "/aqg/quiz/delete",
         type : "POST",
         cache: false,
         data:{
@@ -16,7 +16,7 @@ function deleteQuiz(id){
 
 function publishQuiz(id){
     $.ajax({
-        url: "/quiz/publish",
+        url: "/aqg/quiz/publish",
         type : "POST",
         cache: false,
         data:{
@@ -30,7 +30,7 @@ function publishQuiz(id){
 
 function unpublishQuiz(id){
     $.ajax({
-        url: "/quiz/unpublish",
+        url: "/aqg/quiz/unpublish",
         type : "POST",
         cache: false,
         data:{

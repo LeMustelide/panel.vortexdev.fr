@@ -1,7 +1,7 @@
 
 function deleteVersion(id){
     $.ajax({
-        url: "/version/delete",
+        url: "/aqg/version/delete",
         type : "POST",
         cache: false,
         data:{
@@ -15,7 +15,7 @@ function deleteVersion(id){
 
 function disableVersion(id){
     $.ajax({
-        url: "/version/disable",
+        url: "/aqg/version/disable",
         type : "POST",
         cache: false,
         data:{
@@ -29,7 +29,7 @@ function disableVersion(id){
 
 function enableVersion(id){
     $.ajax({
-        url: "/version/enable",
+        url: "/aqg/version/enable",
         type : "POST",
         cache: false,
         data:{

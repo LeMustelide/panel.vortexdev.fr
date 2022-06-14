@@ -145,7 +145,7 @@
 					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">{% if account.ban == 0 %}Confirmer la sanction de {{ account.UserName }}{% else %}Comfimer la fin de la sanction de {{ account.UserName }}{% endif %}</h6>
 				</div>
 				<div class="card-body">
-                    <form method="POST" action="/account/{% if account.ban == 0 %}ban{% else %}unban{% endif %}/{{ account.SteamID }}">
+                    <form method="POST" action="/aqg/account/{% if account.ban == 0 %}ban{% else %}unban{% endif %}/{{ account.SteamID }}">
 						<label class="form-label text-start" style="color: rgb(255,255,255);">Raison</label>
 						<div class="mb-3 mb-sm-0">
                         <textarea class="form-control" rows="4" name="reason" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea>
@@ -175,7 +175,7 @@
 					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Avertissement</h6>
 				</div>
 				<div class="card-body">
-					<form method="POST" action="/account/warn/{{ account.SteamID }}">
+					<form method="POST" action="/aqg/account/warn/{{ account.SteamID }}">
 						<label class="form-label text-start" style="color: rgb(255,255,255);">Raison</label>
 						<div class="mb-3 mb-sm-0">
                         <textarea class="form-control" rows="4" name="reason" value="" style="max-height: 120px;min-height: 120px;height: 120px;"></textarea>

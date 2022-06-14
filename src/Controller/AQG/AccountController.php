@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\AQG;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,7 +37,7 @@ class AccountController extends AbstractController
         $entityManager->persist($ban);
         $entityManager->flush();
 
-        return $this->redirect('/Profile/'.$steamId);
+        return $this->redirect('/aqg/Profile/'.$steamId);
     }
 
     #[Route('account/unban/{steamId}', name: 'unbanAccount', priority: 2)]
@@ -64,7 +64,7 @@ class AccountController extends AbstractController
         $entityManager->persist($ban);
         $entityManager->flush();
 
-        return $this->redirect('/Profile/'.$steamId);
+        return $this->redirect('/aqg/Profile/'.$steamId);
     }
 
     #[Route('account/warn/{steamId}', name: 'warnAccount', priority: 2)]
@@ -91,6 +91,6 @@ class AccountController extends AbstractController
         $entityManager->persist($warn);
         $entityManager->flush();
 
-        return $this->redirect('/Profile/'.$steamId);
+        return $this->redirect('/aqg/Profile/'.$steamId);
     }
 }

@@ -90,7 +90,7 @@ class QuestionController extends AbstractController
         $entityManager->flush();
 
         //return new JsonResponse(array('rep' => $all));
-        return $this->redirect('/question/'.$id);
+        return $this->redirect('/aqg/question/'.$id);
     }
 
     #[Route('question/createForm/{id}', name: 'questionCreateForm')]
@@ -172,6 +172,6 @@ class QuestionController extends AbstractController
         $entityManager->persist($quizContent);
         $entityManager->flush();
 
-        return $this->redirect('/quiz/'.$id);
+        return $this->redirect('/aqg/quiz/'.$id);
     }
 }

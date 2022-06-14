@@ -23,7 +23,7 @@ class VersionController extends AbstractController
         $entityManager->remove($version);
         $entityManager->flush();
 
-        return $this->redirect('/versionList');
+        return $this->redirect('/aqg/versionList');
     }
 
     #[Route('version/disable', name: 'disableVersion', priority: 2)]
@@ -39,7 +39,7 @@ class VersionController extends AbstractController
         $entityManager->persist($version);
         $entityManager->flush();
 
-        return $this->redirect('/versionList');
+        return $this->redirect('/aqg/versionList');
     }
 
     #[Route('version/enable', name: 'enableVersion', priority: 2)]
@@ -55,7 +55,7 @@ class VersionController extends AbstractController
         $entityManager->persist($version);
         $entityManager->flush();
 
-        return $this->redirect('/versionList');
+        return $this->redirect('/aqg/versionList');
     }
 
     #[Route('version/add', name: 'addVersion', priority: 2)]
@@ -78,6 +78,6 @@ class VersionController extends AbstractController
         $entityManager->persist($version);
         $entityManager->flush();
 
-        return $this->redirect('/versionList');
+        return $this->redirect('/aqg/versionList');
     }
 }

@@ -38,7 +38,7 @@ class QuizController extends AbstractController
         $entityManager->remove($quiz);
         $entityManager->flush();
 
-        return $this->redirect('/quizList');
+        return $this->redirect('/aqg/quizList');
     }
 
     #[Route('quiz/publish', name: 'publishQuiz', priority: 2)]
@@ -54,7 +54,7 @@ class QuizController extends AbstractController
         $entityManager->persist($publicQuiz);
         $entityManager->flush();
 
-        return $this->redirect('/quizList');
+        return $this->redirect('/aqg/quizList');
     }
 
     #[Route('quiz/unpublish', name: 'unpublishQuiz', priority: 2)]
@@ -68,7 +68,7 @@ class QuizController extends AbstractController
         $entityManager->remove($publishQuiz);
         $entityManager->flush();
 
-        return $this->redirect('/quizList');
+        return $this->redirect('/aqg/quizList');
     }
 
     #[Route('quiz/editDetails', name: 'editDetailsQuiz', priority: 2)]
@@ -87,7 +87,7 @@ class QuizController extends AbstractController
         $entityManager->persist($quiz);
         $entityManager->flush();
 
-        return $this->redirect('/quiz/'.$id);
+        return $this->redirect('/aqg/quiz/'.$id);
     }
 
     #[Route('quiz/createForm', name: 'createQuizForm', priority: 2)]
@@ -127,6 +127,6 @@ class QuizController extends AbstractController
 
         $id = $quiz->getId();
 
-        return $this->redirect('/quiz/'.$id);
+        return $this->redirect('/aqg/quiz/'.$id);
     }
 }
