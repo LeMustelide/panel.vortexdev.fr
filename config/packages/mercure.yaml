@@ -1,13 +1,8 @@
-# config/packages/mercure.yaml
 mercure:
     hubs:
         default:
-            url: https://vps.vortexdev.fr/.well-known/mercure
+            url: '%env(MERCURE_URL)%'
+            public_url: '%env(MERCURE_PUBLIC_URL)%'
             jwt:
-                secret: '!ChangeMe!'
-                publish: ['foo', 'https://example.com/foo']
-                subscribe: ['bar', 'https://example.com/bar']
-                algorithm: 'hmac.sha256'
-                provider: 'My\Provider'
-                factory: 'My\Factory'
-                value: 'my.jwt'
+                secret: '%env(MERCURE_JWT_SECRET)%'
+                publish: '*'

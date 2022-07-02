@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '25ba2fd2d229540bc995222e188117d711f3d20c',
+        'reference' => '76b8f9b735f9e47e26bda48b7840e872c8aa1de1',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '25ba2fd2d229540bc995222e188117d711f3d20c',
+            'reference' => '76b8f9b735f9e47e26bda48b7840e872c8aa1de1',
             'dev_requirement' => false,
         ),
         'composer/package-versions-deprecated' => array(
@@ -29,12 +29,12 @@
             'dev_requirement' => false,
         ),
         'doctrine/annotations' => array(
-            'pretty_version' => '1.13.2',
-            'version' => '1.13.2.0',
+            'pretty_version' => '1.13.3',
+            'version' => '1.13.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../doctrine/annotations',
             'aliases' => array(),
-            'reference' => '5b668aef16090008790395c02c893b1ba13f7e08',
+            'reference' => '648b0343343565c4a056bfc8392201385e8d89f0',
             'dev_requirement' => false,
         ),
         'doctrine/cache' => array(
@@ -242,6 +242,24 @@
             'install_path' => __DIR__ . '/../laminas/laminas-code',
             'aliases' => array(),
             'reference' => 'da01fb74c08f37e20e7ae49f1e3ee09aa401ebad',
+            'dev_requirement' => false,
+        ),
+        'lcobucci/clock' => array(
+            'pretty_version' => '2.2.0',
+            'version' => '2.2.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lcobucci/clock',
+            'aliases' => array(),
+            'reference' => 'fb533e093fd61321bfcbac08b131ce805fe183d3',
+            'dev_requirement' => false,
+        ),
+        'lcobucci/jwt' => array(
+            'pretty_version' => '4.1.5',
+            'version' => '4.1.5.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../lcobucci/jwt',
+            'aliases' => array(),
+            'reference' => 'fe2d89f2eaa7087af4aa166c6f480ef04e000582',
             'dev_requirement' => false,
         ),
         'mongodb/mongodb' => array(
@@ -499,8 +517,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0|2.0|3.0',
-                1 => '1.0.0 || 2.0.0 || 3.0.0',
+                0 => '1.0.0 || 2.0.0 || 3.0.0',
+                1 => '1.0|2.0|3.0',
             ),
         ),
         'psr/simple-cache-implementation' => array(
@@ -660,6 +678,15 @@
             'install_path' => __DIR__ . '/../sensio/framework-extra-bundle',
             'aliases' => array(),
             'reference' => '6bd976c99ef3f78e31c9490a10ba6dd8901076eb',
+            'dev_requirement' => false,
+        ),
+        'stella-maris/clock' => array(
+            'pretty_version' => '0.1.4',
+            'version' => '0.1.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../stella-maris/clock',
+            'aliases' => array(),
+            'reference' => '8a0a967896df4c63417385dc69328a0aec84d9cf',
             'dev_requirement' => false,
         ),
         'symfony/apache-pack' => array(
@@ -957,6 +984,15 @@
             'install_path' => __DIR__ . '/../symfony/mercure',
             'aliases' => array(),
             'reference' => '7546092e654f9bb22e554819fb614e462075065a',
+            'dev_requirement' => false,
+        ),
+        'symfony/mercure-bundle' => array(
+            'pretty_version' => 'v0.3.5',
+            'version' => '0.3.5.0',
+            'type' => 'symfony-bundle',
+            'install_path' => __DIR__ . '/../symfony/mercure-bundle',
+            'aliases' => array(),
+            'reference' => 'fed303b571bbb58a411e02d52bebfe3b86d774ee',
             'dev_requirement' => false,
         ),
         'symfony/mime' => array(
