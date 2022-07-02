@@ -43,8 +43,8 @@ class MatchStage extends Stage
      * @see Expr::addAnd()
      * @see https://docs.mongodb.com/manual/reference/operator/and/
      *
-     * @param array|Expr $expression
-     * @param array|Expr ...$expressions
+     * @param mixed[]|Expr $expression
+     * @param mixed[]|Expr ...$expressions
      *
      * @return static
      */
@@ -64,8 +64,8 @@ class MatchStage extends Stage
      * @see Expr::addNor()
      * @see https://docs.mongodb.com/manual/reference/operator/nor/
      *
-     * @param array|Expr $expression
-     * @param array|Expr ...$expressions
+     * @param mixed[]|Expr $expression
+     * @param mixed[]|Expr ...$expressions
      *
      * @return static
      */
@@ -85,8 +85,8 @@ class MatchStage extends Stage
      * @see Expr::addOr()
      * @see https://docs.mongodb.com/manual/reference/operator/or/
      *
-     * @param array|Expr $expression
-     * @param array|Expr ...$expressions
+     * @param mixed[]|Expr $expression
+     * @param mixed[]|Expr ...$expressions
      *
      * @return static
      */
@@ -102,6 +102,8 @@ class MatchStage extends Stage
      *
      * @see Expr::all()
      * @see https://docs.mongodb.com/manual/reference/operator/all/
+     *
+     * @param mixed[] $values
      *
      * @return static
      */
@@ -121,7 +123,7 @@ class MatchStage extends Stage
      * @see Expr::elemMatch()
      * @see https://docs.mongodb.com/manual/reference/operator/elemMatch/
      *
-     * @param array|Expr $expression
+     * @param mixed[]|Expr $expression
      *
      * @return static
      */
@@ -195,7 +197,7 @@ class MatchStage extends Stage
      * @see Expr::geoIntersects()
      * @see https://docs.mongodb.com/manual/reference/operator/geoIntersects/
      *
-     * @param array|Geometry $geometry
+     * @param array<string, mixed>|Geometry $geometry
      *
      * @return static
      */
@@ -294,10 +296,10 @@ class MatchStage extends Stage
      * @see Expr::geoWithinPolygon()
      * @see https://docs.mongodb.com/manual/reference/operator/polygon/
      *
-     * @param array $point1    First point of the polygon
-     * @param array $point2    Second point of the polygon
-     * @param array $point3    Third point of the polygon
-     * @param array ...$points Additional points of the polygon
+     * @param array{int|float, int|float} $point1    First point of the polygon
+     * @param array{int|float, int|float} $point2    Second point of the polygon
+     * @param array{int|float, int|float} $point3    Third point of the polygon
+     * @param array{int|float, int|float} ...$points Additional points of the polygon
      *
      * @return static
      */
@@ -354,6 +356,8 @@ class MatchStage extends Stage
      *
      * @see Expr::in()
      * @see https://docs.mongodb.com/manual/reference/operator/in/
+     *
+     * @param mixed[] $values
      *
      * @return static
      */
@@ -452,7 +456,7 @@ class MatchStage extends Stage
      * @see Expr::not()
      * @see https://docs.mongodb.com/manual/reference/operator/not/
      *
-     * @param array|Expr $expression
+     * @param mixed[]|Expr $expression
      *
      * @return static
      */
@@ -485,6 +489,8 @@ class MatchStage extends Stage
      *
      * @see Expr::notIn()
      * @see https://docs.mongodb.com/manual/reference/operator/nin/
+     *
+     * @param mixed[] $values
      *
      * @return static
      */

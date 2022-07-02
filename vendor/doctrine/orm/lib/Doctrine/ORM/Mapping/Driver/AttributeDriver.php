@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Doctrine\ORM\Mapping\Driver;
 
+use Doctrine\Deprecations\Deprecation;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\Mapping\Builder\EntityListenerBuilder;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\Mapping\Driver\AnnotationDriver;
+use Doctrine\Persistence\Mapping\ClassMetadata as PersistenceClassMetadata;
+use Doctrine\Persistence\Mapping\Driver\ColocatedMappingDriver;
+use LogicException;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
@@ -20,9 +22,14 @@ use function class_exists;
 use function constant;
 use function defined;
 use function get_class;
+use function sprintf;
 
-class AttributeDriver extends AnnotationDriver
+use const PHP_VERSION_ID;
+
+class AttributeDriver extends CompatibilityAnnotationDriver
 {
+    use ColocatedMappingDriver;
+
     /** @var array<string,int> */
     // @phpcs:ignore
     protected $entityAnnotationClasses = [
@@ -31,11 +38,47 @@ class AttributeDriver extends AnnotationDriver
     ];
 
     /**
+     * The annotation reader.
+     *
+     * @internal this property will be private in 3.0
+     *
+     * @var AttributeReader
+     */
+    protected $reader;
+
+    /**
      * @param array<string> $paths
      */
     public function __construct(array $paths)
     {
-        parent::__construct(new AttributeReader(), $paths);
+        if (PHP_VERSION_ID < 80000) {
+            throw new LogicException(sprintf(
+                'The attribute metadata driver cannot be enabled on PHP 7. Please upgrade to PHP 8 or choose a different'
+                . ' metadata driver.'
+            ));
+        }
+
+        $this->reader = new AttributeReader();
+        $this->addPaths($paths);
+    }
+
+    /**
+     * Retrieve the current annotation reader
+     *
+     * @deprecated no replacement planned.
+     *
+     * @return AttributeReader
+     */
+    public function getReader()
+    {
+        Deprecation::trigger(
+            'doctrine/orm',
+            'https://github.com/doctrine/orm/pull/9587',
+            '%s is deprecated with no replacement',
+            __METHOD__
+        );
+
+        return $this->reader;
     }
 
     /**
@@ -55,11 +98,20 @@ class AttributeDriver extends AnnotationDriver
         return true;
     }
 
-    public function loadMetadataForClass($className, ClassMetadata $metadata): void
+    /**
+     * {@inheritDoc}
+     *
+     * @psalm-param class-string<T> $className
+     * @psalm-param ClassMetadata<T> $metadata
+     *
+     * @template T of object
+     */
+    public function loadMetadataForClass($className, PersistenceClassMetadata $metadata): void
     {
-        assert($metadata instanceof ClassMetadataInfo);
-
-        $reflectionClass = $metadata->getReflectionClass();
+        $reflectionClass = $metadata->getReflectionClass()
+            // this happens when running annotation driver in combination with
+            // static reflection services. This is not the nicest fix
+            ?? new ReflectionClass($metadata->name);
 
         $classAttributes = $this->reader->getClassAnnotations($reflectionClass);
 
@@ -195,7 +247,7 @@ class AttributeDriver extends AnnotationDriver
                 constant('Doctrine\ORM\Mapping\ClassMetadata::INHERITANCE_TYPE_' . $inheritanceTypeAttribute->value)
             );
 
-            if ($metadata->inheritanceType !== Mapping\ClassMetadata::INHERITANCE_TYPE_NONE) {
+            if ($metadata->inheritanceType !== ClassMetadata::INHERITANCE_TYPE_NONE) {
                 // Evaluate DiscriminatorColumn annotation
                 if (isset($classAttributes[Mapping\DiscriminatorColumn::class])) {
                     $discrColumnAttribute = $classAttributes[Mapping\DiscriminatorColumn::class];
@@ -260,7 +312,7 @@ class AttributeDriver extends AnnotationDriver
             // Check for JoinColumn/JoinColumns annotations
             $joinColumns = [];
 
-            $joinColumnAttributes = $this->reader->getPropertyAnnotation($property, Mapping\JoinColumn::class);
+            $joinColumnAttributes = $this->reader->getPropertyAnnotationCollection($property, Mapping\JoinColumn::class);
 
             foreach ($joinColumnAttributes as $joinColumnAttribute) {
                 $joinColumns[] = $this->joinColumnToArray($joinColumnAttribute);
@@ -365,11 +417,11 @@ class AttributeDriver extends AnnotationDriver
                     ];
                 }
 
-                foreach ($this->reader->getPropertyAnnotation($property, Mapping\JoinColumn::class) as $joinColumn) {
+                foreach ($this->reader->getPropertyAnnotationCollection($property, Mapping\JoinColumn::class) as $joinColumn) {
                     $joinTable['joinColumns'][] = $this->joinColumnToArray($joinColumn);
                 }
 
-                foreach ($this->reader->getPropertyAnnotation($property, Mapping\InverseJoinColumn::class) as $joinColumn) {
+                foreach ($this->reader->getPropertyAnnotationCollection($property, Mapping\InverseJoinColumn::class) as $joinColumn) {
                     $joinTable['inverseJoinColumns'][] = $this->joinColumnToArray($joinColumn);
                 }
 
@@ -448,7 +500,7 @@ class AttributeDriver extends AnnotationDriver
 
                 // Check for `fetch`
                 if ($associationOverride->fetch) {
-                    $override['fetch'] = constant(Mapping\ClassMetadata::class . '::FETCH_' . $associationOverride->fetch);
+                    $override['fetch'] = constant(ClassMetadata::class . '::FETCH_' . $associationOverride->fetch);
                 }
 
                 $metadata->setAssociationOverride($fieldName, $override);
@@ -515,7 +567,7 @@ class AttributeDriver extends AnnotationDriver
      * @param string $className The class name.
      * @param string $fetchMode The fetch mode.
      *
-     * @return int The fetch mode as defined in ClassMetadata.
+     * @return ClassMetadata::FETCH_* The fetch mode as defined in ClassMetadata.
      *
      * @throws MappingException If the fetch mode is not valid.
      */

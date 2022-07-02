@@ -38,6 +38,7 @@ use function gettype;
 use function is_object;
 use function ltrim;
 use function sprintf;
+use function trigger_deprecation;
 
 /**
  * The DocumentManager class is the central access point for managing the
@@ -49,6 +50,7 @@ use function sprintf;
  *     $dm = DocumentManager::create(new Connection(), $config);
  *
  * @psalm-import-type CommitOptions from UnitOfWork
+ * @psalm-import-type FieldMapping from ClassMetadata
  */
 class DocumentManager implements ObjectManager
 {
@@ -703,6 +705,15 @@ class DocumentManager implements ObjectManager
      */
     public function clear($objectName = null)
     {
+        if ($objectName !== null) {
+            trigger_deprecation(
+                'doctrine/mongodb-odm',
+                '2.4',
+                'Calling %s() with any arguments to clear specific documents is deprecated and will not be supported in Doctrine ODM 3.0.',
+                __METHOD__
+            );
+        }
+
         $this->unitOfWork->clear($objectName);
     }
 
@@ -749,6 +760,8 @@ class DocumentManager implements ObjectManager
 
     /**
      * Returns a reference to the supplied document.
+     *
+     * @psalm-param FieldMapping $referenceMapping
      *
      * @return mixed The reference for the document in question, according to the desired mapping
      *
@@ -804,10 +817,12 @@ class DocumentManager implements ObjectManager
     /**
      * Build discriminator portion of reference for specified reference mapping and class metadata.
      *
-     * @param array         $referenceMapping Mappings of reference for which discriminator data is created.
-     * @param ClassMetadata $class            Metadata of reference document class.
+     * @param array                 $referenceMapping Mappings of reference for which discriminator data is created.
+     * @param ClassMetadata<object> $class            Metadata of reference document class.
+     * @psalm-param FieldMapping $referenceMapping
      *
      * @return array with next structure [{discriminator field} => {discriminator value}]
+     * @psalm-return array<string, class-string>
      *
      * @throws MappingException When discriminator map is present and reference class in not registered in it.
      */

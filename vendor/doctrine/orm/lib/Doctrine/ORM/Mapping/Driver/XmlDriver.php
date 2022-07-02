@@ -6,11 +6,12 @@ namespace Doctrine\ORM\Mapping\Driver;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping\Builder\EntityListenerBuilder;
-use Doctrine\ORM\Mapping\ClassMetadata as Metadata;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Mapping\MappingException;
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata as PersistenceClassMetadata;
 use Doctrine\Persistence\Mapping\Driver\FileDriver;
 use InvalidArgumentException;
+use LogicException;
 use SimpleXMLElement;
 
 use function assert;
@@ -18,6 +19,7 @@ use function constant;
 use function count;
 use function defined;
 use function explode;
+use function extension_loaded;
 use function file_get_contents;
 use function in_array;
 use function simplexml_load_string;
@@ -39,13 +41,25 @@ class XmlDriver extends FileDriver
      */
     public function __construct($locator, $fileExtension = self::DEFAULT_FILE_EXTENSION)
     {
+        if (! extension_loaded('simplexml')) {
+            throw new LogicException(sprintf(
+                'The XML metadata driver cannot be enabled because the SimpleXML PHP extension is missing.'
+                . ' Please configure PHP with SimpleXML or choose a different metadata driver.'
+            ));
+        }
+
         parent::__construct($locator, $fileExtension);
     }
 
     /**
      * {@inheritDoc}
+     *
+     * @psalm-param class-string<T> $className
+     * @psalm-param ClassMetadata<T> $metadata
+     *
+     * @template T of object
      */
-    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    public function loadMetadataForClass($className, PersistenceClassMetadata $metadata)
     {
         $xmlRoot = $this->getElement($className);
         assert($xmlRoot instanceof SimpleXMLElement);
@@ -159,7 +173,7 @@ class XmlDriver extends FileDriver
             $inheritanceType = (string) $xmlRoot['inheritance-type'];
             $metadata->setInheritanceType(constant('Doctrine\ORM\Mapping\ClassMetadata::INHERITANCE_TYPE_' . $inheritanceType));
 
-            if ($metadata->inheritanceType !== Metadata::INHERITANCE_TYPE_NONE) {
+            if ($metadata->inheritanceType !== ClassMetadata::INHERITANCE_TYPE_NONE) {
                 // Evaluate <discriminator-column...>
                 if (isset($xmlRoot->{'discriminator-column'})) {
                     $discrColumn = $xmlRoot->{'discriminator-column'};
@@ -676,7 +690,7 @@ class XmlDriver extends FileDriver
 
                 // Check for `fetch`
                 if (isset($overrideElement['fetch'])) {
-                    $override['fetch'] = constant(Metadata::class . '::FETCH_' . (string) $overrideElement['fetch']);
+                    $override['fetch'] = constant(ClassMetadata::class . '::FETCH_' . (string) $overrideElement['fetch']);
                 }
 
                 $metadata->setAssociationOverride($fieldName, $override);

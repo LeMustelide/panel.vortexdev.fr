@@ -11,6 +11,9 @@
 
 namespace Symfony\Bundle\MakerBundle\Util;
 
+use ReflectionClass;
+use ReflectionException;
+
 /**
  * @author Jesse Rushlow <jr@rushlow.dev>
  *
@@ -23,25 +26,6 @@ final class TemplateComponentGenerator
     public function __construct(PhpCompatUtil $phpCompatUtil)
     {
         $this->phpCompatUtil = $phpCompatUtil;
-    }
-
-    public static function generateUseStatements(array $classesToBeImported): string
-    {
-        $transformed = [];
-
-        foreach ($classesToBeImported as $key => $class) {
-            $transformed[$key] = str_replace('\\', ' ', $class);
-        }
-
-        asort($transformed);
-
-        $statements = '';
-
-        foreach ($transformed as $key => $class) {
-            $statements .= sprintf("use %s;\n", $classesToBeImported[$key]);
-        }
-
-        return $statements;
     }
 
     /** @legacy Annotation Support can be dropped w/ Symfony 6 LTS */
@@ -95,5 +79,15 @@ final class TemplateComponentGenerator
         }
 
         return sprintf('%s ', $classNameDetails->getShortName());
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function repositoryHasAddRemoveMethods(string $repositoryFullClassName): bool
+    {
+        $reflectedComponents = new ReflectionClass($repositoryFullClassName);
+
+        return $reflectedComponents->hasMethod('add') && $reflectedComponents->hasMethod('remove');
     }
 }

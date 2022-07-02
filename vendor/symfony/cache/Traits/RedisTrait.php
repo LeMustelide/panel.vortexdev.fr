@@ -15,6 +15,7 @@ use Predis\Command\Redis\UNLINK;
 use Predis\Connection\Aggregate\ClusterInterface;
 use Predis\Connection\Aggregate\RedisCluster;
 use Predis\Connection\Aggregate\ReplicationInterface;
+use Predis\Response\ErrorInterface;
 use Predis\Response\Status;
 use Symfony\Component\Cache\Exception\CacheException;
 use Symfony\Component\Cache\Exception\InvalidArgumentException;
@@ -172,6 +173,10 @@ trait RedisTrait
             $class = $params['redis_cluster'] ? \RedisCluster::class : (1 < \count($hosts) ? \RedisArray::class : \Redis::class);
         } else {
             $class = $params['class'] ?? \Predis\Client::class;
+
+            if (isset($params['redis_sentinel']) && !is_a($class, \Predis\Client::class, true) && !class_exists(\RedisSentinel::class)) {
+                throw new CacheException(sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and ext-redis >= 5.2 not found: "%s".', $class, $dsn));
+            }
         }
 
         if (is_a($class, \Redis::class, true)) {
@@ -180,7 +185,7 @@ trait RedisTrait
 
             $initializer = static function ($redis) use ($connect, $params, $dsn, $auth, $hosts, $tls) {
                 $host = $hosts[0]['host'] ?? $hosts[0]['path'];
-                $port = $hosts[0]['port'] ?? 6379;
+                $port = $hosts[0]['port'] ?? 0;
 
                 if (isset($hosts[0]['host']) && $tls) {
                     $host = 'tls://'.$host;
@@ -373,7 +378,7 @@ trait RedisTrait
     {
         if ($this->redis instanceof \Predis\ClientInterface) {
             $prefix = $this->redis->getOptions()->prefix ? $this->redis->getOptions()->prefix->getPrefix() : '';
-            $prefixLen = \strlen($prefix);
+            $prefixLen = \strlen($prefix ?? '');
         }
 
         $cleared = true;
@@ -391,7 +396,7 @@ trait RedisTrait
             }
 
             $info = $host->info('Server');
-            $info = $info['Server'] ?? $info;
+            $info = !$info instanceof ErrorInterface ? $info['Server'] ?? $info : ['redis_version' => '2.0'];
 
             if (!$host instanceof \Predis\ClientInterface) {
                 $prefix = \defined('Redis::SCAN_PREFIX') && (\Redis::SCAN_PREFIX & $host->getOption(\Redis::OPT_SCAN)) ? '' : $host->getOption(\Redis::OPT_PREFIX);

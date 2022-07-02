@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Doctrine\ODM\MongoDB\Mapping;
 
+use BackedEnum;
 use BadMethodCallException;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Instantiator\Instantiator;
 use Doctrine\Instantiator\InstantiatorInterface;
 use Doctrine\ODM\MongoDB\Id\IdGenerator;
@@ -16,10 +19,13 @@ use Doctrine\ODM\MongoDB\Utility\CollectionHelper;
 use Doctrine\Persistence\Mapping\ClassMetadata as BaseClassMetadata;
 use Doctrine\Persistence\Mapping\ReflectionService;
 use Doctrine\Persistence\Mapping\RuntimeReflectionService;
+use Doctrine\Persistence\Reflection\EnumReflectionProperty;
 use InvalidArgumentException;
 use LogicException;
 use ProxyManager\Proxy\GhostObjectInterface;
 use ReflectionClass;
+use ReflectionEnum;
+use ReflectionNamedType;
 use ReflectionProperty;
 
 use function array_filter;
@@ -31,6 +37,7 @@ use function assert;
 use function class_exists;
 use function constant;
 use function count;
+use function enum_exists;
 use function extension_loaded;
 use function get_class;
 use function in_array;
@@ -42,6 +49,8 @@ use function sprintf;
 use function strtolower;
 use function strtoupper;
 use function trigger_deprecation;
+
+use const PHP_VERSION_ID;
 
 /**
  * A <tt>ClassMetadata</tt> instance holds all the object-document mapping metadata
@@ -95,7 +104,8 @@ use function trigger_deprecation;
  *      criteria?: array<string, string>,
  *      alsoLoadFields?: list<string>,
  *      order?: int|string,
- *      background?: bool
+ *      background?: bool,
+ *      enumType?: class-string<BackedEnum>,
  * }
  * @psalm-type FieldMapping = array{
  *      type: string,
@@ -140,6 +150,7 @@ use function trigger_deprecation;
  *      index?: bool,
  *      criteria?: array<string, string>,
  *      alsoLoadFields?: list<string>,
+ *      enumType?: class-string<BackedEnum>,
  * }
  * @psalm-type AssociationFieldMapping = array{
  *      type?: string,
@@ -328,6 +339,8 @@ use function trigger_deprecation;
      * NOTIFY means that Doctrine relies on the entities sending out notifications
      * when their properties change. Such entity classes must implement
      * the <tt>NotifyPropertyChanged</tt> interface.
+     *
+     * @deprecated
      */
     public const CHANGETRACKING_NOTIFY = 3;
 
@@ -586,7 +599,8 @@ use function trigger_deprecation;
      *
      * @see discriminatorField
      *
-     * @var mixed
+     * @var string|null
+     * @psalm-var class-string|null
      */
     public $discriminatorValue;
 
@@ -788,6 +802,9 @@ use function trigger_deprecation;
         return $this->reflClass;
     }
 
+    /**
+     * @param string $fieldName
+     */
     public function isIdentifier($fieldName): bool
     {
         return $this->identifier === $fieldName;
@@ -806,6 +823,8 @@ use function trigger_deprecation;
     /**
      * Since MongoDB only allows exactly one identifier field
      * this will always return an array with only one value
+     *
+     * @return array<string|null>
      */
     public function getIdentifier(): array
     {
@@ -823,6 +842,9 @@ use function trigger_deprecation;
         return [$this->identifier];
     }
 
+    /**
+     * @param string $fieldName
+     */
     public function hasField($fieldName): bool
     {
         return isset($this->fieldMappings[$fieldName]);
@@ -1303,6 +1325,9 @@ use function trigger_deprecation;
 
     /**
      * Whether the change tracking policy of this class is "notify".
+     *
+     * @deprecated This method was deprecated in doctrine/mongodb-odm 2.4. Please use DEFERRED_EXPLICIT tracking
+     * policy and isChangeTrackingDeferredImplicit method to detect it.
      */
     public function isChangeTrackingNotify(): bool
     {
@@ -1525,6 +1550,7 @@ use function trigger_deprecation;
     {
         $mapping['embedded'] = true;
         $mapping['type']     = self::ONE;
+
         $this->mapField($mapping);
     }
 
@@ -1537,6 +1563,7 @@ use function trigger_deprecation;
     {
         $mapping['embedded'] = true;
         $mapping['type']     = self::MANY;
+
         $this->mapField($mapping);
     }
 
@@ -1549,6 +1576,7 @@ use function trigger_deprecation;
     {
         $mapping['reference'] = true;
         $mapping['type']      = self::ONE;
+
         $this->mapField($mapping);
     }
 
@@ -1561,6 +1589,7 @@ use function trigger_deprecation;
     {
         $mapping['reference'] = true;
         $mapping['type']      = self::MANY;
+
         $this->mapField($mapping);
     }
 
@@ -1616,6 +1645,8 @@ use function trigger_deprecation;
 
     /**
      * Checks whether the class has a mapped association (embed or reference) with the given field name.
+     *
+     * @param string $fieldName
      */
     public function hasAssociation($fieldName): bool
     {
@@ -1625,6 +1656,8 @@ use function trigger_deprecation;
     /**
      * Checks whether the class has a mapped reference or embed for the specified field and
      * is a single valued association.
+     *
+     * @param string $fieldName
      */
     public function isSingleValuedAssociation($fieldName): bool
     {
@@ -1634,6 +1667,8 @@ use function trigger_deprecation;
     /**
      * Checks whether the class has a mapped reference or embed for the specified field and
      * is a collection valued association.
+     *
+     * @param string $fieldName
      */
     public function isCollectionValuedAssociation($fieldName): bool
     {
@@ -1743,6 +1778,8 @@ use function trigger_deprecation;
      * Since MongoDB only allows exactly one identifier field this is a proxy
      * to {@see getIdentifierValue()} and returns an array with the identifier
      * field as a key.
+     *
+     * @param object $object
      */
     public function getIdentifierValues($object): array
     {
@@ -2067,19 +2104,25 @@ use function trigger_deprecation;
         return array_keys($this->associationMappings);
     }
 
+    /**
+     * @param string $fieldName
+     */
     public function getTypeOfField($fieldName): ?string
     {
         return isset($this->fieldMappings[$fieldName]) ?
             $this->fieldMappings[$fieldName]['type'] : null;
     }
 
+    /**
+     * @param string $assocName
+     */
     public function getAssociationTargetClass($assocName): ?string
     {
         if (! isset($this->associationMappings[$assocName])) {
             throw new InvalidArgumentException("Association name expected, '" . $assocName . "' is not an association.");
         }
 
-        return $this->associationMappings[$assocName]['targetDocument'];
+        return $this->associationMappings[$assocName]['targetDocument'] ?? null;
     }
 
     /**
@@ -2098,11 +2141,17 @@ use function trigger_deprecation;
         return $this->associationMappings[$assocName]['collectionClass'];
     }
 
+    /**
+     * @param string $assocName
+     */
     public function isAssociationInverseSide($assocName): bool
     {
         throw new BadMethodCallException(__METHOD__ . '() is not implemented yet.');
     }
 
+    /**
+     * @param string $assocName
+     */
     public function getAssociationMappedByTargetField($assocName)
     {
         throw new BadMethodCallException(__METHOD__ . '() is not implemented yet.');
@@ -2121,6 +2170,14 @@ use function trigger_deprecation;
     {
         if (! isset($mapping['fieldName']) && isset($mapping['name'])) {
             $mapping['fieldName'] = $mapping['name'];
+        }
+
+        if ($this->isTypedProperty($mapping['fieldName'])) {
+            $mapping = $this->validateAndCompleteTypedFieldMapping($mapping);
+
+            if (isset($mapping['type']) && $mapping['type'] === self::MANY) {
+                $mapping = $this->validateAndCompleteTypedManyAssociationMapping($mapping);
+            }
         }
 
         if (! isset($mapping['fieldName']) || ! is_string($mapping['fieldName'])) {
@@ -2193,6 +2250,11 @@ use function trigger_deprecation;
             }
 
             unset($this->generatorOptions['type']);
+        }
+
+        if (! isset($mapping['type'])) {
+            // Default to string
+            $mapping['type'] = Type::STRING;
         }
 
         if (! isset($mapping['nullable'])) {
@@ -2320,6 +2382,24 @@ use function trigger_deprecation;
 
         $reflProp = $this->reflectionService->getAccessibleProperty($this->name, $mapping['fieldName']);
         assert($reflProp instanceof ReflectionProperty);
+
+        if (isset($mapping['enumType'])) {
+            if (PHP_VERSION_ID < 80100) {
+                throw MappingException::enumsRequirePhp81($this->name, $mapping['fieldName']);
+            }
+
+            if (! enum_exists($mapping['enumType'])) {
+                throw MappingException::nonEnumTypeMapped($this->name, $mapping['fieldName'], $mapping['enumType']);
+            }
+
+            $reflectionEnum = new ReflectionEnum($mapping['enumType']);
+            if (! $reflectionEnum->isBacked()) {
+                throw MappingException::nonBackedEnumMapped($this->name, $mapping['fieldName'], $mapping['enumType']);
+            }
+
+            $reflProp = new EnumReflectionProperty($reflProp, $mapping['enumType']);
+        }
+
         $this->reflFields[$mapping['fieldName']] = $reflProp;
 
         return $mapping;
@@ -2447,6 +2527,11 @@ use function trigger_deprecation;
         foreach ($this->fieldMappings as $field => $mapping) {
             $prop = $this->reflectionService->getAccessibleProperty($mapping['declared'] ?? $this->name, $field);
             assert($prop instanceof ReflectionProperty);
+
+            if (isset($mapping['enumType'])) {
+                $prop = new EnumReflectionProperty($prop, $mapping['enumType']);
+            }
+
             $this->reflFields[$field] = $prop;
         }
     }
@@ -2504,5 +2589,89 @@ use function trigger_deprecation;
 
             throw MappingException::duplicateDatabaseFieldName($this->getName(), $mapping['fieldName'], $mapping['name'], $fieldName);
         }
+    }
+
+    private function isTypedProperty(string $name): bool
+    {
+        return PHP_VERSION_ID >= 70400
+            && $this->reflClass->hasProperty($name)
+            && $this->reflClass->getProperty($name)->hasType();
+    }
+
+    /**
+     * Validates & completes the given field mapping based on typed property.
+     *
+     * @psalm-param FieldMappingConfig $mapping
+     *
+     * @return FieldMappingConfig
+     */
+    private function validateAndCompleteTypedFieldMapping(array $mapping): array
+    {
+        $type = $this->reflClass->getProperty($mapping['fieldName'])->getType();
+
+        if (! $type instanceof ReflectionNamedType || isset($mapping['type'])) {
+            return $mapping;
+        }
+
+        if (PHP_VERSION_ID >= 80100 && ! $type->isBuiltin() && enum_exists($type->getName())) {
+            $mapping['enumType'] = $type->getName();
+
+            $reflection = new ReflectionEnum($type->getName());
+            $type       = $reflection->getBackingType();
+
+            if ($type === null) {
+                throw MappingException::nonBackedEnumMapped($this->name, $mapping['fieldName'], $mapping['enumType']);
+            }
+
+            assert($type instanceof ReflectionNamedType);
+        }
+
+        switch ($type->getName()) {
+            case DateTime::class:
+                $mapping['type'] = Type::DATE;
+                break;
+            case DateTimeImmutable::class:
+                $mapping['type'] = Type::DATE_IMMUTABLE;
+                break;
+            case 'array':
+                $mapping['type'] = Type::HASH;
+                break;
+            case 'bool':
+                $mapping['type'] = Type::BOOL;
+                break;
+            case 'float':
+                $mapping['type'] = Type::FLOAT;
+                break;
+            case 'int':
+                $mapping['type'] = Type::INT;
+                break;
+            case 'string':
+                $mapping['type'] = Type::STRING;
+                break;
+        }
+
+        return $mapping;
+    }
+
+    /**
+     * Validates & completes the basic mapping information based on typed property.
+     *
+     * @psalm-param FieldMappingConfig $mapping
+     *
+     * @return FieldMappingConfig
+     */
+    private function validateAndCompleteTypedManyAssociationMapping(array $mapping): array
+    {
+        $type = $this->reflClass->getProperty($mapping['fieldName'])->getType();
+
+        if (! $type instanceof ReflectionNamedType) {
+            return $mapping;
+        }
+
+        if (! isset($mapping['collectionClass']) && class_exists($type->getName())) {
+            $mapping['collectionClass'] = $type->getName();
+        }
+
+        return $mapping;
     }
 }

@@ -144,6 +144,10 @@ final class FilterCollection
 
     /**
      * Gets enabled filter criteria.
+     *
+     * @param ClassMetadata<object> $class
+     *
+     * @return array<string, mixed>
      */
     public function getFilterCriteria(ClassMetadata $class): array
     {

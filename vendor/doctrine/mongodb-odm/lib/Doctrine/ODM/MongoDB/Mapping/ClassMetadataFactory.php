@@ -27,6 +27,7 @@ use function get_class;
 use function get_class_methods;
 use function in_array;
 use function interface_exists;
+use function trigger_deprecation;
 use function ucfirst;
 
 /**
@@ -83,6 +84,9 @@ final class ClassMetadataFactory extends AbstractClassMetadataFactory
         $this->initialized = true;
     }
 
+    /**
+     * @param string $className
+     */
     protected function onNotFoundMetadata($className)
     {
         if (! $this->evm->hasListeners(Events::onClassMetadataNotFound)) {
@@ -96,12 +100,18 @@ final class ClassMetadataFactory extends AbstractClassMetadataFactory
         return $eventArgs->getFoundMetadata();
     }
 
+    /**
+     * @deprecated
+     *
+     * @param string $namespaceAlias
+     * @param string $simpleClassName
+     */
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName): string
     {
         return $this->config->getDocumentNamespace($namespaceAlias) . '\\' . $simpleClassName;
     }
 
-    protected function getDriver()
+    protected function getDriver(): MappingDriver
     {
         return $this->driver;
     }
@@ -121,6 +131,9 @@ final class ClassMetadataFactory extends AbstractClassMetadataFactory
         return ! $class->isMappedSuperclass && ! $class->isEmbeddedDocument && ! $class->isQueryResultDocument && ! $class->isView();
     }
 
+    /**
+     * @param bool $rootEntityFound
+     */
     protected function doLoadMetadata($class, $parent, $rootEntityFound, array $nonSuperclassParents = []): void
     {
         assert($class instanceof ClassMetadata);
@@ -195,6 +208,16 @@ final class ClassMetadataFactory extends AbstractClassMetadataFactory
 
         $eventArgs = new LoadClassMetadataEventArgs($class, $this->dm);
         $this->evm->dispatchEvent(Events::loadClassMetadata, $eventArgs);
+
+        // phpcs:ignore SlevomatCodingStandard.ControlStructures.EarlyExit.EarlyExitNotUsed
+        if ($class->isChangeTrackingNotify()) {
+            trigger_deprecation(
+                'doctrine/mongodb-odm',
+                '2.4',
+                'NOTIFY tracking policy used in class "%s" is deprecated. Please use DEFERRED_EXPLICIT instead.',
+                $class->name
+            );
+        }
     }
 
     /**

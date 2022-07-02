@@ -9,7 +9,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Connections\PrimaryReadReplicaConnection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
-use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\TableDiff;
 use Doctrine\DBAL\Types\Types;
@@ -37,29 +36,22 @@ use const CASE_LOWER;
 
 final class TableMetadataStorage implements MetadataStorage
 {
-    /** @var bool */
-    private $isInitialized;
+    private bool $isInitialized = false;
 
-    /** @var bool */
-    private $schemaUpToDate = false;
+    private bool $schemaUpToDate = false;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /** @var AbstractSchemaManager<AbstractPlatform> */
-    private $schemaManager;
+    private AbstractSchemaManager $schemaManager;
 
-    /** @var AbstractPlatform */
-    private $platform;
+    private AbstractPlatform $platform;
 
-    /** @var TableMetadataStorageConfiguration */
-    private $configuration;
+    private TableMetadataStorageConfiguration $configuration;
 
-    /** @var MigrationsRepository|null */
-    private $migrationRepository;
+    private ?MigrationsRepository $migrationRepository = null;
 
-    /** @var MigrationsComparator */
-    private $comparator;
+    private MigrationsComparator $comparator;
 
     public function __construct(
         Connection $connection,
@@ -69,7 +61,7 @@ final class TableMetadataStorage implements MetadataStorage
     ) {
         $this->migrationRepository = $migrationRepository;
         $this->connection          = $connection;
-        $this->schemaManager       = $connection->getSchemaManager();
+        $this->schemaManager       = $connection->createSchemaManager();
         $this->platform            = $connection->getDatabasePlatform();
 
         if ($configuration !== null && ! ($configuration instanceof TableMetadataStorageConfiguration)) {
@@ -184,9 +176,8 @@ final class TableMetadataStorage implements MetadataStorage
             return null;
         }
 
-        $comparator   = new Comparator();
         $currentTable = $this->schemaManager->listTableDetails($this->configuration->getTableName());
-        $diff         = $comparator->diffTable($currentTable, $expectedTable);
+        $diff         = $this->schemaManager->createComparator()->diffTable($currentTable, $expectedTable);
 
         return $diff instanceof TableDiff ? $diff : null;
     }

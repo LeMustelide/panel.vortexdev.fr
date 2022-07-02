@@ -67,6 +67,7 @@ final class CurlResponse implements ResponseInterface, StreamableInterface
         $this->timeout = $options['timeout'] ?? null;
         $this->info['http_method'] = $method;
         $this->info['user_data'] = $options['user_data'] ?? null;
+        $this->info['max_duration'] = $options['max_duration'] ?? null;
         $this->info['start_time'] = $this->info['start_time'] ?? microtime(true);
         $info = &$this->info;
         $headers = &$this->headers;
@@ -257,7 +258,9 @@ final class CurlResponse implements ResponseInterface, StreamableInterface
 
             $this->doDestruct();
         } finally {
-            curl_setopt($this->handle, \CURLOPT_VERBOSE, false);
+            if (\is_resource($this->handle) || $this->handle instanceof \CurlHandle) {
+                curl_setopt($this->handle, \CURLOPT_VERBOSE, false);
+            }
         }
     }
 
@@ -402,7 +405,6 @@ final class CurlResponse implements ResponseInterface, StreamableInterface
                 if (curl_getinfo($ch, \CURLINFO_REDIRECT_COUNT) === $options['max_redirects']) {
                     curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, false);
                 } elseif (303 === $info['http_code'] || ('POST' === $info['http_method'] && \in_array($info['http_code'], [301, 302], true))) {
-                    $info['http_method'] = 'HEAD' === $info['http_method'] ? 'HEAD' : 'GET';
                     curl_setopt($ch, \CURLOPT_POSTFIELDS, '');
                 }
             }
@@ -422,7 +424,12 @@ final class CurlResponse implements ResponseInterface, StreamableInterface
         $info['redirect_url'] = null;
 
         if (300 <= $statusCode && $statusCode < 400 && null !== $location) {
-            if (null === $info['redirect_url'] = $resolveRedirect($ch, $location)) {
+            if ($noContent = 303 === $statusCode || ('POST' === $info['http_method'] && \in_array($statusCode, [301, 302], true))) {
+                $info['http_method'] = 'HEAD' === $info['http_method'] ? 'HEAD' : 'GET';
+                curl_setopt($ch, \CURLOPT_CUSTOMREQUEST, $info['http_method']);
+            }
+
+            if (null === $info['redirect_url'] = $resolveRedirect($ch, $location, $noContent)) {
                 $options['max_redirects'] = curl_getinfo($ch, \CURLINFO_REDIRECT_COUNT);
                 curl_setopt($ch, \CURLOPT_FOLLOWLOCATION, false);
                 curl_setopt($ch, \CURLOPT_MAXREDIRS, $options['max_redirects']);

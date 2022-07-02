@@ -71,6 +71,9 @@ class XmlDriver extends FileDriver
         ],
     ];
 
+    /**
+     * @param string|null $fileExtension
+     */
     public function __construct($locator, $fileExtension = self::DEFAULT_FILE_EXTENSION)
     {
         parent::__construct($locator, $fileExtension);
@@ -273,6 +276,10 @@ class XmlDriver extends FileDriver
 
                 if (isset($attributes['not-saved'])) {
                     $mapping['notSaved'] = ((string) $attributes['not-saved'] === 'true');
+                }
+
+                if (isset($attributes['enum-type'])) {
+                    $mapping['enumType'] = (string) $attributes['enum-type'];
                 }
 
                 if (isset($attributes['field-name'])) {

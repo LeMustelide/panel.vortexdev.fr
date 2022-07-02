@@ -13,6 +13,13 @@ namespace Symfony\Bundle\MakerBundle\Util;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Embedded;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use PhpParser\Builder;
 use PhpParser\BuilderHelpers;
 use PhpParser\Comment\Doc;
@@ -93,7 +100,7 @@ final class ClassSourceManipulator
         $attributes = [];
 
         if ($this->useAttributesForDoctrineMapping) {
-            $attributes[] = $this->buildAttributeNode('ORM\Column', $columnOptions);
+            $attributes[] = $this->buildAttributeNode(Column::class, $columnOptions, 'ORM');
         } else {
             $comments[] = $this->buildAnnotationLine('@ORM\Column', $columnOptions);
         }
@@ -138,10 +145,9 @@ final class ClassSourceManipulator
         } else {
             $attributes = [
                 $this->buildAttributeNode(
-                    'ORM\\Embedded',
-                    [
-                        'class' => new ClassNameValue($className, $typeHint),
-                    ]
+                    Embedded::class,
+                    ['class' => new ClassNameValue($className, $typeHint)],
+                    'ORM'
                 ),
             ];
         }
@@ -247,8 +253,7 @@ final class ClassSourceManipulator
 
     public function addGetter(string $propertyName, $returnType, bool $isReturnTypeNullable, array $commentLines = []): void
     {
-        $methodName = 'get'.Str::asCamelCase($propertyName);
-
+        $methodName = ('bool' === $returnType ? 'is' : 'get').Str::asCamelCase($propertyName);
         $this->addCustomGetter($propertyName, $methodName, $returnType, $isReturnTypeNullable, $commentLines);
     }
 
@@ -333,6 +338,9 @@ final class ClassSourceManipulator
         return $this->createBlankLineNode(self::CONTEXT_CLASS_METHOD);
     }
 
+    /**
+     * @param array<Node\Attribute|Node\AttributeGroup> $attributes
+     */
     public function addProperty(string $name, array $annotationLines = [], $defaultValue = null, array $attributes = []): void
     {
         if ($this->propertyExists($name)) {
@@ -342,12 +350,12 @@ final class ClassSourceManipulator
 
         $newPropertyBuilder = (new Builder\Property($name))->makePrivate();
 
-        if ($annotationLines && $this->useAnnotations) {
+        if ($this->useAttributesForDoctrineMapping) {
+            foreach ($attributes as $attribute) {
+                $newPropertyBuilder->addAttribute($attribute);
+            }
+        } elseif ($annotationLines && $this->useAnnotations) {
             $newPropertyBuilder->setDocComment($this->createDocBlock($annotationLines));
-        }
-
-        foreach ($attributes as $attribute) {
-            $newPropertyBuilder->addAttribute($attribute);
         }
 
         if (null !== $defaultValue) {
@@ -356,6 +364,17 @@ final class ClassSourceManipulator
         $newPropertyNode = $newPropertyBuilder->getNode();
 
         $this->addNodeAfterProperties($newPropertyNode);
+    }
+
+    public function addAttributeToClass(string $attributeClass, array $options): void
+    {
+        $this->addUseStatementIfNecessary($attributeClass);
+
+        $classNode = $this->getClassNode();
+
+        $classNode->attrGroups[] = new Node\AttributeGroup([$this->buildAttributeNode($attributeClass, $options)]);
+
+        $this->updateSourceCodeFromNewStmts();
     }
 
     public function addAnnotationToClass(string $annotationClass, array $options): void
@@ -493,6 +512,13 @@ final class ClassSourceManipulator
             throw new \Exception('Invalid value: loop before quoting.');
         }
 
+        if (\function_exists('enum_exists')) {
+            // do we have an enum ?
+            if (\is_object($value) && enum_exists(\get_class($value))) {
+                $value = $value->value;
+            }
+        }
+
         return sprintf('"%s"', $value);
     }
 
@@ -532,8 +558,9 @@ final class ClassSourceManipulator
         } else {
             $attributes = [
                 $this->buildAttributeNode(
-                    $relation instanceof RelationManyToOne ? 'ORM\\ManyToOne' : 'ORM\\OneToOne',
-                    $annotationOptions
+                    $relation instanceof RelationManyToOne ? ManyToOne::class : OneToOne::class,
+                    $annotationOptions,
+                    'ORM'
                 ),
             ];
         }
@@ -544,9 +571,7 @@ final class ClassSourceManipulator
                     'nullable' => false,
                 ]);
             } else {
-                $attributes[] = $this->buildAttributeNode('ORM\\JoinColumn', [
-                    'nullable' => false,
-                ]);
+                $attributes[] = $this->buildAttributeNode(JoinColumn::class, ['nullable' => false], 'ORM');
             }
         }
 
@@ -628,8 +653,9 @@ final class ClassSourceManipulator
         } else {
             $attributes = [
                 $this->buildAttributeNode(
-                    $relation instanceof RelationManyToMany ? 'ORM\\ManyToMany' : 'ORM\\OneToMany',
-                    $annotationOptions
+                    $relation instanceof RelationManyToMany ? ManyToMany::class : OneToMany::class,
+                    $annotationOptions,
+                    'ORM'
                 ),
             ];
         }
@@ -662,7 +688,7 @@ final class ClassSourceManipulator
             $collectionTypeHint,
             false,
             // add @return that advertises this as a collection of specific objects
-            [sprintf('@return %s|%s[]', $collectionTypeHint, $typeHint)]
+            [sprintf('@return %s<int, %s>', $collectionTypeHint, $typeHint)]
         );
 
         $argName = Str::pluralCamelCaseToSingular($relation->getPropertyName());
@@ -674,7 +700,7 @@ final class ClassSourceManipulator
         $paramBuilder->setTypeHint($typeHint);
         $adderNodeBuilder->addParam($paramBuilder->getNode());
 
-        //if (!$this->avatars->contains($avatar))
+        // if (!$this->avatars->contains($avatar))
         $containsMethodCallNode = new Node\Expr\MethodCall(
             new Node\Expr\PropertyFetch(new Node\Expr\Variable('this'), $relation->getPropertyName()),
             'contains',
@@ -729,7 +755,7 @@ final class ClassSourceManipulator
             // $this->avatars->removeElement($avatar);
             $removerNodeBuilder->addStmt(BuilderHelpers::normalizeStmt($removeElementCall));
         } else {
-            //if ($this->avatars->removeElement($avatar))
+            // if ($this->avatars->removeElement($avatar))
             $ifRemoveElementStmt = new Node\Stmt\If_($removeElementCall);
             $removerNodeBuilder->addStmt($ifRemoveElementStmt);
             if ($relation instanceof RelationOneToMany) {
@@ -898,6 +924,30 @@ final class ClassSourceManipulator
         $this->updateSourceCodeFromNewStmts();
 
         return $shortClassName;
+    }
+
+    /**
+     * Builds a PHPParser attribute node.
+     *
+     * @param string  $attributeClass  The attribute class which should be used for the attribute E.g. #[Column()]
+     * @param array   $options         The named arguments for the attribute ($key = argument name, $value = argument value)
+     * @param ?string $attributePrefix If a prefix is provided, the node is built using the prefix. E.g. #[ORM\Column()]
+     */
+    public function buildAttributeNode(string $attributeClass, array $options, ?string $attributePrefix = null): Node\Attribute
+    {
+        $options = $this->sortOptionsByClassConstructorParameters($options, $attributeClass);
+
+        $context = $this;
+        $nodeArguments = array_map(static function ($option, $value) use ($context) {
+            return new Node\Arg($context->buildNodeExprByValue($value), false, false, [], new Node\Identifier($option));
+        }, array_keys($options), array_values($options));
+
+        $class = $attributePrefix ? sprintf('%s\\%s', $attributePrefix, Str::getShortClassName($attributeClass)) : Str::getShortClassName($attributeClass);
+
+        return new Node\Attribute(
+            new Node\Name($class),
+            $nodeArguments
+        );
     }
 
     private function updateSourceCodeFromNewStmts(): void
@@ -1155,6 +1205,8 @@ final class ClassSourceManipulator
                 return '\\'.\DateInterval::class;
 
             case 'object':
+                return 'object';
+
             case 'binary':
             case 'blob':
             default:
@@ -1419,27 +1471,6 @@ final class ClassSourceManipulator
         }
 
         return $nodeValue;
-    }
-
-    /**
-     * builds an PHPParser attribute node.
-     *
-     * @param string $attributeClass the attribute class which should be used for the attribute
-     * @param array  $options        the named arguments for the attribute ($key = argument name, $value = argument value)
-     */
-    private function buildAttributeNode(string $attributeClass, array $options): Node\Attribute
-    {
-        $options = $this->sortOptionsByClassConstructorParameters($options, $attributeClass);
-
-        $context = $this;
-        $nodeArguments = array_map(static function ($option, $value) use ($context) {
-            return new Node\Arg($context->buildNodeExprByValue($value), false, false, [], new Node\Identifier($option));
-        }, array_keys($options), array_values($options));
-
-        return new Node\Attribute(
-            new Node\Name($attributeClass),
-            $nodeArguments
-        );
     }
 
     /**

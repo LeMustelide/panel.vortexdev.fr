@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Doctrine\ODM\MongoDB\Aggregation;
 
+use Doctrine\ODM\MongoDB\Aggregation\Stage\Sort;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Iterator\Iterator;
 use Doctrine\ODM\MongoDB\Mapping\ClassMetadata;
@@ -26,6 +27,8 @@ use function trigger_deprecation;
 
 /**
  * Fluent interface for building aggregation pipelines.
+ *
+ * @psalm-import-type SortShape from Sort
  */
 class Builder
 {
@@ -171,6 +174,8 @@ class Builder
      * Executes the aggregation pipeline
      *
      * @deprecated This method was deprecated in doctrine/mongodb-odm 2.2. Please use getAggregation() instead.
+     *
+     * @param array<string, mixed> $options
      */
     public function execute(array $options = []): Iterator
     {
@@ -217,8 +222,8 @@ class Builder
      *
      * @see https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/
      *
-     * @param float|array|Point $x
-     * @param float             $y
+     * @param float|array<string, mixed>|Point $x
+     * @param float                            $y
      */
     public function geoNear($x, $y = null): Stage\GeoNear
     {
@@ -230,6 +235,8 @@ class Builder
 
     /**
      * Returns an aggregation object for the current pipeline
+     *
+     * @param array<string, mixed> $options
      */
     public function getAggregation(array $options = []): Aggregation
     {
@@ -253,6 +260,8 @@ class Builder
      * For aggregation pipelines that will be nested (e.g. in a facet stage),
      * you should not apply filters as this may cause wrong results to be
      * given.
+     *
+     * @return array<array<string, mixed>>
      */
     // phpcs:enable Squiz.Commenting.FunctionComment.ExtraParamComment
     public function getPipeline(/* bool $applyFilters = true */): array
@@ -470,7 +479,7 @@ class Builder
      * including the _id field. You can promote an existing embedded document to
      * the top level, or create a new document for promotion.
      *
-     * @param string|array|Expr|null $expression Optional. A replacement expression that
+     * @param string|mixed[]|Expr|null $expression Optional. A replacement expression that
      * resolves to a document.
      */
     public function replaceRoot($expression = null): Stage\ReplaceRoot
@@ -527,8 +536,9 @@ class Builder
      *
      * @see https://docs.mongodb.com/manual/reference/operator/aggregation/sort/
      *
-     * @param array|string $fieldName Field name or array of field/order pairs
-     * @param int|string   $order     Field order (if one field is specified)
+     * @param array<string, int|string|array<string, string>>|string $fieldName Field name or array of field/order pairs
+     * @param int|string|null                                        $order     Field order (if one field is specified)
+     * @psalm-param SortShape|string $fieldName Field name or array of field/order pairs
      */
     public function sort($fieldName, $order = null): Stage\Sort
     {
@@ -584,6 +594,10 @@ class Builder
 
     /**
      * Applies filters and discriminator queries to the pipeline
+     *
+     * @param array<string, mixed> $query
+     *
+     * @return array<string, mixed>
      */
     private function applyFilters(array $query): array
     {
