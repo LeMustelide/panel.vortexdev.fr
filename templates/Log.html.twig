@@ -10,7 +10,7 @@
     const eventSource = new EventSource("{{ mercure('https://vps.vortexdev.fr/aqg/log')|escape('js') }}");
     eventSource.onmessage = event => {
         // Will be called every time an update is published by the server
-        console.log(JSON.parse(event.data));
+        console.log(event);
         const data = JSON.parse(event.data);
         
         const unixTimestamp = data.timestamp
@@ -20,7 +20,15 @@
         const dateObject = new Date(milliseconds)
 
         const humanDateFormat = dateObject.toLocaleString()
-        document.getElementById("realtimeData").insertAdjacentHTML('afterbegin', '['+humanDateFormat+'] ['+data.method+'] : '+data.content.SteamID+' -> '+data.action+'<br>');
+        if(typeof data.content !== 'undefined'){
+            console.log('no');
+            document.getElementById("realtimeData").insertAdjacentHTML('afterbegin', '['+humanDateFormat+'] ['+data.ip+'] ['+data.method+'] : '+data.content.SteamID+' -> '+data.action+'<br>');
+        }
+        else{
+            console.log('yes');
+            document.getElementById("realtimeData").insertAdjacentHTML('afterbegin', '['+humanDateFormat+'] ['+data.ip+'] ['+data.method+'] : '+data.action+'<br>');
+        }
+        
     }
     </script>
 
@@ -47,7 +55,7 @@
 		<div class="card shadow">
 			<div class="card-header d-flex justify-content-between align-items-center">
 				<a href="#" onclick="details()"><h6 class="text-primary fw-bold m-0">Details</h6></a>
-                <a href="#" onclick="realtime()"><h6 class="text-primary fw-bold m-0">Temps réél</h6></a>
+                <a href="#" onclick="realtime()"><h6 class="text-primary fw-bold m-0">Temps réel</h6></a>
 				<div class="dropdown no-arrow">
 					<button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
 						<i class="far fa-eye-slash text-gray-400"></i>
@@ -106,7 +114,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="card-body" id="realtime" style="display:none">
+			<div class="card-body" id="realtime" style="display:none; overflow: auto;max-height: calc(88vh - 300px);">
 				<div style="font-family:   Ubuntu;
                 font-size:      18px;"
                 id="realtimeData">
