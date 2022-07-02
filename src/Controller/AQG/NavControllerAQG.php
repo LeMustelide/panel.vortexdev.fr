@@ -152,11 +152,12 @@ class NavControllerAQG extends AbstractController
         $log = $dm->createQueryBuilder(aqgLog::class)
             ->field('url')->where('function(){ var pattern = /.*'.str_replace('/', '\\/', $find).'.*/; return pattern.test(this.url); }')
             ->sort('_id', 'desc')
+            ->limit(20)
             ->getQuery();
         $pagination = $paginator->paginate(
             $log,
             $request->query->getInt('page', $page), 
-            $size 
+            $size
         );
 
         return $this->render('Log.html.twig', ['page' => $page, 'find' => $find, 'size' => $size, 'pagination' => $pagination]);
