@@ -2,7 +2,7 @@
 mercure:
     hubs:
         default:
-            url: https://panel.vortexdev.fr/
+            url: https://vps.vortexdev.fr/.well-known/mercure
             jwt:
                 secret: '!ChangeMe!'
                 publish: ['foo', 'https://example.com/foo']
