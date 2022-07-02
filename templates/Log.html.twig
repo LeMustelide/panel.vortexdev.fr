@@ -39,10 +39,14 @@
 
     <script>
     function realtime(){
+        document.getElementById('Realtime-btn').className = "btn-tab-focus";
+        document.getElementById('Details-btn').className = "btn-tab";
         document.getElementById('realtime').style.display= "block";
         document.getElementById('details').style.display= "none";
     }
     function details(){
+        document.getElementById('Details-btn').className = "btn-tab-focus";
+        document.getElementById('Realtime-btn').className = "btn-tab";
         document.getElementById('realtime').style.display= "none";
         document.getElementById('details').style.display= "block";
     }
@@ -53,15 +57,11 @@
 	<div class="container-fluid">
 		<h3 class="text-dark mb-4" style="/*border-color: rgb(251,0,0);*/">Journaux d'Événements</h3>
 		<div class="card shadow">
-			<div class="card-header d-flex justify-content-between align-items-center">
-				<a href="#" onclick="details()"><h6 class="text-primary fw-bold m-0">Details</h6></a>
-                <a href="#" onclick="realtime()"><h6 class="text-primary fw-bold m-0">Temps réel</h6></a>
-				<div class="dropdown no-arrow">
-					<button class="btn btn-link btn-sm dropdown-toggle" aria-expanded="false" data-bs-toggle="dropdown" type="button">
-						<i class="far fa-eye-slash text-gray-400"></i>
-					</button>
-					<div class="dropdown-menu shadow dropdown-menu-end animated--fade-in" style="/*background: rgb(64,63,63);*/"></div>
-				</div>
+			<div class="card-header py-3 d-flex align-items-center" style="padding-bottom: 0px !important;padding-left: 13px;">
+            <button type="button" class="btn-tab-focus" id="Details-btn" href="#" onclick="details()"><h6 class="text-primary fw-bold m-0">Details</h6></button>
+            <button type="button" class="btn-tab" id="Realtime-btn" href="#" onclick="realtime()"><h6 class="text-primary fw-bold m-0">Temps réel</h6></button>
+            
+                
 			</div>
 			<div class="card-body" id="details" style="display:block">
 				<div class="row">
@@ -114,8 +114,8 @@
 					</div>
 				</div>
 			</div>
-			<div class="card-body" id="realtime" style="display:none; overflow: auto;max-height: calc(88vh - 300px);">
-				<div style="font-family:   Ubuntu;
+			<div class="card-body" id="realtime" style="border-radius: 0px 0px 5px 5px;background-color: #000000;display:none; overflow: auto;height: calc(88vh - 200px);">
+				<div style="font-family: 'Source Code Pro', monospace;
                 font-size:      18px;"
                 id="realtimeData">
                 </div>
