@@ -93,7 +93,7 @@
 									<td id="url" value="{{Log.status|e }}">{{ Log.url|e }}</td>
 									<td id="SteamId" value="{{Log.status}}">{% if Log.content is not null and Log.content['SteamID'] is defined %} {{  Log.content['SteamID']|e }} {% endif %}</td>
 									<td id="description">{% if Log.content is not null %} {{ Log.contentToString() }} {% endif %}</td>
-									<td>{{ Log.timestamp|date("d/m/Y H:i:s", "Europe/Paris") }}</td>
+									<td>{{ Log.timestamp|date("d/m/Y H:i:s") }}</td>
 								</tr>
 							{% endfor %}
 						</tbody>
