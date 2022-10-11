@@ -1,0 +1,192 @@
+{% extends "base.html.twig" %}
+
+{% block title %}
+	Clés - panel
+{% endblock %}
+
+{% block javascripts %}
+
+
+	<script type="text/javascript" src="{{ asset('Js/keys.js') }}"></script>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js" type="text/javascript"></script>
+
+
+{% endblock %}
+
+{% block content %}
+	<div class="container-fluid">
+		<h3 class="text-dark mb-4" style="/*border-color: rgb(251,0,0);*/">Compte administrateur</h3>
+		<div class="card shadow">
+			<div class="card-header py-3 d-flex align-items-center" style="padding-bottom: 0px !important;padding-left: 13px;">
+                <button type="button" class="btn-tab-focus" id="Details-btn" href="#" onclick="details()"><h6 class="text-primary fw-bold m-0">Comptes</h6></button>
+                <button type="button" class="btn-tab" id="Realtime-btn" href="#" onclick="realtime()"><h6 class="text-primary fw-bold m-0">Groupes</h6></button>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<div class="col-md-6 align-self-center">
+						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+							<label class="form-label">Nombre de lignes :
+								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='{{ path('keys') }}/'+this.value+'/{{ page }}'">
+									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+									<option value="100" {% if size  == 100 %} selected {% endif %}>100</option>
+								</select>
+							</label>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div id="dataTable_filter" class="text-md-end dataTables_filter">
+							<div class="row row-cols-2 justify-content-end align-items-center">
+								<div class="col-auto">
+									<button onclick="openFormAdd()" class="btn btn-primary addbuton" type="button">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+								</div>
+								<div class="col-auto">
+									<label class="col-form-label"><input class="form-control form-control-sm" type="search" aria-controls="dataTable" placeholder="Rechercher"/></label>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="table-responsive table mt-2" id="dataTable" role="grid" aria-describedby="dataTable_info">
+					<table class="table my-0" id="dataTable">
+						<thead>
+							<tr>
+								<th style="max-width: 25%;">Mail</th>
+								<th>Groupes</th>
+                                <th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for steamKeys in pagination %}
+								<tr class="key" id="row{{steamKeys.id}}">
+									<td id="Mail" value="{{steamKeys.steamId|e }}">{{ pseudo[steamKeys.id]|e }}</td>
+									<td id="steamKey" value="{{steamKeys.steamkey}}">{{ steamKeys.steamkey|e }}</td>
+									<td class="text-end">
+										<button class="btn btn-primary" onclick="openFormModify('{{steamKeys.id}}')" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;">
+											<i class="fas fa-pencil-alt"></i>
+										</button>
+										<button class="btn btn-primary" onclick="openFormDelete('{{steamKeys.id}}')" type="button" style="background: #b0544b;border-color: #d96257;">
+											<i class="fa fa-trash"></i>
+										</button>
+									</td>
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<div class="row">
+					<div class="col-md-6 align-self-center">
+						<p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Affichage de {{ page * size - size + 1}} à {% if page * size > pagination.getTotalItemCount %}{{pagination.getTotalItemCount}}{% else %}{{ page * size }}{% endif %} sur {{ pagination.getTotalItemCount }} </p>
+					</div>
+					<div class="col-md-6">
+						<nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+							<ul class="pagination">
+								{{ knp_pagination_render(pagination) }}
+							</ul>
+						</nav>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="deleteForm" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;height: 164px;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Confirmer la suppression de {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<label id="popUpBodyText" class="form-label text-start" style="color: rgb(255,255,255);">Voulez-vous réellement supprimer :?<br></label>
+					<div style="text-align: center;padding-top: 7px;">
+						<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormDelete()">Annuler</button>
+						<button class="btn btn-primary" id="action" type="button" style="background: #c55e5e;border-color: #ff9494;margin-right: 0px;text-align: right;" onclick="deleteKey();">Supprimer</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="addForm" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: table;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadText" class="text-primary fw-bold m-0">Ajout d'une clé</h6>
+				</div>
+				<div class="card-body">
+					<form action="javascript:addKey()">
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Clé Steam</label>
+						<div class="mb-3 mb-sm-0">
+							<input class="form-control form-control-user" type="text" placeholder="xxxxx-xxxxx-xxxxx" required="" pattern="[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}" id="steamKeyForm">
+						</div>
+						<br>
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Description</label>
+						<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Description" id="descriptionAdd"></div>
+						<br>
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Étiquette</label>
+						<div class="mb-3 mb-sm-0"><input class="form-control form-control-user" type="text" placeholder="Étiquette" id="tagAdd"></div>
+						<br>
+						<label class="form-label">Comptes</label>
+						<select id="selectAccount" class="d-inline-block form-select form-select-sm">
+							<option value="" selected="">Aucun</option>
+							{% for name in username %}
+								<option value="{{name['SteamID']}}">{{name['UserName']}}
+									-
+									{{name['SteamID']}}</option>
+							{% endfor %}
+						</select>
+						<div style="text-align: center;padding-top: 7px;">
+							<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormAdd()">Annuler</button>
+							<button class="btn btn-success" id="action" type="submit">Ajouter</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
+		<div id="modifyForm" style="display:none">
+			<div style="top:0; left:0; position:fixed; width: 100%;min-width: 100%;height: 100%;min-height: 100%;z-index: 3;background-color: rgba(0,0,0,0.64);"></div>
+			<div class="card shadow" style="z-index: 5;margin: auto;position: absolute;left: 0;top: 0;right: 0;bottom: 0;display: table;width: 437px;">
+				<div class="card-header d-flex justify-content-between align-items-center" style="height: 50px;">
+					<h6 id="popUpHeadTextModify" class="text-primary fw-bold m-0">modify la clé {object_name}</h6>
+				</div>
+				<div class="card-body">
+					<form action="javascript:modifyKey()">
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Clé Steam</label>
+						<div class="mb-3 mb-sm-0">
+							<input class="form-control form-control-user" type="text" placeholder="xxxxx-xxxxx-xxxxx" required="" pattern="[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}-[a-zA-Z0-9]{5}" id="steamKeyModify" value="{object_name}">
+						</div>
+						<br>
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Description</label>
+						<div class="mb-3 mb-sm-0">
+							<input class="form-control form-control-user" type="text" placeholder="Description" id="descriptionModify">
+						</div>
+						<br>
+						<label class="form-label text-start" style="color: rgb(255,255,255);">Étiquette</label>
+						<div class="mb-3 mb-sm-0">
+							<input class="form-control form-control-user" type="text" placeholder="Étiquette" id="tagModify">
+						</div>
+						<br>
+						<label class="form-label">Comptes</label>
+						<select id="selectAccountModify" class="d-inline-block form-select form-select-sm">
+							<option value="">Aucun</option>
+							{% for name in allUsername %}
+								<option value="{{name['SteamID']}}">{{name['UserName']}}
+									-
+									{{name['SteamID']}}</option>
+							{% endfor %}
+						</select>
+						<input id="id" style="display:none;">
+						<div style="text-align: center;padding-top: 7px;">
+							<button class="btn btn-primary" type="button" style="background: #414141;border-color: #5e5e5e;margin-right: 15px;" onclick="closeFormModify()">Annuler</button>
+							<button class="btn btn-primary addbuton" id="action" type="submit" style="margin-right: 0px;text-align: right;">Modifier</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
