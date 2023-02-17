@@ -1,17 +1,41 @@
 doctrine:
+    dbal:
+      default_connection: panel
+      connections:
+        panel:
+          url: '%env(resolve:DATABASE_URL)%'
+        aqg:
+          url: '%env(resolve:DATABASE_CUSTOMER_URL)%'
     orm:
-        auto_generate_proxy_classes: false
-        query_cache_driver:
-            type: pool
-            pool: doctrine.system_cache_pool
-        result_cache_driver:
-            type: pool
-            pool: doctrine.result_cache_pool
-
-framework:
-    cache:
-        pools:
-            doctrine.result_cache_pool:
-                adapter: cache.app
-            doctrine.system_cache_pool:
-                adapter: cache.system
+        default_entity_manager: panel
+        entity_managers:
+          panel:
+            connection: panel
+            mappings:
+                App:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Entity/panel'
+                    prefix: 'App\Entity\panel'
+                    alias: App
+          aqg:
+            connection: aqg
+            mappings:
+                aqg:
+                    is_bundle: false
+                    dir: '%kernel.project_dir%/src/Entity/aqg'
+                    prefix: 'App\Entity\aqg'
+                    alias: aqg
+doctrine_mongodb:
+    connections:
+      default:
+          server: '%env(resolve:MONGODB_URL)%'
+          options: {} 
+    default_database: AQG
+    document_managers:
+      default:
+          mappings:
+            MyBundle5:
+              type: annotation
+              dir: '%kernel.project_dir%/src/Document'
+              alias: aqgLog
+              prefix: App\Document\
