@@ -26,6 +26,13 @@
     --bs-body-color: #ffffff;
 }
 
+thead {
+    position: sticky !important;
+    top: 0 !important;
+    background-color: #4a4a4a;
+}
+
+
 .form-control:disabled,
 .form-control[readonly] {
     background-color: #949597;
