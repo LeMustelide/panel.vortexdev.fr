@@ -69,15 +69,36 @@ class AccountRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative()['number'];
     }
 
-    public function getAccountList(){
+    public function getAccountList(string $sort, string $order, string $query = null)
+    {
         $conn = $this->getEntityManager()->getConnection();
-        $sql = 'SELECT Account.SteamID, UserName, Bio, QuizPlayed, Win, Lose, QuizCreated, MultiplayerQuizPlayed, YourQuizPlayed, CreationDate, ConnectionDate, IFNULL((SELECT if(panelBan.action = 1, 1, 0) FROM qxqp2383_panel.sanction panelBan WHERE panelBan.steamId = Account.SteamID ORDER BY panelBan.date DESC LIMIT 1), 0) AS \'ban\' FROM Account';
+
+        $sql = "SELECT Account.SteamID, UserName, Bio, QuizPlayed, Win, Lose, QuizCreated, 
+        MultiplayerQuizPlayed, YourQuizPlayed, CreationDate, ConnectionDate, 
+        IFNULL((SELECT if(panelBan.action = 1, 1, 0) FROM qxqp2383_panel.sanction panelBan WHERE panelBan.steamId = Account.SteamID ORDER BY panelBan.date DESC LIMIT 1), 0) AS 'ban' 
+        FROM Account";
+
+        if ($query) {
+            $sql .= ' WHERE UserName LIKE :query OR SteamID LIKE :query OR Bio LIKE :query';
+        }
+
+        $sql .= " ORDER BY " . $sort . " " . $order;
+
         $stmt = $conn->prepare($sql);
+
+        if ($query) {
+            $stmt->bindValue('query', "%$query%");
+        }
+
         $resultSet = $stmt->executeQuery();
+
         return $resultSet->fetchAllAssociative();
     }
 
-    public function getAccountDetails($steamid){
+
+
+    public function getAccountDetails($steamid)
+    {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT Account.SteamID, UserName, Bio, QuizPlayed, Win, Lose, QuizCreated, MultiplayerQuizPlayed, YourQuizPlayed, CreationDate, ConnectionDate, IFNULL((SELECT if(panelBan.action = 1, 1, 0) FROM qxqp2383_panel.sanction panelBan WHERE panelBan.steamId = Account.SteamID ORDER BY panelBan.date DESC LIMIT 1), 0) AS \'ban\' FROM Account WHERE Account.SteamID = :SteamID';
         $stmt = $conn->prepare($sql);
@@ -86,7 +107,8 @@ class AccountRepository extends ServiceEntityRepository
         return $resultSet->fetchAssociative();
     }
 
-    public function getSanctions($steamid){
+    public function getSanctions($steamid)
+    {
         $conn = $this->getEntityManager()->getConnection();
         $sql = 'SELECT * FROM qxqp2383_panel.sanction WHERE steamId = :SteamID';
         $stmt = $conn->prepare($sql);

@@ -14,19 +14,25 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-							<label class="form-label">Nombre de lignes :
-								<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" onchange="window.location.href='{{ path('account') }}/'+this.value+'/{{ page }}'">
-									<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
-									<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
-									<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
-									<option value="100" {% if size == 100 %} selected {% endif %}>100</option>
-								</select>
-							</label>
+							<form method="get" action="{{ path('account', {'sort': currentSort, 'order': currentOrder, 'page': page}) }}">
+								<label class="form-label">Nombre de lignes :
+									<select class="d-inline-block form-select form-select-sm" style="width: 79.578px;" name="size" onchange="this.form.submit()">
+										<option value="10" {% if size == 10 %} selected {% endif %}>10</option>
+										<option value="25" {% if size == 25 %} selected {% endif %}>25</option>
+										<option value="50" {% if size == 50 %} selected {% endif %}>50</option>
+										<option value="100" {% if size == 100 %} selected {% endif %}>100</option>
+									</select>
+								</label>
+							</form>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="text-md-end dataTables_filter" id="dataTable_filter">
-							<label class="form-label"><input type="search" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher"></label>
+							<form action="{{ path('account') }}" method="get">
+								<label class="form-label">
+									<input type="search" name="query" class="form-control form-control-sm" aria-controls="dataTable" placeholder="Rechercher" value="{{ query }}">
+								</label>
+							</form>
 						</div>
 					</div>
 				</div>
@@ -34,11 +40,11 @@
 					<table class="table my-0" id="dataTable">
 						<thead>
 							<tr>
-								<th>Pseudo</th>
+								<th><a href="{{ path('account', {'sort': 'UserName', 'order': (currentSort == 'UserName' and currentOrder == 'ASC') ? 'DESC' : 'ASC', 'size': size}) }}">Pseudo</a></th>
 								<th>SteamID</th>
 								<th>Biographie</th>
-								<th style="width: 200px;">{{ knp_pagination_sortable(pagination, 'Première connexion', ' Account.CreationDate') }}</th>
-								<th style="width: 200px;">Dernière connexion</th>
+								<th style="width: 200px;"><a href="{{ path('account', {'sort': 'CreationDate', 'order': (currentSort == 'CreationDate' and currentOrder == 'ASC') ? 'DESC' : 'ASC', 'size': size}) }}">Première connexion</a></th>
+								<th style="width: 200px;"><a href="{{ path('account', {'sort': 'ConnectionDate', 'order': (currentSort == 'ConnectionDate' and currentOrder == 'ASC') ? 'DESC' : 'ASC', 'size': size}) }}">Dernière connexion</a></th>
 								<th style="width: 100px;">Action</th>
 							</tr>
 						</thead>
@@ -48,7 +54,7 @@
 								<td id="keystr" value="{{Account.SteamID}}">{{ Account.SteamID|e }}</td>
 								<td>{{ Account.Bio|e }}</td>
 								<td>{{ Account.CreationDate|date('d/m/Y H:i') }}</td>
-								<td>{{ Account.CreationDate|date('d/m/Y H:i') }}</td>
+								<td>{{ Account.ConnectionDate|date('d/m/Y H:i') }}</td>
 
 								<td>
 									<button class="btn btn-primary" type="button" onclick="window.location.href='/aqg/Profile/{{Account.SteamID}}'">
