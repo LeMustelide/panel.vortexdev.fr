@@ -27,10 +27,6 @@ WORKDIR /var/www/symfony
 # Copiez les fichiers de votre projet Symfony dans le conteneur
 COPY . /var/www/symfony
 
-# Installez les dépendances de votre projet avec Composer
-# Si vous avez un fichier composer.lock, il est recommandé de l'utiliser
-RUN composer install --no-dev --optimize-autoloader
-
 # Exposez le port sur lequel le serveur web est configuré pour écouter
 EXPOSE 9000
 
