@@ -23,9 +23,6 @@ RUN pecl install mongodb \
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     && mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 
-# Définissez le répertoire de travail dans le conteneur
-WORKDIR /var/www/html
-
 # Configurer le document root d'Apache pour pointer vers le dossier public de Symfony
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 
@@ -39,14 +36,13 @@ COPY . /var/www/html
 # Ajuster les permissions des dossiers var et vendor
 RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log /var/www/html/vendor \
   && chown -R www-data:www-data /var/www/html/var /var/www/html/vendor \
-  && chmod -R 775 /var/www/html/var
-  
-USER www-data
+  && chmod -R 775 /var/www/html/var \
+  && chmod -R 777 /var/www/
 
 # Exécuter Composer Install (sans scripts pour éviter des erreurs liées à l'environnement)
 RUN composer install --prefer-dist --no-scripts --no-dev --optimize-autoloader
 
-USER root
-
 # Exposez le port sur lequel le serveur web est configuré pour écouter
 EXPOSE 80
+
+WORKDIR /var/www
