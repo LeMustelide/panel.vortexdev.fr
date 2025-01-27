@@ -7,7 +7,9 @@
 {% block javascripts %}
 
     <script>
-    const eventSource = new EventSource("{{ mercure('https://vps.vortexdev.fr/aqg/log')|escape('js') }}");
+    const eventSource = new EventSource("{{ mercure('https://vps.vortexdev.fr/aqg/log')|escape('js') }}", {
+        withCredentials: true,
+    });
     eventSource.onmessage = event => {
         // Will be called every time an update is published by the server
         console.log(event);

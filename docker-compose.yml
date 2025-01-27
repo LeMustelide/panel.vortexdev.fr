@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+    app:
+        image: ghcr.io/lemustelide/panel.vortexdev.fr:latest
+        environment:
+            MONGODB_URL: mongodb://admin:admin@mongo:27017
+        depends_on:
+            - mongo
+            - mercure
+        labels:
+            - "traefik.http.routers.panel.entrypoints=websecure"
+            - "traefik.http.routers.panel.rule=Host(`panel.vortexdev.fr`)"
+            - "traefik.http.routers.panel.tls.certresolver=leresolver"
+            - "traefik.http.services.panel.loadbalancer.server.port=80"
+
+    mongo:
+        image: mongo:4.4
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: admin
+            MONGO_INITDB_ROOT_PASSWORD: admin
+        volumes:
+            - mongo-data:/data/db
+
+    mercure:
+        image: dunglas/mercure
+        environment:
+            SERVER_NAME: ":80"
+            MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_PUBLISHER_JWT_KEY}
+            MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_SUBSCRIBER_JWT_KEY}
+            MERCURE_EXTRA_DIRECTIVES: |-
+                cors_origins "https://panel.vortexdev.fr"
+                anonymous
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.mercure.entrypoints=websecure"
+            - "traefik.http.routers.mercure.rule=Host(`mercure.vps.vortexdev.fr`)"
+            - "traefik.http.routers.mercure.tls.certresolver=leresolver"
+            - "traefik.http.services.mercure.loadbalancer.server.port=80"
+
+volumes:
+    mongo-data:
+
+networks:
+    default:
+        external:
+            name: portainer-install_default

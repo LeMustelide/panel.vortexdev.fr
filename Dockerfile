@@ -42,6 +42,9 @@ RUN mkdir -p /var/www/html/var/cache /var/www/html/var/log /var/www/html/vendor 
 # Exécuter Composer Install (sans scripts pour éviter des erreurs liées à l'environnement)
 RUN composer install --prefer-dist --no-scripts --no-dev --optimize-autoloader
 
+# Clear Symfony cache
+RUN php bin/console cache:clear
+
 # Exposez le port sur lequel le serveur web est configuré pour écouter
 EXPOSE 80
 
